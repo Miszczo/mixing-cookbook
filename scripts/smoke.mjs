@@ -33,11 +33,7 @@ async function request(path, { method = "GET", form, json } = {}) {
       ...(form ? { "Content-Type": "application/x-www-form-urlencoded" } : {}),
       ...(json ? { "Content-Type": "application/json" } : {}),
     },
-    body: form
-      ? new URLSearchParams(form).toString()
-      : json
-        ? JSON.stringify(json)
-        : undefined,
+    body: form ? new URLSearchParams(form).toString() : json ? JSON.stringify(json) : undefined,
   });
   storeCookies(response);
 
@@ -57,11 +53,7 @@ async function request(path, { method = "GET", form, json } = {}) {
 const steps = [
   ["home renders", () => request("/"), { status: 200 }],
   ["dashboard redirects anonymous user", () => request("/dashboard"), { status: 302, location: "/auth/signin" }],
-  [
-    "anonymous GET probes returns 401",
-    () => request("/api/isolation/probes"),
-    { status: 401 },
-  ],
+  ["anonymous GET probes returns 401", () => request("/api/isolation/probes"), { status: 401 }],
   [
     "signup creates account",
     () => request("/api/auth/signup", { method: "POST", form: { email, password } }),
@@ -107,16 +99,8 @@ const steps = [
         Array.isArray(actual.body?.items) && actual.body.items.some((item) => item.label === "starter-visible"),
     },
   ],
-  [
-    "user A POST catalog returns 403",
-    () => request("/api/isolation/catalog", { method: "POST" }),
-    { status: 403 },
-  ],
-  [
-    "user A signs out",
-    () => request("/api/auth/signout", { method: "POST" }),
-    { status: 302, location: "/" },
-  ],
+  ["user A POST catalog returns 403", () => request("/api/isolation/catalog", { method: "POST" }), { status: 403 }],
+  ["user A signs out", () => request("/api/auth/signout", { method: "POST" }), { status: 302, location: "/" }],
   [
     "user B signup creates account",
     () => request("/api/auth/signup", { method: "POST", form: { email: emailB, password } }),
@@ -135,11 +119,7 @@ const steps = [
       check: (actual) => Array.isArray(actual.body?.probes) && !actual.body.probes.some((p) => p.id === probeIdA),
     },
   ],
-  [
-    "user B GET probes by A id returns 404",
-    () => request(`/api/isolation/probes/${probeIdA}`),
-    { status: 404 },
-  ],
+  ["user B GET probes by A id returns 404", () => request(`/api/isolation/probes/${probeIdA}`), { status: 404 }],
   [
     "user B GET catalog starter-visible",
     () => request("/api/isolation/catalog"),
@@ -149,17 +129,18 @@ const steps = [
         Array.isArray(actual.body?.items) && actual.body.items.some((item) => item.label === "starter-visible"),
     },
   ],
-  [
-    "user B POST catalog returns 403",
-    () => request("/api/isolation/catalog", { method: "POST" }),
-    { status: 403 },
-  ],
+  ["user B POST catalog returns 403", () => request("/api/isolation/catalog", { method: "POST" }), { status: 403 }],
   ["signout clears session", () => request("/api/auth/signout", { method: "POST" }), { status: 302, location: "/" }],
   ["dashboard redirects after signout", () => request("/dashboard"), { status: 302, location: "/auth/signin" }],
 ];
 
 let failed = 0;
 for (const [name, run, expected] of steps) {
+  if (typeof probeIdA !== "string" && name.startsWith("user B GET probes")) {
+    console.log(`FAIL  ${name}  -> missing probe id from user A`);
+    failed++;
+    break;
+  }
   const actual = await run();
   const ok =
     actual.status === expected.status &&
