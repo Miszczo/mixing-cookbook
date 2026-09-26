@@ -344,10 +344,10 @@ There is no application data to backfill. The migration is forward-only: once `s
 
 #### Automated
 
-- [x] 3.1 `BASE_URL=http://localhost:4321 npm run smoke` passes against preview and local Supabase
+- [x] 3.1 `BASE_URL=http://localhost:4321 npm run smoke` passes against preview and local Supabase — e80514c
 
 
 
 #### Manual
 
-- [x] 3.2 Smoke log shows user B does not receive user A's probe id, both users receive `starter-visible`, and catalog POST returns `403`
+- [x] 3.2 Smoke log shows user B does not receive user A's probe id, both users receive `starter-visible`, and catalog POST returns `403` — e80514c
