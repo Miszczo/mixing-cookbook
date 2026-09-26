@@ -269,8 +269,8 @@ There is no application data to backfill. The migration is forward-only: once `s
 
 #### Automated
 
-- [ ] 2.1 `npx astro check` passes
-- [ ] 2.2 `npm run lint` passes
+- [x] 2.1 `npx astro check` passes
+- [x] 2.2 `npm run lint` passes
 
 #### Manual
 
