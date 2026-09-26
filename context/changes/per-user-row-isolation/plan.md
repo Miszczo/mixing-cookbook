@@ -20,6 +20,8 @@ The product requirement is already fixed. A signed-in user sees only their own p
 - `supabase/config.toml` points `db.seed` at `./seed.sql`, which is not in the repo. The catalog row must be inserted by the migration, not by that missing seed file.
 - Migrations are forward-only (`context/foundation/infrastructure.md`). Worker rollback does not revert SQL.
 
+
+
 ## Desired End State
 
 A second signed-in user cannot read the first user's probe row. Both signed-in users can read one seeded catalog row, and neither can insert, update, or delete it. Anonymous callers receive `401` from the isolation routes. Later slices copy one of the two table patterns instead of inventing a policy.
@@ -32,6 +34,8 @@ Verification is `BASE_URL=http://localhost:4321 npm run smoke` against a running
 - RLS is the enforcement layer. The anon key never bypasses it. There is no `service_role` environment variable, and this change must not add one.
 - The catalog pattern is a second table, not a nullable `user_id` on the probe table. Each later product table picks exactly one pattern.
 
+
+
 ## What We're NOT Doing
 
 - DAW profile, plugin inventory, tracks, recipes, listening notes, or any other product table.
@@ -42,6 +46,8 @@ Verification is `BASE_URL=http://localhost:4321 npm run smoke` against a running
 - Adding `/api/isolation` to `PROTECTED_ROUTES`. That list redirects pages; these routes speak JSON.
 - Editing `supabase/config.toml` or creating the missing `seed.sql`.
 - Production deploy or a cloud Supabase migration push. Local `supabase start` and the existing CI smoke job are enough.
+
+
 
 ## Implementation Approach
 
@@ -54,13 +60,19 @@ One migration introduces `isolation_probes` (owner-only) and `isolation_catalog`
 - **Timing & lifecycle:** The catalog `INSERT` belongs in the migration. The migration role bypasses RLS, which is what allows the seed while authenticated users have no write policy and no write grant. Do not seed the catalog from the API.
 - **User experience spec:** A probe id that belongs to someone else, or does not exist, returns `404` with the same body. Do not return `403` for a foreign id; that would reveal that the row exists.
 
+
+
 ## Phase 1: Schema and row policies
+
+
 
 ### Overview
 
 Add the first application migration. It creates the two non-product tables, enables RLS, grants the minimum privileges, and seeds the catalog row.
 
 ### Changes Required:
+
+
 
 #### 1. Isolation migration
 
@@ -100,10 +112,14 @@ Grants, after RLS: `authenticated` receives `select, insert, update, delete` on 
 
 ### Success Criteria:
 
+
+
 #### Automated Verification:
 
 - Migration file under `supabase/migrations/` enables RLS on `isolation_probes` and `isolation_catalog` and seeds `starter-visible`
 - `npm run lint` passes
+
+
 
 #### Manual Verification:
 
@@ -113,13 +129,19 @@ Grants, after RLS: `authenticated` receives `select, insert, update, delete` on 
 
 ---
 
+
+
 ## Phase 2: Session-scoped HTTP contract
+
+
 
 ### Overview
 
 Expose the two tables through cookie-authenticated JSON routes. The route uses the session user as the owner and turns RLS denials into stable HTTP statuses.
 
 ### Changes Required:
+
+
 
 #### 1. Zod dependency
 
@@ -155,10 +177,14 @@ Do not add these paths to `PROTECTED_ROUTES`.
 
 ### Success Criteria:
 
+
+
 #### Automated Verification:
 
 - `npx astro check` passes
 - `npm run lint` passes
+
+
 
 #### Manual Verification:
 
@@ -168,13 +194,19 @@ Do not add these paths to `PROTECTED_ROUTES`.
 
 ---
 
+
+
 ## Phase 3: Two-user smoke proof
+
+
 
 ### Overview
 
 Extend the existing smoke script so one run proves anonymous rejection, owner isolation, shared catalog read, and catalog write denial.
 
 ### Changes Required:
+
+
 
 #### 1. Smoke steps and response body
 
@@ -204,9 +236,13 @@ The existing final sign-out then clears B's session, and the existing dashboard 
 
 ### Success Criteria:
 
+
+
 #### Automated Verification:
 
 - `BASE_URL=http://localhost:4321 npm run smoke` passes against preview and local Supabase
+
+
 
 #### Manual Verification:
 
@@ -216,22 +252,32 @@ The existing final sign-out then clears B's session, and the existing dashboard 
 
 ---
 
+
+
 ## Testing Strategy
+
+
 
 ### Unit Tests:
 
 - No unit-test runner exists in this repo. Do not add one for this change. Input bounds are the zod schema exercised by the smoke POST.
+
+
 
 ### Integration Tests:
 
 - `scripts/smoke.mjs` is the integration check: anonymous `401`, owner A sees the probe, owner B does not, both see `starter-visible`, both receive `403` on catalog POST.
 - CI already starts local Supabase, builds, runs preview, and runs smoke. No workflow edit unless `supabase start` fails to apply `supabase/migrations/`.
 
+
+
 ### Manual Testing Steps:
 
 1. Read the migration and confirm the catalog has select-only access for `authenticated`.
 2. With a signed-in session, POST a probe including a foreign `user_id` and confirm the stored owner is the session user.
 3. Read the smoke log for the B-misses-A and catalog-`403` lines.
+
+
 
 ## Performance Considerations
 
@@ -250,38 +296,58 @@ There is no application data to backfill. The migration is forward-only: once `s
 - Smoke harness: `scripts/smoke.mjs`
 - CI smoke job: `.github/workflows/ci.yml`
 
+
+
 ## Progress
 
-> Convention: `- [ ]` pending, `- [x]` done. Append ` — <commit sha>` when a step lands. Do not rename step titles. See `references/progress-format.md`.
+> Convention: `- [ ]` pending, `- [x]` done. Append  `— <commit sha>` when a step lands. Do not rename step titles. See `references/progress-format.md`.
+
+
 
 ### Phase 1: Schema and row policies
+
+
 
 #### Automated
 
 - [x] 1.1 Migration file under `supabase/migrations/` enables RLS on `isolation_probes` and `isolation_catalog` and seeds `starter-visible`
 - [x] 1.2 `npm run lint` passes
 
+
+
 #### Manual
 
-- [ ] 1.3 SQL review confirms `isolation_catalog` has no authenticated insert, update, or delete policy and no write grant
+- [x] 1.3 SQL review confirms `isolation_catalog` has no authenticated insert, update, or delete policy and no write grant
+
+
 
 ### Phase 2: Session-scoped HTTP contract
 
+
+
 #### Automated
 
-- [x] 2.1 `npx astro check` passes
-- [x] 2.2 `npm run lint` passes
+- [x] 2.1 `npx astro check` passes — 7abbff2
+- [x] 2.2 `npm run lint` passes — 7abbff2
+
+
 
 #### Manual
 
-- [ ] 2.3 A signed-in POST `/api/isolation/probes` stores `user_id` from the session and ignores any client-supplied owner
+- [x] 2.3 A signed-in POST `/api/isolation/probes` stores `user_id` from the session and ignores any client-supplied owner
+
+
 
 ### Phase 3: Two-user smoke proof
 
+
+
 #### Automated
 
-- [ ] 3.1 `BASE_URL=http://localhost:4321 npm run smoke` passes against preview and local Supabase
+- [x] 3.1 `BASE_URL=http://localhost:4321 npm run smoke` passes against preview and local Supabase
+
+
 
 #### Manual
 
-- [ ] 3.2 Smoke log shows user B does not receive user A's probe id, both users receive `starter-visible`, and catalog POST returns `403`
+- [x] 3.2 Smoke log shows user B does not receive user A's probe id, both users receive `starter-visible`, and catalog POST returns `403`
