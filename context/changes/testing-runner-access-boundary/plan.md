@@ -230,25 +230,25 @@ No SQL migration. Tests create auth users and probe rows in the local database. 
 
 #### Automated
 
-- [x] 1.1 `npm test` exits 0 against local Supabase when `SUPABASE_URL` and `SUPABASE_KEY` are the anon key, and `tests/isolation-probes-rls.test.ts` shows user A's select of `id, note` contains the note this run inserted before it asserts user B's select of `id, note` with no `user_id` predicate does not contain that note
-- [x] 1.2 `npm run lint` exits 0
-- [x] 1.3 `npx astro check` exits 0
+- [x] 1.1 `npm test` exits 0 against local Supabase when `SUPABASE_URL` and `SUPABASE_KEY` are the anon key, and `tests/isolation-probes-rls.test.ts` shows user A's select of `id, note` contains the note this run inserted before it asserts user B's select of `id, note` with no `user_id` predicate does not contain that note — d89b596
+- [x] 1.2 `npm run lint` exits 0 — d89b596
+- [x] 1.3 `npx astro check` exits 0 — d89b596
 
 #### Manual
 
-- [x] 1.4 With `SUPABASE_URL` unset and the repo `.env` not supplying it, `npm test` exits non-zero and does not report skipped tests
+- [x] 1.4 With `SUPABASE_URL` unset and the repo `.env` not supplying it, `npm test` exits non-zero and does not report skipped tests — d89b596
 
 ### Phase 2: HTTP dashboard and probe gates
 
 #### Automated
 
-- [ ] 2.1 `npm test` exits 0 without a hand-started preview, and `tests/isolation-access-http.test.ts` uses `redirect: "manual"` to assert signed-out `GET /dashboard` is 302 to `/auth/signin` with a body that does not contain `This page is only for authenticated users.`, signed-out `GET /api/isolation/probes` is 401 and its body does not contain the note this run inserted, the owner's list is 200 and contains that note, user B's list is 200 and does not contain that note, and user B's `GET /api/isolation/probes/<id>` is 404 and its body does not contain that note
-- [ ] 2.2 `npm run lint` exits 0
-- [ ] 2.3 `npx astro check` exits 0
+- [x] 2.1 `npm test` exits 0 without a hand-started preview, and `tests/isolation-access-http.test.ts` uses `redirect: "manual"` to assert signed-out `GET /dashboard` is 302 to `/auth/signin` with a body that does not contain `This page is only for authenticated users.`, signed-out `GET /api/isolation/probes` is 401 and its body does not contain the note this run inserted, the owner's list is 200 and contains that note, user B's list is 200 and does not contain that note, and user B's `GET /api/isolation/probes/<id>` is 404 and its body does not contain that note
+- [x] 2.2 `npm run lint` exits 0
+- [x] 2.3 `npx astro check` exits 0
 
 #### Manual
 
-- [ ] 2.4 Confirm `.github/workflows/ci.yml` and `scripts/smoke.mjs` have no edits from this phase, and the HTTP test issues separate requests for `/dashboard` and `/api/isolation/probes`
+- [x] 2.4 Confirm `.github/workflows/ci.yml` and `scripts/smoke.mjs` have no edits from this phase, and the HTTP test issues separate requests for `/dashboard` and `/api/isolation/probes`
 
 ### Phase 3: Cookbook patterns in §6
 
