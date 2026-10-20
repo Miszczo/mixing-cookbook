@@ -80,7 +80,7 @@ Phase 3 writes the patterns that actually shipped into the cookbook. It does not
 
 **Intent**: Add a non-watch test script and Vitest 4 so later phases have a runner that loads this app's Vite config, including the `@/` alias and server env wiring.
 
-**Contract**: `scripts.test` is `vitest run`. The direct devDependency is `vitest` `^4.1.0`, the major `astro@7.3.2` already declares in its own devDependencies. `vitest.config.ts` exports `getViteConfig` from `astro/config` with `test.environment` set to `node`. Do not set jsdom. Do not add a `test` script that shells out to `scripts/smoke.mjs`.
+**Contract**: `scripts.test` is `vitest run`. The direct devDependency is `vitest` `^4.1.0`, the major `astro@7.3.2` already declares in its own devDependencies. `vitest.config.ts` exports `getViteConfig` from `astro/config` with `test.environment` set to `node`. The default export awaits that config and removes plugin `vite-plugin-cloudflare:dev` so Vitest does not start a second workerd. The HTTP file starts `astro dev` itself. Do not set jsdom. Do not add a `test` script that shells out to `scripts/smoke.mjs`.
 
 #### 2. Env guard and the session select
 

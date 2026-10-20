@@ -110,7 +110,7 @@ Dwa dowody, oba na żywym Supabase i na sesji, nie na mocku. Notatka jest konkre
 - **Selekt drugiego użytkownika.** Właściciel wstawia wiersz i jego `select("id, note")` zawiera ten ciąg. Drugi zalogowany użytkownik robi ten sam `select("id, note")` bez predykatu `user_id`. Jego wynik nie zawiera notatki. To jest trwały dowód polityki: brak wiersza w selekcie sesji B, a nie sam kod HTTP.
 - **Bramki HTTP** (`GET`, bez podążania za przekierowaniem):
   - `/dashboard` bez sesji: 302 na `/auth/signin`, a ciało nie zawiera zdania `This page is only for authenticated users.`
-  - anonimowe `GET /api/isolation/probes`: 401 z osobnym ciałem `{ error: "unauthorized" }`, bez notatki
+  - anonimowe `GET /api/isolation/probes`: 401, a ciało nie zawiera notatki
   - lista właściciela: 200 i ciało zawiera notatkę
   - lista użytkownika B: 200 i ciało nie zawiera notatki
 - `GET /api/isolation/probes/:id` cudzego wiersza zwraca 404 i nie oddaje notatki. Ten 404 nie jest trwałym dowodem polityki: ten sam status da się uzyskać filtrem po `id` albo po `user_id` w handlerze, gdy polityki SELECT już nie ma.
@@ -130,7 +130,7 @@ Dwa dowody, oba na żywym Supabase i na sesji, nie na mocku. Notatka jest konkre
 
 ### 6.6 Per-rollout-phase notes
 
-- Faza 1 (runner i granica dostępu) wysłała dowody z §6.1 i §6.2: `npm test`, selekt `id, note` bez predykatu `user_id` oraz bramki HTTP (dashboard 302 bez zdania dla zalogowanych, anonimowe 401 z ciałem `{ error: "unauthorized" }` bez notatki, lista właściciela 200 z notatką, lista użytkownika B 200 bez notatki).
+- Faza 1 (runner i granica dostępu) wysłała dowody z §6.1 i §6.2: `npm test`, selekt `id, note` bez predykatu `user_id` oraz bramki HTTP (dashboard 302 bez zdania dla zalogowanych, anonimowe 401 bez notatki, lista właściciela 200 z notatką, lista użytkownika B 200 bez notatki).
 - `npm run smoke` zostaje istniejącym skryptem end-to-end. Wpięcie suite do CI jest nadal §3 Faza 4.
 - Faza 1 nie dodała narzędzia AI-native. Warstwa wizyjna zostaje niezalecana; data sprawdzenia Playwright MCP, 2026-10-07, jest już w §4.
 

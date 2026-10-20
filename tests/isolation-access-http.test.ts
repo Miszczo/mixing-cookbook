@@ -129,8 +129,10 @@ async function stopApp(child: ChildProcess | undefined): Promise<void> {
   const pid = child.pid;
 
   if (child.exitCode === null) {
-    const exited = new Promise<void>((resolve) => {
-      const timer = setTimeout(resolve, 8_000);
+    const exited = new Promise<void>((resolve, reject) => {
+      const timer = setTimeout(() => {
+        reject(new Error(`astro dev pid ${pid} was still running after stop`));
+      }, 8_000);
       child.once("exit", () => {
         clearTimeout(timer);
         resolve();
@@ -138,13 +140,22 @@ async function stopApp(child: ChildProcess | undefined): Promise<void> {
     });
 
     if (process.platform === "win32") {
-      const killer = spawn("taskkill", ["/pid", String(pid), "/t", "/f"], {
-        windowsHide: true,
-        stdio: "ignore",
+      const code = await new Promise<number | null>((resolve) => {
+        const killer = spawn("taskkill", ["/pid", String(pid), "/t", "/f"], {
+          windowsHide: true,
+          stdio: "ignore",
+        });
+        killer.once("error", () => {
+          child.kill();
+          resolve(null);
+        });
+        killer.once("exit", (exitCode) => {
+          resolve(exitCode);
+        });
       });
-      killer.once("error", () => {
+      if (code !== 0) {
         child.kill();
-      });
+      }
     } else {
       try {
         process.kill(-pid, "SIGTERM");
