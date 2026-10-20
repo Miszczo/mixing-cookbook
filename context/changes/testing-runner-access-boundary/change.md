@@ -1,7 +1,7 @@
 ---
 change_id: testing-runner-access-boundary
 title: Stand up the runner and prove the access boundary
-status: implementing
+status: implemented
 created: 2026-10-07
 updated: 2026-10-20
 archived_at: null

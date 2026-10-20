@@ -254,9 +254,9 @@ No SQL migration. Tests create auth users and probe rows in the local database. 
 
 #### Automated
 
-- [x] 3.1 `context/foundation/test-plan.md` §6.1, §6.2, and §6.6 describe the shipped runner, the session select without a `user_id` predicate, and the HTTP gates, including the note-absence assertions
-- [x] 3.2 The diff to `context/foundation/test-plan.md` does not change §1–§5, §6.3–§6.5, or §7
+- [x] 3.1 `context/foundation/test-plan.md` §6.1, §6.2, and §6.6 describe the shipped runner, the session select without a `user_id` predicate, and the HTTP gates, including the note-absence assertions — 0c3afdf
+- [x] 3.2 The diff to `context/foundation/test-plan.md` does not change §1–§5, §6.3–§6.5, or §7 — 0c3afdf
 
 #### Manual
 
-- [x] 3.3 Read §6.2 and confirm it names these avoided proofs: a mocked ownership check, HTTP 200 alone, `ENABLE ROW LEVEL SECURITY` alone, a bare 401, a sign-in page test, and treating the dashboard redirect as coverage of `/api/isolation`
+- [x] 3.3 Read §6.2 and confirm it names these avoided proofs: a mocked ownership check, HTTP 200 alone, `ENABLE ROW LEVEL SECURITY` alone, a bare 401, a sign-in page test, and treating the dashboard redirect as coverage of `/api/isolation` — 0c3afdf
