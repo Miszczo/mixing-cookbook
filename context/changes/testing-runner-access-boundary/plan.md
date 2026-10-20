@@ -242,21 +242,21 @@ No SQL migration. Tests create auth users and probe rows in the local database. 
 
 #### Automated
 
-- [x] 2.1 `npm test` exits 0 without a hand-started preview, and `tests/isolation-access-http.test.ts` uses `redirect: "manual"` to assert signed-out `GET /dashboard` is 302 to `/auth/signin` with a body that does not contain `This page is only for authenticated users.`, signed-out `GET /api/isolation/probes` is 401 and its body does not contain the note this run inserted, the owner's list is 200 and contains that note, user B's list is 200 and does not contain that note, and user B's `GET /api/isolation/probes/<id>` is 404 and its body does not contain that note
-- [x] 2.2 `npm run lint` exits 0
-- [x] 2.3 `npx astro check` exits 0
+- [x] 2.1 `npm test` exits 0 without a hand-started preview, and `tests/isolation-access-http.test.ts` uses `redirect: "manual"` to assert signed-out `GET /dashboard` is 302 to `/auth/signin` with a body that does not contain `This page is only for authenticated users.`, signed-out `GET /api/isolation/probes` is 401 and its body does not contain the note this run inserted, the owner's list is 200 and contains that note, user B's list is 200 and does not contain that note, and user B's `GET /api/isolation/probes/<id>` is 404 and its body does not contain that note — 6c1f7bc
+- [x] 2.2 `npm run lint` exits 0 — 6c1f7bc
+- [x] 2.3 `npx astro check` exits 0 — 6c1f7bc
 
 #### Manual
 
-- [x] 2.4 Confirm `.github/workflows/ci.yml` and `scripts/smoke.mjs` have no edits from this phase, and the HTTP test issues separate requests for `/dashboard` and `/api/isolation/probes`
+- [x] 2.4 Confirm `.github/workflows/ci.yml` and `scripts/smoke.mjs` have no edits from this phase, and the HTTP test issues separate requests for `/dashboard` and `/api/isolation/probes` — 6c1f7bc
 
 ### Phase 3: Cookbook patterns in §6
 
 #### Automated
 
-- [ ] 3.1 `context/foundation/test-plan.md` §6.1, §6.2, and §6.6 describe the shipped runner, the session select without a `user_id` predicate, and the HTTP gates, including the note-absence assertions
-- [ ] 3.2 The diff to `context/foundation/test-plan.md` does not change §1–§5, §6.3–§6.5, or §7
+- [x] 3.1 `context/foundation/test-plan.md` §6.1, §6.2, and §6.6 describe the shipped runner, the session select without a `user_id` predicate, and the HTTP gates, including the note-absence assertions
+- [x] 3.2 The diff to `context/foundation/test-plan.md` does not change §1–§5, §6.3–§6.5, or §7
 
 #### Manual
 
-- [ ] 3.3 Read §6.2 and confirm it names these avoided proofs: a mocked ownership check, HTTP 200 alone, `ENABLE ROW LEVEL SECURITY` alone, a bare 401, a sign-in page test, and treating the dashboard redirect as coverage of `/api/isolation`
+- [x] 3.3 Read §6.2 and confirm it names these avoided proofs: a mocked ownership check, HTTP 200 alone, `ENABLE ROW LEVEL SECURITY` alone, a bare 401, a sign-in page test, and treating the dashboard redirect as coverage of `/api/isolation`
