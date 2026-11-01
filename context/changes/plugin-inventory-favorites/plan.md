@@ -28,3 +28,4 @@ A signed-in producer adds, edits, and deletes owned plugins with a name and a ty
 - [x] Migration with RLS and four owner policies
 - [x] Routes, page, and navigation
 - [x] Two-user HTTP proof, lint, and type check
+- [x] Manual browser check of `/plugins`, confirmed by the project owner on 2026-11-01
