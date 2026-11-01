@@ -1,0 +1,19 @@
+{
+  "version": 1,
+  "hooks": {
+    "postToolUse": [
+      {
+        "command": "node .cursor/hooks/lint-edited-file.mjs",
+        "matcher": "Write",
+        "timeout": 30
+      }
+    ],
+    "stop": [
+      {
+        "command": "node .cursor/hooks/end-of-turn.mjs",
+        "timeout": 180,
+        "loop_limit": 1
+      }
+    ]
+  }
+}
