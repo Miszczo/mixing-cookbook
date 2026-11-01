@@ -23,12 +23,17 @@ export const POST: APIRoute = async (context) => {
     return Response.json({ error: "not_found" }, { status: 404 });
   }
 
-  const form = await context.request.formData();
+  let form: FormData | null;
+  try {
+    form = await context.request.formData();
+  } catch {
+    form = null;
+  }
   const table = supabase.from("plugins");
   const now = new Date().toISOString();
   let query;
 
-  switch (form.get("action")) {
+  switch (form?.get("action")) {
     case "update": {
       const parsed = pluginInputSchema.safeParse({ name: form.get("name"), plugin_type: form.get("plugin_type") });
       if (!parsed.success) {

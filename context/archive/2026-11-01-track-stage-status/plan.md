@@ -2,6 +2,8 @@
 
 Roadmap S-03. PRD: FR-010.
 
+> Note: this plan was written alongside the code, without a `/10x-plan` session.
+
 ## Outcome
 
 A signed-in producer creates a track with a name and a stage on `/tracks`, opens it at `/tracks/[id]`, and edits both fields. S-04 places the recipe card on that page.
@@ -16,10 +18,11 @@ A signed-in producer creates a track with a name and a stage on `/tracks`, opens
 
 ## Proof
 
-`tests/plugins-tracks-http.test.ts` covers the anonymous redirect, rejected input that keeps typed text, create, edit after a fresh read, and another user's read and edit attempts.
+`tests/plugins-tracks-http.test.ts` covers the anonymous redirect, a rejected create that keeps typed text, create, edit after a fresh read, and another user's read and edit attempts.
 
 ## Progress
 
 - [x] Migration with RLS and owner policies
 - [x] Routes and pages
 - [x] Two-user HTTP proof, lint, and type check
+- [x] Manual browser check of `/tracks`, confirmed by the project owner on 2026-11-01

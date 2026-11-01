@@ -15,11 +15,16 @@ export const POST: APIRoute = async (context) => {
     return Response.json({ error: "service_unavailable" }, { status: 503 });
   }
 
-  const form = await context.request.formData();
-  const name = form.get("name");
-  const parsed = pluginInputSchema.safeParse({ name, plugin_type: form.get("plugin_type") });
+  let form: FormData | null;
+  try {
+    form = await context.request.formData();
+  } catch {
+    form = null;
+  }
+  const name = form?.get("name");
+  const parsed = pluginInputSchema.safeParse({ name, plugin_type: form?.get("plugin_type") });
   if (!parsed.success) {
-    const typed = typeof name === "string" ? name.slice(0, 100) : "";
+    const typed = typeof name === "string" ? Array.from(name).slice(0, 100).join("") : "";
     return context.redirect(`/plugins?error=invalid_plugin&name=${encodeURIComponent(typed)}`, 303);
   }
 
