@@ -1,7 +1,7 @@
 ---
 change_id: primary-daw-profile
 title: Primary daw profile
-status: implemented
+status: impl_reviewed
 created: 2026-10-20
 updated: 2026-11-01
 archived_at: null
