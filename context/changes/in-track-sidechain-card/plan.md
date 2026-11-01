@@ -307,18 +307,18 @@ The migration only adds a table. Existing tracks have no row until the first act
 
 #### Automated
 
-- [x] 1.1 `npx vitest run tests/recipe-tool-selection.test.ts` passes
-- [x] 1.2 `npm run lint` passes
-- [x] 1.3 `npx astro check` passes
+- [x] 1.1 `npx vitest run tests/recipe-tool-selection.test.ts` passes — 51b7742
+- [x] 1.2 `npm run lint` passes — 51b7742
+- [x] 1.3 `npx astro check` passes — 51b7742
 
 ### Phase 2: Stored progress
 
 #### Automated
 
-- [ ] 2.1 Local Supabase applies the migration: `npx supabase migration up --local`
-- [ ] 2.2 `npx vitest run tests/recipe-progress-rls.test.ts` passes
-- [ ] 2.3 `npm run lint` passes
-- [ ] 2.4 `npx astro check` passes
+- [x] 2.1 Local Supabase applies the migration: `npx supabase migration up --local`
+- [x] 2.2 `npx vitest run tests/recipe-progress-rls.test.ts` passes
+- [x] 2.3 `npm run lint` passes
+- [x] 2.4 `npx astro check` passes
 
 ### Phase 3: Card on the track page
 
