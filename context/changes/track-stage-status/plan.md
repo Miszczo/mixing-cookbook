@@ -25,3 +25,4 @@ A signed-in producer creates a track with a name and a stage on `/tracks`, opens
 - [x] Migration with RLS and owner policies
 - [x] Routes and pages
 - [x] Two-user HTTP proof, lint, and type check
+- [x] Manual browser check of `/tracks`, confirmed by the project owner on 2026-11-01
