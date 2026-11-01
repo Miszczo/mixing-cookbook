@@ -45,7 +45,7 @@ Przepis miksowy powinien być kontekstowy: połączenie intencji, posiadanych pl
 | ----- | ----------------------------- | --------------------------------------------------------- | ----------------------- | ------------------------- | -------- |
 | F-01  | per-user-row-isolation        | (foundation) per-user row isolation for new app data      | —                       | FR-001                    | done |
 | S-01  | primary-daw-profile           | sign in and choose a primary DAW                          | F-01                    | FR-001, FR-002            | done |
-| S-02  | plugin-inventory-favorites    | add, edit, and delete plugins, and mark favorites         | F-01                    | FR-003, FR-004            | in-progress |
+| S-02  | plugin-inventory-favorites    | add, edit, and delete plugins, and mark favorites         | F-01                    | FR-003, FR-004            | done |
 | S-03  | track-stage-status            | create and edit a track with a name and stage             | F-01                    | FR-010                    | in-progress |
 | S-04  | in-track-sidechain-card       | get a matched sidechain recipe card inside a Miks track   | S-01, S-02, S-03        | US-01, FR-008, FR-009, FR-011 | proposed |
 | S-05  | author-recipe-with-screenshot | save an own recipe with checklist and screenshot          | F-01                    | FR-006, FR-007            | ready |
@@ -114,7 +114,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Catalog fields stay limited to what matching needs; an empty inventory is valid and is what S-04's native fallback is for.
-- **Status:** in-progress
+- **Status:** done
 
 ### S-03: Track name and stage
 
@@ -218,3 +218,4 @@ None. The PRD lists no open questions, and sequencing did not add a cross-slice 
 | ---------- | ---------------------- | -------- | ---- |
 | F-01 | per-user-row-isolation | 2026-11-01 | (foundation) New application rows are stored so a signed-in user can read and write only their own; product tables are still created by the first slice that needs each one. Archived to `context/archive/2026-09-23-per-user-row-isolation/`. Lesson: —. |
 | S-01       | primary-daw-profile          | 2026-11-01 | User can sign in and choose a primary DAW. Archived to `context/archive/2026-10-20-primary-daw-profile/`. Lesson: —. |
+| S-02 | plugin-inventory-favorites | 2026-11-01 | User can add, edit, and delete owned plugins with a name and a type, and can mark favorites. Archived to `context/archive/2026-11-01-plugin-inventory-favorites/`. Lesson: —. |
