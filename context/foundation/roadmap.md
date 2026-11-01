@@ -3,7 +3,7 @@ project: "Sound Intent & Mixing Cookbook CMS"
 version: 1
 status: draft
 created: 2026-09-23
-updated: 2026-09-23
+updated: 2026-10-20
 prd_version: 1
 main_goal: speed
 top_blocker: capacity
@@ -43,12 +43,12 @@ Przepis miksowy powinien być kontekstowy: połączenie intencji, posiadanych pl
 
 | ID    | Change ID                     | Outcome (user can …)                                      | Prerequisites           | PRD refs                  | Status   |
 | ----- | ----------------------------- | --------------------------------------------------------- | ----------------------- | ------------------------- | -------- |
-| F-01  | per-user-row-isolation        | (foundation) per-user row isolation for new app data      | —                       | FR-001                    | in-progress |
-| S-01  | primary-daw-profile           | sign in and choose a primary DAW                          | F-01                    | FR-001, FR-002            | proposed |
-| S-02  | plugin-inventory-favorites    | add, edit, and delete plugins, and mark favorites         | F-01                    | FR-003, FR-004            | proposed |
-| S-03  | track-stage-status            | create and edit a track with a name and stage             | F-01                    | FR-010                    | proposed |
+| F-01  | per-user-row-isolation        | (foundation) per-user row isolation for new app data      | —                       | FR-001                    | done |
+| S-01  | primary-daw-profile           | sign in and choose a primary DAW                          | F-01                    | FR-001, FR-002            | in-progress |
+| S-02  | plugin-inventory-favorites    | add, edit, and delete plugins, and mark favorites         | F-01                    | FR-003, FR-004            | ready |
+| S-03  | track-stage-status            | create and edit a track with a name and stage             | F-01                    | FR-010                    | ready |
 | S-04  | in-track-sidechain-card       | get a matched sidechain recipe card inside a Miks track   | S-01, S-02, S-03        | US-01, FR-008, FR-009, FR-011 | proposed |
-| S-05  | author-recipe-with-screenshot | save an own recipe with checklist and screenshot          | F-01                    | FR-006, FR-007            | proposed |
+| S-05  | author-recipe-with-screenshot | save an own recipe with checklist and screenshot          | F-01                    | FR-006, FR-007            | ready |
 | S-06  | search-recipes-by-intent      | search and filter starter and own recipes by intent       | S-04, S-05              | FR-005                    | proposed |
 | S-07  | track-listening-notes         | add a listening note to a track and read them in order    | S-03                    | US-01, FR-012, FR-013     | proposed |
 
@@ -88,7 +88,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Sequenced first because every later slice stores private data and the baseline has no application tables; the isolation rule is fixed once here so those slices do not invent their own.
-- **Status:** in-progress
+- **Status:** done
 
 ## Slices
 
@@ -102,7 +102,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Sign-in already exists, so this slice only adds the DAW choice; without it the native fallback in S-04 has nothing to name.
-- **Status:** proposed
+- **Status:** in-progress
 
 ### S-02: Plugin inventory and favorites
 
@@ -114,7 +114,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Catalog fields stay limited to what matching needs; an empty inventory is valid and is what S-04's native fallback is for.
-- **Status:** proposed
+- **Status:** ready
 
 ### S-03: Track name and stage
 
@@ -126,7 +126,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** The card in S-04 and the listening note in S-07 both need a track; stage is enough, and tempo or genre stay out.
-- **Status:** proposed
+- **Status:** ready
 
 ### S-04: Sidechain recipe card inside a track
 
@@ -152,7 +152,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Authoring can run beside the card because the starter recipe already proves S-04; image upload starts here, where the user first supplies a file.
-- **Status:** proposed
+- **Status:** ready
 
 ### S-06: Search recipes by intent
 
@@ -182,12 +182,12 @@ Foundations below assume these are present and do NOT re-scaffold them.
 
 | Roadmap ID | Change ID                     | Suggested issue title                                      | Ready for `/10x-plan` | Notes                                      |
 | ---------- | ----------------------------- | ---------------------------------------------------------- | --------------------- | ------------------------------------------ |
-| F-01       | per-user-row-isolation        | Isolate each signed-in user's application rows             | yes                   | Run `/10x-plan per-user-row-isolation`     |
-| S-01       | primary-daw-profile           | Let the user choose a primary DAW                          | no                    | After F-01                                 |
-| S-02       | plugin-inventory-favorites    | Let the user catalog plugins and mark favorites            | no                    | After F-01; parallel with S-01 and S-03    |
-| S-03       | track-stage-status            | Let the user create a track with a stage                   | no                    | After F-01; parallel with S-01 and S-02    |
+| F-01       | per-user-row-isolation        | Isolate each signed-in user's application rows             | no                    | Implemented and impl-reviewed; not archived |
+| S-01       | primary-daw-profile           | Let the user choose a primary DAW                          | yes                   | F-01 is done                               |
+| S-02       | plugin-inventory-favorites    | Let the user catalog plugins and mark favorites            | yes                   | F-01 is done; parallel with S-01 and S-03  |
+| S-03       | track-stage-status            | Let the user create a track with a stage                   | yes                   | F-01 is done; parallel with S-01 and S-02  |
 | S-04       | in-track-sidechain-card       | Show a matched sidechain recipe card inside a Miks track   | no                    | After S-01, S-02, and S-03                 |
-| S-05       | author-recipe-with-screenshot | Let the user save a recipe with a checklist and screenshot | no                    | After F-01; parallel with the card path    |
+| S-05       | author-recipe-with-screenshot | Let the user save a recipe with a checklist and screenshot | yes                   | F-01 is done; parallel with the card path  |
 | S-06       | search-recipes-by-intent      | Let the user search recipes by intent                      | no                    | After S-04 and S-05                        |
 | S-07       | track-listening-notes         | Let the user keep ordered listening notes on a track       | no                    | After S-03; parallel with the card path    |
 
@@ -214,4 +214,6 @@ None. The PRD lists no open questions, and sequencing did not add a cross-slice 
 
 ## Done
 
-(Empty on first generation. `/10x-archive` appends an entry here when a change whose Change ID matches an item is archived.)
+| Roadmap ID | Change ID              | Archived | Note |
+| ---------- | ---------------------- | -------- | ---- |
+| F-01       | per-user-row-isolation | no       | Phases 1–3 checked; impl-review findings marked fixed. Status set to `done` on 2026-09-27. Folder is still `impl_reviewed`, not archived. |
