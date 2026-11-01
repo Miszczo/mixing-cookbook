@@ -47,7 +47,7 @@ Przepis miksowy powinien być kontekstowy: połączenie intencji, posiadanych pl
 | S-01  | primary-daw-profile           | sign in and choose a primary DAW                          | F-01                    | FR-001, FR-002            | done |
 | S-02  | plugin-inventory-favorites    | add, edit, and delete plugins, and mark favorites         | F-01                    | FR-003, FR-004            | done |
 | S-03  | track-stage-status            | create and edit a track with a name and stage             | F-01                    | FR-010                    | done |
-| S-04  | in-track-sidechain-card       | get a matched sidechain recipe card inside a Miks track   | S-01, S-02, S-03        | US-01, FR-008, FR-009, FR-011 | proposed |
+| S-04  | in-track-sidechain-card       | get a matched sidechain recipe card inside a Miks track   | S-01, S-02, S-03        | US-01, FR-008, FR-009, FR-011 | in-progress |
 | S-05  | author-recipe-with-screenshot | save an own recipe with checklist and screenshot          | F-01                    | FR-006, FR-007            | ready |
 | S-06  | search-recipes-by-intent      | search and filter starter and own recipes by intent       | S-04, S-05              | FR-005                    | proposed |
 | S-07  | track-listening-notes         | add a listening note to a track and read them in order    | S-03                    | US-01, FR-012, FR-013     | proposed |
@@ -140,7 +140,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
   - Which DAW names and native-tool labels belong in the first fallback map — Owner: user. Block: no.
   - Checklist text and settings screenshot for the starter "Sidechain stopy z basem" recipe — Owner: user. Block: no.
 - **Risk:** This is the earliest slice that exercises matching; own-recipe authoring is not a prerequisite, so a starter recipe is seeded here rather than waiting on S-05.
-- **Status:** proposed
+- **Status:** in-progress
 
 ### S-05: Author a recipe with a screenshot
 
