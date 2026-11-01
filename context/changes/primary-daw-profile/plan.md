@@ -264,9 +264,9 @@ The migration is forward-only. Existing accounts get no backfill. A missing row 
 
 #### Manual
 
-- [x] Signed-in dashboard shows "No primary DAW is set." and saving Ableton Live then refreshing shows "Primary DAW: Ableton Live" (HTTP test, not checked in a browser)
-- [x] Saving FL Studio replaces the label, and the page offers no way to clear the choice (HTTP test, not checked in a browser)
-- [x] Submitting "Choose a DAW" leaves the profile unset and shows "Choose a primary DAW." (HTTP test, not checked in a browser)
+- [x] 2.3 Signed-in dashboard shows "No primary DAW is set." and saving Ableton Live then refreshing shows "Primary DAW: Ableton Live" (HTTP test, not checked in a browser)
+- [x] 2.4 Saving FL Studio replaces the label, and the page offers no way to clear the choice (HTTP test, not checked in a browser)
+- [x] 2.5 Submitting "Choose a DAW" leaves the profile unset and shows "Choose a primary DAW." (HTTP test, not checked in a browser)
 
 ### Phase 3: Two-user proof
 
@@ -278,4 +278,4 @@ The migration is forward-only. Existing accounts get no backfill. A missing row 
 
 #### Manual
 
-- [x] After the tests, a signed-in refresh of `/dashboard` still shows the last saved DAW label (HTTP test, not checked in a browser)
+- [x] 3.4 After the tests, a signed-in refresh of `/dashboard` still shows the last saved DAW label (HTTP test, not checked in a browser)

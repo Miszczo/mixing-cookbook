@@ -1,0 +1,32 @@
+---
+import Layout from "@/layouts/Layout.astro";
+
+interface Props {
+  title: string;
+}
+
+const { title } = Astro.props;
+const links = [
+  { href: "/dashboard", label: "Dashboard" },
+  { href: "/plugins", label: "Plugins" },
+  { href: "/tracks", label: "Tracks" },
+];
+---
+
+<Layout title={title}>
+  <div class="bg-cosmic min-h-screen p-4 text-white">
+    <div class="mx-auto max-w-3xl">
+      <nav aria-label="Main" class="mb-6 flex gap-4 rounded-xl border border-white/10 bg-white/5 px-4 py-2 text-sm">
+        {links.map((link) => (
+          <a href={link.href} class="text-purple-200 hover:text-white hover:underline">
+            {link.label}
+          </a>
+        ))}
+      </nav>
+      <main class="rounded-2xl border border-white/10 bg-white/10 p-6 backdrop-blur-xl">
+        <h1 class="mb-4 text-2xl font-bold">{title}</h1>
+        <slot />
+      </main>
+    </div>
+  </div>
+</Layout>

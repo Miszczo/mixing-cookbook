@@ -1,0 +1,113 @@
+---
+import { z } from "zod";
+import AppLayout from "@/layouts/AppLayout.astro";
+import { createClient } from "@/lib/supabase";
+import { PLUGIN_COLUMNS, PLUGIN_TYPES, pluginRowSchema } from "@/lib/plugins";
+
+const showInvalid = Astro.url.searchParams.get("error") === "invalid_plugin";
+const typedName = Astro.url.searchParams.get("name") ?? "";
+
+const supabase = createClient(Astro.request.headers, Astro.cookies);
+const result = supabase
+  ? await supabase
+      .from("plugins")
+      .select(PLUGIN_COLUMNS)
+      .order("is_favorite", { ascending: false })
+      .order("name", { ascending: true })
+  : null;
+const rows = z.array(pluginRowSchema).safeParse(result?.data);
+const plugins = result && !result.error && rows.success ? rows.data : null;
+
+const field = "rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm text-white [&>option]:text-black";
+const button = "rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm transition-colors hover:bg-white/20";
+---
+
+<AppLayout title="Plugins">
+  <form method="POST" action="/api/plugins" class="flex flex-col gap-2 sm:flex-row">
+    <label class="sr-only" for="plugin-name">
+      Plugin name
+    </label>
+    <input
+      id="plugin-name"
+      name="name"
+      required
+      maxlength="100"
+      placeholder="Plugin name"
+      value={typedName}
+      class:list={[field, "grow"]}
+    />
+    <label class="sr-only" for="plugin-type">
+      Plugin type
+    </label>
+    <select id="plugin-type" name="plugin_type" class:list={field}>
+      {PLUGIN_TYPES.map((type) => (
+        <option value={type.id}>{type.label}</option>
+      ))}
+    </select>
+    <button type="submit" class:list={button}>
+      Add plugin
+    </button>
+  </form>
+  {showInvalid && (
+    <p role="alert" class="mt-2 text-sm text-red-200">
+      Enter a plugin name up to 100 characters and choose a type.
+    </p>
+  )}
+
+  {!plugins ? (
+    <p role="alert" class="mt-6">
+      Plugins could not be loaded.
+    </p>
+  ) : plugins.length === 0 ? (
+    <p class="mt-6 text-blue-100/80">No plugins yet. Recipes will use your DAW's native tools until you add some.</p>
+  ) : (
+    <ul class="mt-6 flex flex-col gap-3">
+      {plugins.map((plugin) => (
+        <li class="flex flex-col gap-2 rounded-xl border border-white/10 bg-white/5 p-3">
+          <form method="POST" action={`/api/plugins/${plugin.id}`} class="flex flex-col gap-2 sm:flex-row">
+            <input type="hidden" name="action" value="update" />
+            <label class="sr-only" for={`name-${plugin.id}`}>
+              Name
+            </label>
+            <input
+              id={`name-${plugin.id}`}
+              name="name"
+              required
+              maxlength="100"
+              value={plugin.name}
+              class:list={[field, "grow"]}
+            />
+            <label class="sr-only" for={`type-${plugin.id}`}>
+              Type
+            </label>
+            <select id={`type-${plugin.id}`} name="plugin_type" class:list={field}>
+              {PLUGIN_TYPES.map((type) => (
+                <option value={type.id} selected={type.id === plugin.plugin_type}>
+                  {type.label}
+                </option>
+              ))}
+            </select>
+            <button type="submit" class:list={button}>
+              Save
+            </button>
+          </form>
+          <div class="flex gap-2">
+            <form method="POST" action={`/api/plugins/${plugin.id}`}>
+              <input type="hidden" name="action" value="favorite" />
+              <input type="hidden" name="is_favorite" value={plugin.is_favorite ? "false" : "true"} />
+              <button type="submit" class:list={button} aria-pressed={plugin.is_favorite ? "true" : "false"}>
+                {plugin.is_favorite ? "★ Favorite" : "☆ Mark favorite"}
+              </button>
+            </form>
+            <form method="POST" action={`/api/plugins/${plugin.id}`}>
+              <input type="hidden" name="action" value="delete" />
+              <button type="submit" class:list={button}>
+                Delete
+              </button>
+            </form>
+          </div>
+        </li>
+      ))}
+    </ul>
+  )}
+</AppLayout>

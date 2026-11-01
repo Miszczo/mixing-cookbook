@@ -1,0 +1,74 @@
+---
+import { z } from "zod";
+import AppLayout from "@/layouts/AppLayout.astro";
+import { createClient } from "@/lib/supabase";
+import { TRACK_COLUMNS, TRACK_STAGES, trackRowSchema, trackStageLabel } from "@/lib/tracks";
+
+const showInvalid = Astro.url.searchParams.get("error") === "invalid_track";
+const typedName = Astro.url.searchParams.get("name") ?? "";
+
+const supabase = createClient(Astro.request.headers, Astro.cookies);
+const result = supabase
+  ? await supabase.from("tracks").select(TRACK_COLUMNS).order("created_at", { ascending: false })
+  : null;
+const rows = z.array(trackRowSchema).safeParse(result?.data);
+const tracks = result && !result.error && rows.success ? rows.data : null;
+
+const field = "rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm text-white [&>option]:text-black";
+const button = "rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm transition-colors hover:bg-white/20";
+---
+
+<AppLayout title="Tracks">
+  <form method="POST" action="/api/tracks" class="flex flex-col gap-2 sm:flex-row">
+    <label class="sr-only" for="track-name">
+      Track name
+    </label>
+    <input
+      id="track-name"
+      name="name"
+      required
+      maxlength="100"
+      placeholder="Track name"
+      value={typedName}
+      class:list={[field, "grow"]}
+    />
+    <label class="sr-only" for="track-stage">
+      Stage
+    </label>
+    <select id="track-stage" name="stage" class:list={field}>
+      {TRACK_STAGES.map((stage) => (
+        <option value={stage.id}>{stage.label}</option>
+      ))}
+    </select>
+    <button type="submit" class:list={button}>
+      Add track
+    </button>
+  </form>
+  {showInvalid && (
+    <p role="alert" class="mt-2 text-sm text-red-200">
+      Enter a track name up to 100 characters and choose a stage.
+    </p>
+  )}
+
+  {!tracks ? (
+    <p role="alert" class="mt-6">
+      Tracks could not be loaded.
+    </p>
+  ) : tracks.length === 0 ? (
+    <p class="mt-6 text-blue-100/80">No tracks yet.</p>
+  ) : (
+    <ul class="mt-6 flex flex-col gap-2">
+      {tracks.map((track) => (
+        <li>
+          <a
+            href={`/tracks/${track.id}`}
+            class="flex justify-between rounded-xl border border-white/10 bg-white/5 p-3 hover:bg-white/10"
+          >
+            <span class="font-semibold">{track.name}</span>
+            <span class="text-blue-100/80">{trackStageLabel(track.stage)}</span>
+          </a>
+        </li>
+      ))}
+    </ul>
+  )}
+</AppLayout>

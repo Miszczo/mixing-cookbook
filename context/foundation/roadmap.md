@@ -44,9 +44,9 @@ Przepis miksowy powinien być kontekstowy: połączenie intencji, posiadanych pl
 | ID    | Change ID                     | Outcome (user can …)                                      | Prerequisites           | PRD refs                  | Status   |
 | ----- | ----------------------------- | --------------------------------------------------------- | ----------------------- | ------------------------- | -------- |
 | F-01  | per-user-row-isolation        | (foundation) per-user row isolation for new app data      | —                       | FR-001                    | done |
-| S-01  | primary-daw-profile           | sign in and choose a primary DAW                          | F-01                    | FR-001, FR-002            | in-progress |
-| S-02  | plugin-inventory-favorites    | add, edit, and delete plugins, and mark favorites         | F-01                    | FR-003, FR-004            | ready |
-| S-03  | track-stage-status            | create and edit a track with a name and stage             | F-01                    | FR-010                    | ready |
+| S-01  | primary-daw-profile           | sign in and choose a primary DAW                          | F-01                    | FR-001, FR-002            | done |
+| S-02  | plugin-inventory-favorites    | add, edit, and delete plugins, and mark favorites         | F-01                    | FR-003, FR-004            | done |
+| S-03  | track-stage-status            | create and edit a track with a name and stage             | F-01                    | FR-010                    | done |
 | S-04  | in-track-sidechain-card       | get a matched sidechain recipe card inside a Miks track   | S-01, S-02, S-03        | US-01, FR-008, FR-009, FR-011 | proposed |
 | S-05  | author-recipe-with-screenshot | save an own recipe with checklist and screenshot          | F-01                    | FR-006, FR-007            | ready |
 | S-06  | search-recipes-by-intent      | search and filter starter and own recipes by intent       | S-04, S-05              | FR-005                    | proposed |
@@ -102,7 +102,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Sign-in already exists, so this slice only adds the DAW choice; without it the native fallback in S-04 has nothing to name.
-- **Status:** in-progress
+- **Status:** done
 
 ### S-02: Plugin inventory and favorites
 
@@ -114,7 +114,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Catalog fields stay limited to what matching needs; an empty inventory is valid and is what S-04's native fallback is for.
-- **Status:** ready
+- **Status:** done
 
 ### S-03: Track name and stage
 
@@ -126,7 +126,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** The card in S-04 and the listening note in S-07 both need a track; stage is enough, and tempo or genre stay out.
-- **Status:** ready
+- **Status:** done
 
 ### S-04: Sidechain recipe card inside a track
 

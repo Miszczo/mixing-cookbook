@@ -1,0 +1,57 @@
+---
+import { z } from "zod";
+import AppLayout from "@/layouts/AppLayout.astro";
+import { createClient } from "@/lib/supabase";
+import { TRACK_COLUMNS, TRACK_STAGES, trackRowSchema } from "@/lib/tracks";
+
+const id = z.uuid().safeParse(Astro.params.id);
+const supabase = createClient(Astro.request.headers, Astro.cookies);
+const result =
+  id.success && supabase ? await supabase.from("tracks").select(TRACK_COLUMNS).eq("id", id.data).maybeSingle() : null;
+
+const parsed = trackRowSchema.safeParse(result?.data);
+const track = parsed.success ? parsed.data : null;
+const loadFailed = Boolean(result?.error);
+if (!track) {
+  Astro.response.status = loadFailed ? 500 : 404;
+}
+
+const showInvalid = Astro.url.searchParams.get("error") === "invalid_track";
+const field = "rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm text-white [&>option]:text-black";
+const button = "rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm transition-colors hover:bg-white/20";
+---
+
+<AppLayout title={track?.name ?? (loadFailed ? "Track could not be loaded" : "Track not found")}>
+  {track ? (
+    <>
+      <form method="POST" action={`/api/tracks/${track.id}`} class="flex flex-col gap-2 sm:flex-row">
+        <label class="sr-only" for="track-name">
+          Track name
+        </label>
+        <input id="track-name" name="name" required maxlength="100" value={track.name} class:list={[field, "grow"]} />
+        <label class="sr-only" for="track-stage">
+          Stage
+        </label>
+        <select id="track-stage" name="stage" class:list={field}>
+          {TRACK_STAGES.map((stage) => (
+            <option value={stage.id} selected={stage.id === track.stage}>
+              {stage.label}
+            </option>
+          ))}
+        </select>
+        <button type="submit" class:list={button}>
+          Save
+        </button>
+      </form>
+      {showInvalid && (
+        <p role="alert" class="mt-2 text-sm text-red-200">
+          Enter a track name up to 100 characters and choose a stage.
+        </p>
+      )}
+    </>
+  ) : (
+    <a href="/tracks" class="text-purple-200 hover:text-white hover:underline">
+      Back to tracks
+    </a>
+  )}
+</AppLayout>

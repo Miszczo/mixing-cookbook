@@ -65,6 +65,15 @@ const loadFailed = !profile || Boolean(profile.error) || (storedId !== undefined
         )}
       </section>
 
+      <nav aria-label="Main" class="mt-6 flex justify-center gap-4 text-sm">
+        <a href="/plugins" class="text-purple-200 hover:text-white hover:underline">
+          Plugins
+        </a>
+        <a href="/tracks" class="text-purple-200 hover:text-white hover:underline">
+          Tracks
+        </a>
+      </nav>
+
       <form method="POST" action="/api/auth/signout" class="mt-6">
         <button
           type="submit"
