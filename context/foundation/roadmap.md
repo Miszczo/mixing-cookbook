@@ -46,7 +46,7 @@ Przepis miksowy powinien być kontekstowy: połączenie intencji, posiadanych pl
 | F-01  | per-user-row-isolation        | (foundation) per-user row isolation for new app data      | —                       | FR-001                    | done |
 | S-01  | primary-daw-profile           | sign in and choose a primary DAW                          | F-01                    | FR-001, FR-002            | done |
 | S-02  | plugin-inventory-favorites    | add, edit, and delete plugins, and mark favorites         | F-01                    | FR-003, FR-004            | done |
-| S-03  | track-stage-status            | create and edit a track with a name and stage             | F-01                    | FR-010                    | in-progress |
+| S-03  | track-stage-status            | create and edit a track with a name and stage             | F-01                    | FR-010                    | done |
 | S-04  | in-track-sidechain-card       | get a matched sidechain recipe card inside a Miks track   | S-01, S-02, S-03        | US-01, FR-008, FR-009, FR-011 | proposed |
 | S-05  | author-recipe-with-screenshot | save an own recipe with checklist and screenshot          | F-01                    | FR-006, FR-007            | ready |
 | S-06  | search-recipes-by-intent      | search and filter starter and own recipes by intent       | S-04, S-05              | FR-005                    | proposed |
@@ -126,7 +126,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** The card in S-04 and the listening note in S-07 both need a track; stage is enough, and tempo or genre stay out.
-- **Status:** in-progress
+- **Status:** done
 
 ### S-04: Sidechain recipe card inside a track
 
@@ -219,3 +219,4 @@ None. The PRD lists no open questions, and sequencing did not add a cross-slice 
 | F-01 | per-user-row-isolation | 2026-11-01 | (foundation) New application rows are stored so a signed-in user can read and write only their own; product tables are still created by the first slice that needs each one. Archived to `context/archive/2026-09-23-per-user-row-isolation/`. Lesson: —. |
 | S-01       | primary-daw-profile          | 2026-11-01 | User can sign in and choose a primary DAW. Archived to `context/archive/2026-10-20-primary-daw-profile/`. Lesson: —. |
 | S-02 | plugin-inventory-favorites | 2026-11-01 | User can add, edit, and delete owned plugins with a name and a type, and can mark favorites. Archived to `context/archive/2026-11-01-plugin-inventory-favorites/`. Lesson: —. |
+| S-03 | track-stage-status | 2026-11-01 | User can create and edit a track with a name and a stage such as Aranż, Miks, or Master. Archived to `context/archive/2026-11-01-track-stage-status/`. Lesson: —. |
