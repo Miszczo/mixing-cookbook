@@ -11,7 +11,7 @@ const result =
 
 const parsed = trackRowSchema.safeParse(result?.data);
 const track = parsed.success ? parsed.data : null;
-const loadFailed = Boolean(result?.error);
+const loadFailed = Boolean(result?.error) || (Boolean(result?.data) && !parsed.success);
 if (!track) {
   Astro.response.status = loadFailed ? 500 : 404;
 }

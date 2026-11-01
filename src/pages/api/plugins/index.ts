@@ -24,7 +24,7 @@ export const POST: APIRoute = async (context) => {
   const name = form?.get("name");
   const parsed = pluginInputSchema.safeParse({ name, plugin_type: form?.get("plugin_type") });
   if (!parsed.success) {
-    const typed = typeof name === "string" ? name.slice(0, 100) : "";
+    const typed = typeof name === "string" ? Array.from(name).slice(0, 100).join("") : "";
     return context.redirect(`/plugins?error=invalid_plugin&name=${encodeURIComponent(typed)}`, 303);
   }
 

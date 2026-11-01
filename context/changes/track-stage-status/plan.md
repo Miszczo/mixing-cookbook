@@ -18,7 +18,7 @@ A signed-in producer creates a track with a name and a stage on `/tracks`, opens
 
 ## Proof
 
-`tests/plugins-tracks-http.test.ts` covers the anonymous redirect, rejected input that keeps typed text, create, edit after a fresh read, and another user's read and edit attempts.
+`tests/plugins-tracks-http.test.ts` covers the anonymous redirect, a rejected create that keeps typed text, create, edit after a fresh read, and another user's read and edit attempts.
 
 ## Progress
 

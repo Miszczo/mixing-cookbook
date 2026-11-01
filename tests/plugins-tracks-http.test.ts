@@ -53,6 +53,12 @@ describe("plugins and tracks", () => {
     expect(afterRejected.body).toContain('value="Typed name"');
     expect(afterRejected.body).toContain("No plugins yet.");
 
+    const splitEmoji = await request(origin, owner, "/api/plugins", {
+      method: "POST",
+      form: { name: `${"a".repeat(99)}😀`, plugin_type: "compressor" },
+    });
+    expect(splitEmoji.status).toBe(303);
+
     const created = await request(origin, owner, "/api/plugins", {
       method: "POST",
       form: { name, plugin_type: "compressor" },
@@ -107,6 +113,9 @@ describe("plugins and tracks", () => {
     const anonymousPage = await request(origin, anonymous, "/tracks");
     expect(anonymousPage.status).toBe(302);
     expect(anonymousPage.locationPath).toBe("/auth/signin");
+    const anonymousForm = { method: "POST", form: { name, stage: "aranz" } };
+    expect((await request(origin, anonymous, "/api/tracks", anonymousForm)).status).toBe(401);
+    expect((await request(origin, anonymous, `/api/tracks/${missingUuid}`, anonymousForm)).status).toBe(401);
 
     const owner = new Map<string, string>();
     await signIn(origin, owner, `track-a-${stamp}@example.com`, password);
@@ -118,11 +127,26 @@ describe("plugins and tracks", () => {
     expect(rejected.status).toBe(303);
     expect((await request(origin, owner, rejected.location)).body).toContain('value="Typed track"');
 
+    const nonFormCreate = await request(origin, owner, "/api/tracks", { method: "POST", json: { name } });
+    expect(nonFormCreate.status).toBe(303);
+    expect(nonFormCreate.locationPath).toBe("/tracks");
+
+    const splitEmoji = await request(origin, owner, "/api/tracks", {
+      method: "POST",
+      form: { name: `${"a".repeat(99)}😀`, stage: "aranz" },
+    });
+    expect(splitEmoji.status).toBe(303);
+
     const created = await request(origin, owner, "/api/tracks", { method: "POST", form: { name, stage: "aranz" } });
     expect(created.status).toBe(303);
     const trackPath = created.location;
     expect(trackPath).toMatch(/^\/tracks\/[0-9a-f-]{36}$/);
     expect((await request(origin, owner, "/tracks")).body).toContain(name);
+    expect((await request(origin, owner, trackPath)).body).toMatch(/<option[^>]*value="aranz"[^>]*selected/);
+
+    const nonFormEdit = await request(origin, owner, `/api${trackPath}`, { method: "POST", json: { name } });
+    expect(nonFormEdit.status).toBe(303);
+    expect(nonFormEdit.locationPath).toBe(trackPath);
 
     const edited = await request(origin, owner, `/api${trackPath}`, {
       method: "POST",

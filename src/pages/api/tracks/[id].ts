@@ -22,8 +22,13 @@ export const POST: APIRoute = async (context) => {
     return Response.json({ error: "not_found" }, { status: 404 });
   }
 
-  const form = await context.request.formData();
-  const parsed = trackInputSchema.safeParse({ name: form.get("name"), stage: form.get("stage") });
+  let form: FormData | null;
+  try {
+    form = await context.request.formData();
+  } catch {
+    form = null;
+  }
+  const parsed = trackInputSchema.safeParse({ name: form?.get("name"), stage: form?.get("stage") });
   if (!parsed.success) {
     return context.redirect(`/tracks/${id.data}?error=invalid_track`, 303);
   }
