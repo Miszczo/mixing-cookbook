@@ -2,6 +2,8 @@
 
 Roadmap S-02. PRD: FR-003, FR-004.
 
+> Note: this plan was written alongside the code, without a `/10x-plan` session.
+
 ## Outcome
 
 A signed-in producer adds, edits, and deletes owned plugins with a name and a type on `/plugins`, and marks favorites. Favorites list first. This is the full CRUD resource for the project, and S-04 reads it for matching.

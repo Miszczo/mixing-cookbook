@@ -2,6 +2,8 @@
 
 Roadmap S-03. PRD: FR-010.
 
+> Note: this plan was written alongside the code, without a `/10x-plan` session.
+
 ## Outcome
 
 A signed-in producer creates a track with a name and a stage on `/tracks`, opens it at `/tracks/[id]`, and edits both fields. S-04 places the recipe card on that page.
