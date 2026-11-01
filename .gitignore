@@ -26,3 +26,17 @@ pnpm-debug.log*
 
 # jetbrains setting folder
 .idea/
+
+# private course lessons
+10xdevs-lessons
+
+# course toolkit installed by 10x-cli (restore: npx @przeprogramowani/10x-cli@latest get <lesson>)
+.cursor/skills
+.cursor/prompts
+.cursor/rules/10x-course.mdc
+.cursor/.10x-cli-manifest.json
+.10x-cli.json
+
+# local archives and scratch queries
+*.7z
+supabase/snippets/
