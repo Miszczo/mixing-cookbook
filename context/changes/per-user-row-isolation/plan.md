@@ -327,8 +327,8 @@ There is no application data to backfill. The migration is forward-only: once `s
 
 #### Automated
 
-- [x] 2.1 `npx astro check` passes — 7abbff2
-- [x] 2.2 `npm run lint` passes — 7abbff2
+- [x] 2.1 `npx astro check` passes — b7ae0a6
+- [x] 2.2 `npm run lint` passes — b7ae0a6
 
 
 
@@ -344,10 +344,10 @@ There is no application data to backfill. The migration is forward-only: once `s
 
 #### Automated
 
-- [x] 3.1 `BASE_URL=http://localhost:4321 npm run smoke` passes against preview and local Supabase — e80514c
+- [x] 3.1 `BASE_URL=http://localhost:4321 npm run smoke` passes against preview and local Supabase — 54fc34a
 
 
 
 #### Manual
 
-- [x] 3.2 Smoke log shows user B does not receive user A's probe id, both users receive `starter-visible`, and catalog POST returns `403` — e80514c
+- [x] 3.2 Smoke log shows user B does not receive user A's probe id, both users receive `starter-visible`, and catalog POST returns `403` — 54fc34a

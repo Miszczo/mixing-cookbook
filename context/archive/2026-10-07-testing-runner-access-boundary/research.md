@@ -1,7 +1,7 @@
 ---
 date: 2026-10-07T20:38:30+02:00
 researcher: Miszczo
-git_commit: 5a89d84c54d502b20f65af399f5e39c0fea08d79
+git_commit: cb541a8017cb1ef26cdbfff9e381cabef690028b
 branch: master
 repository: mixing-cookbook
 topic: "Ground test-plan Phase 1 access risks #1 and #4"
@@ -15,7 +15,7 @@ last_updated_by: Miszczo
 
 **Date**: 2026-10-07T20:38:30+02:00
 **Researcher**: Miszczo
-**Git Commit**: 5a89d84c54d502b20f65af399f5e39c0fea08d79
+**Git Commit**: cb541a8017cb1ef26cdbfff9e381cabef690028b
 **Branch**: master
 **Repository**: mixing-cookbook
 
@@ -141,5 +141,5 @@ No `research.md` files were found under `context/`. Not applicable.
 ## Open Questions
 
 - This session did not start Supabase or read `pg_policies`. Enforcement is the SQL file at the cited lines, not a live query result.
-- `git status --porcelain` for the cited source files was empty at commit `5a89d84c54d502b20f65af399f5e39c0fea08d79` on local `master`. This session did not check whether that commit is on the GitHub remote, so citations stay `file:line`.
+- `git status --porcelain` for the cited source files was empty at commit `cb541a8017cb1ef26cdbfff9e381cabef690028b` on local `master`. This session did not check whether that commit is on the GitHub remote, so citations stay `file:line`.
 - Whether a deployed `SUPABASE_KEY` is the anon key is not established beyond `README.md:104` and `:124`.

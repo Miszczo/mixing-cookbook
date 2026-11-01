@@ -230,33 +230,33 @@ No SQL migration. Tests create auth users and probe rows in the local database. 
 
 #### Automated
 
-- [x] 1.1 `npm test` exits 0 against local Supabase when `SUPABASE_URL` and `SUPABASE_KEY` are the anon key, and `tests/isolation-probes-rls.test.ts` shows user A's select of `id, note` contains the note this run inserted before it asserts user B's select of `id, note` with no `user_id` predicate does not contain that note — d89b596
-- [x] 1.2 `npm run lint` exits 0 — d89b596
-- [x] 1.3 `npx astro check` exits 0 — d89b596
+- [x] 1.1 `npm test` exits 0 against local Supabase when `SUPABASE_URL` and `SUPABASE_KEY` are the anon key, and `tests/isolation-probes-rls.test.ts` shows user A's select of `id, note` contains the note this run inserted before it asserts user B's select of `id, note` with no `user_id` predicate does not contain that note — 9f54471
+- [x] 1.2 `npm run lint` exits 0 — 9f54471
+- [x] 1.3 `npx astro check` exits 0 — 9f54471
 
 #### Manual
 
-- [x] 1.4 With `SUPABASE_URL` unset and the repo `.env` not supplying it, `npm test` exits non-zero and does not report skipped tests — d89b596
+- [x] 1.4 With `SUPABASE_URL` unset and the repo `.env` not supplying it, `npm test` exits non-zero and does not report skipped tests — 9f54471
 
 ### Phase 2: HTTP dashboard and probe gates
 
 #### Automated
 
-- [x] 2.1 `npm test` exits 0 without a hand-started preview, and `tests/isolation-access-http.test.ts` uses `redirect: "manual"` to assert signed-out `GET /dashboard` is 302 to `/auth/signin` with a body that does not contain `This page is only for authenticated users.`, signed-out `GET /api/isolation/probes` is 401 and its body does not contain the note this run inserted, the owner's list is 200 and contains that note, user B's list is 200 and does not contain that note, and user B's `GET /api/isolation/probes/<id>` is 404 and its body does not contain that note — 6c1f7bc
-- [x] 2.2 `npm run lint` exits 0 — 6c1f7bc
-- [x] 2.3 `npx astro check` exits 0 — 6c1f7bc
+- [x] 2.1 `npm test` exits 0 without a hand-started preview, and `tests/isolation-access-http.test.ts` uses `redirect: "manual"` to assert signed-out `GET /dashboard` is 302 to `/auth/signin` with a body that does not contain `This page is only for authenticated users.`, signed-out `GET /api/isolation/probes` is 401 and its body does not contain the note this run inserted, the owner's list is 200 and contains that note, user B's list is 200 and does not contain that note, and user B's `GET /api/isolation/probes/<id>` is 404 and its body does not contain that note — 59ce763
+- [x] 2.2 `npm run lint` exits 0 — 59ce763
+- [x] 2.3 `npx astro check` exits 0 — 59ce763
 
 #### Manual
 
-- [x] 2.4 Confirm `.github/workflows/ci.yml` and `scripts/smoke.mjs` have no edits from this phase, and the HTTP test issues separate requests for `/dashboard` and `/api/isolation/probes` — 6c1f7bc
+- [x] 2.4 Confirm `.github/workflows/ci.yml` and `scripts/smoke.mjs` have no edits from this phase, and the HTTP test issues separate requests for `/dashboard` and `/api/isolation/probes` — 59ce763
 
 ### Phase 3: Cookbook patterns in §6
 
 #### Automated
 
-- [x] 3.1 `context/foundation/test-plan.md` §6.1, §6.2, and §6.6 describe the shipped runner, the session select without a `user_id` predicate, and the HTTP gates, including the note-absence assertions — 0c3afdf
-- [x] 3.2 The diff to `context/foundation/test-plan.md` does not change §1–§5, §6.3–§6.5, or §7 — 0c3afdf
+- [x] 3.1 `context/foundation/test-plan.md` §6.1, §6.2, and §6.6 describe the shipped runner, the session select without a `user_id` predicate, and the HTTP gates, including the note-absence assertions — db57a1a
+- [x] 3.2 The diff to `context/foundation/test-plan.md` does not change §1–§5, §6.3–§6.5, or §7 — db57a1a
 
 #### Manual
 
-- [x] 3.3 Read §6.2 and confirm it names these avoided proofs: a mocked ownership check, HTTP 200 alone, `ENABLE ROW LEVEL SECURITY` alone, a bare 401, a sign-in page test, and treating the dashboard redirect as coverage of `/api/isolation` — 0c3afdf
+- [x] 3.3 Read §6.2 and confirm it names these avoided proofs: a mocked ownership check, HTTP 200 alone, `ENABLE ROW LEVEL SECURITY` alone, a bare 401, a sign-in page test, and treating the dashboard redirect as coverage of `/api/isolation` — db57a1a

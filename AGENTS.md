@@ -26,7 +26,9 @@ Astro components for static content and layout; React only when interactivity is
 
 shadcn/ui `new-york` files are in `src/components/ui/`; @components.json sets `rsc` to false. Add a component with `npx shadcn@latest add <name>`.
 
-`supabase/` contains `config.toml` only. There is no migrations directory; auth uses `auth.users` (@README.md). When adding tables, create `supabase/migrations/` as `YYYYMMDDHHmmss_short_description.sql` and enable RLS with granular per-operation, per-role policies.
+Add tables in `supabase/migrations/` as `YYYYMMDDHHmmss_short_description.sql` and enable RLS with granular per-operation, per-role policies.
+
+This repository is public. Do not commit course material: `.cursor/skills`, `.cursor/prompts`, and `10xdevs-lessons` are local and ignored.
 
 ## Coding style
 
@@ -34,8 +36,7 @@ TypeScript, Prettier, and ESLint: @tsconfig.json, @.prettierrc.json, @eslint.con
 
 ## Testing
 
-There is no Vitest, Jest, or Playwright config and no `*.test.*` or `*.spec.*` files. `npm run smoke` is the only automated check. It needs Supabase reachable with email confirmation disabled. On `master`, the `smoke` job in @.github/workflows/ci.yml starts local Supabase, builds, and runs that script against `npm run preview`.
-
+`npm test` runs Vitest integration tests from `tests/` against local Supabase. `npm run smoke` (@scripts/smoke.mjs) walks the HTTP flow and needs Supabase reachable with email confirmation disabled. The patterns are in @context/foundation/test-plan.md. In CI, the `smoke` job in @.github/workflows/ci.yml starts local Supabase, builds, and runs the smoke test against `npm run preview`.
 ## Pull requests
 
-This directory has no Git history, so a commit-message convention is not defined.
+Commit messages use `type(change-id): summary`, for example `feat(primary-daw-profile): ...`.
