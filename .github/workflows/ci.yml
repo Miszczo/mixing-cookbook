@@ -45,6 +45,8 @@ jobs:
           source supabase.env
           printf 'SUPABASE_URL=%s\nSUPABASE_KEY=%s\n' "$API_URL" "$ANON_KEY" > .env
           cp .env .dev.vars
+      - name: Run integration tests
+        run: npm test
       - run: npm run build
       - name: Run smoke test against production preview
         run: |

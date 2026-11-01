@@ -1,7 +1,17 @@
 ---
 import Layout from "@/layouts/Layout.astro";
+import { createClient } from "@/lib/supabase";
+import { PRIMARY_DAWS } from "@/lib/primary-daw";
 
 const { user } = Astro.locals;
+const showInvalidChoice = Astro.url.searchParams.get("error") === "invalid_daw";
+
+const supabase = createClient(Astro.request.headers, Astro.cookies);
+const profile = supabase ? await supabase.from("daw_profiles").select("daw_id").maybeSingle() : null;
+
+const storedId: unknown = profile?.data?.daw_id;
+const currentDaw = PRIMARY_DAWS.find((daw) => daw.id === storedId);
+const loadFailed = !profile || Boolean(profile.error) || (storedId !== undefined && !currentDaw);
 ---
 
 <Layout title="Dashboard">
@@ -14,6 +24,47 @@ const { user } = Astro.locals;
         Welcome, <span class="font-semibold text-white">{user?.email}</span>
       </p>
       <p class="mt-2 text-sm text-blue-100/50">This page is only for authenticated users.</p>
+
+      <section class="mt-6">
+        {loadFailed ? (
+          <p role="alert">Primary DAW could not be loaded.</p>
+        ) : (
+          <>
+            <p>{currentDaw ? `Primary DAW: ${currentDaw.label}` : "No primary DAW is set."}</p>
+            {showInvalidChoice && (
+              <p role="alert" class="mt-2 text-sm text-red-200">
+                Choose a primary DAW.
+              </p>
+            )}
+            <form method="POST" action="/api/profile/primary-daw" class="mt-3 flex items-center justify-center gap-2">
+              <label for="daw_id" class="sr-only">
+                Primary DAW
+              </label>
+              <select
+                id="daw_id"
+                name="daw_id"
+                class="rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm text-white [&>option]:text-black"
+              >
+                <option value="" selected={!currentDaw}>
+                  Choose a DAW
+                </option>
+                {PRIMARY_DAWS.map((daw) => (
+                  <option value={daw.id} selected={daw.id === currentDaw?.id}>
+                    {daw.label}
+                  </option>
+                ))}
+              </select>
+              <button
+                type="submit"
+                class="rounded-lg border border-white/20 bg-white/10 px-4 py-2 text-sm transition-colors hover:bg-white/20"
+              >
+                Save
+              </button>
+            </form>
+          </>
+        )}
+      </section>
+
       <form method="POST" action="/api/auth/signout" class="mt-6">
         <button
           type="submit"

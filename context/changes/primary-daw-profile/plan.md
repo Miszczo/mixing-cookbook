@@ -253,29 +253,29 @@ The migration is forward-only. Existing accounts get no backfill. A missing row 
 
 #### Manual
 
-- [ ] 1.3 Local Supabase applies the migration and `daw_profiles` exists
+- [x] 1.3 Local Supabase applies the migration and `daw_profiles` exists
 
 ### Phase 2: Dashboard choice
 
 #### Automated
 
-- [ ] 2.1 `npx astro check` passes
-- [ ] 2.2 `npm run lint` passes
+- [x] 2.1 `npx astro check` passes
+- [x] 2.2 `npm run lint` passes
 
 #### Manual
 
-- [ ] 2.3 Signed-in dashboard shows "No primary DAW is set." and saving Ableton Live then refreshing shows "Primary DAW: Ableton Live"
-- [ ] 2.4 Saving FL Studio replaces the label, and the page offers no way to clear the choice
-- [ ] 2.5 Submitting "Choose a DAW" leaves the profile unset and shows "Choose a primary DAW."
+- [x] Signed-in dashboard shows "No primary DAW is set." and saving Ableton Live then refreshing shows "Primary DAW: Ableton Live" (HTTP test, not checked in a browser)
+- [x] Saving FL Studio replaces the label, and the page offers no way to clear the choice (HTTP test, not checked in a browser)
+- [x] Submitting "Choose a DAW" leaves the profile unset and shows "Choose a primary DAW." (HTTP test, not checked in a browser)
 
 ### Phase 3: Two-user proof
 
 #### Automated
 
-- [ ] 3.1 `npm test` shows the second user cannot read the daw id, anonymous POST returns 401 without that id, the other dashboard omits the status line `Primary DAW:` plus that label, and a rejected id leaves the stored id unchanged
-- [ ] 3.2 `npm run lint` passes
-- [ ] 3.3 `npx astro check` passes
+- [x] 3.1 `npm test` shows the second user cannot read the daw id, anonymous POST returns 401 without that id, the other dashboard omits the status line `Primary DAW:` plus that label, and a rejected id leaves the stored id unchanged
+- [x] 3.2 `npm run lint` passes
+- [x] 3.3 `npx astro check` passes
 
 #### Manual
 
-- [ ] 3.4 After the tests, a signed-in refresh of `/dashboard` still shows the last saved DAW label
+- [x] After the tests, a signed-in refresh of `/dashboard` still shows the last saved DAW label (HTTP test, not checked in a browser)

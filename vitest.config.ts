@@ -7,6 +7,8 @@ const astroViteConfig = getViteConfig({
     environment: "node",
     include: ["tests/**/*.test.ts"],
     globals: true,
+    // HTTP tests each boot one astro dev server; run files one at a time.
+    fileParallelism: false,
   },
 });
 
