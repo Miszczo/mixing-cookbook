@@ -216,5 +216,5 @@ None. The PRD lists no open questions, and sequencing did not add a cross-slice 
 
 | Roadmap ID | Change ID              | Archived | Note |
 | ---------- | ---------------------- | -------- | ---- |
-| F-01       | per-user-row-isolation | no       | Phases 1–3 checked; impl-review findings marked fixed. Status set to `done` on 2026-09-27. Folder is still `impl_reviewed`, not archived. |
+| F-01 | per-user-row-isolation | 2026-11-01 | (foundation) New application rows are stored so a signed-in user can read and write only their own; product tables are still created by the first slice that needs each one. Archived to `context/archive/2026-09-23-per-user-row-isolation/`. Lesson: —. |
 | S-01       | primary-daw-profile          | 2026-11-01 | User can sign in and choose a primary DAW. Archived to `context/archive/2026-10-20-primary-daw-profile/`. Lesson: —. |
