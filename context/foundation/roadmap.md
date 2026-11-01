@@ -3,7 +3,7 @@ project: "Sound Intent & Mixing Cookbook CMS"
 version: 1
 status: draft
 created: 2026-09-23
-updated: 2026-10-20
+updated: 2026-11-01
 prd_version: 1
 main_goal: speed
 top_blocker: capacity
@@ -44,7 +44,7 @@ Przepis miksowy powinien być kontekstowy: połączenie intencji, posiadanych pl
 | ID    | Change ID                     | Outcome (user can …)                                      | Prerequisites           | PRD refs                  | Status   |
 | ----- | ----------------------------- | --------------------------------------------------------- | ----------------------- | ------------------------- | -------- |
 | F-01  | per-user-row-isolation        | (foundation) per-user row isolation for new app data      | —                       | FR-001                    | done |
-| S-01  | primary-daw-profile           | sign in and choose a primary DAW                          | F-01                    | FR-001, FR-002            | in-progress |
+| S-01  | primary-daw-profile           | sign in and choose a primary DAW                          | F-01                    | FR-001, FR-002            | done |
 | S-02  | plugin-inventory-favorites    | add, edit, and delete plugins, and mark favorites         | F-01                    | FR-003, FR-004            | in-progress |
 | S-03  | track-stage-status            | create and edit a track with a name and stage             | F-01                    | FR-010                    | in-progress |
 | S-04  | in-track-sidechain-card       | get a matched sidechain recipe card inside a Miks track   | S-01, S-02, S-03        | US-01, FR-008, FR-009, FR-011 | proposed |
@@ -102,7 +102,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Sign-in already exists, so this slice only adds the DAW choice; without it the native fallback in S-04 has nothing to name.
-- **Status:** in-progress
+- **Status:** done
 
 ### S-02: Plugin inventory and favorites
 
@@ -217,3 +217,4 @@ None. The PRD lists no open questions, and sequencing did not add a cross-slice 
 | Roadmap ID | Change ID              | Archived | Note |
 | ---------- | ---------------------- | -------- | ---- |
 | F-01       | per-user-row-isolation | no       | Phases 1–3 checked; impl-review findings marked fixed. Status set to `done` on 2026-09-27. Folder is still `impl_reviewed`, not archived. |
+| S-01       | primary-daw-profile          | 2026-11-01 | User can sign in and choose a primary DAW. Archived to `context/archive/2026-10-20-primary-daw-profile/`. Lesson: —. |
