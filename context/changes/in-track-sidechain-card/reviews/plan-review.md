@@ -21,7 +21,7 @@
 
 Grounding: 7/7 existing paths ✓, 4/4 cited references ✓, Progress↔Phase 15/15 ✓, brief↔plan ✓. The nested route was confirmed not to collide, and `public/` files are served in dev and preview.
 
-Triage was done by the agent under the owner's standing instruction not to wait for routine decisions. All fixes are plan edits.
+The agent's earlier triage was withdrawn. The fixes it chose were already in the plan, and the owner then decided each finding.
 
 ## Findings
 
@@ -73,7 +73,7 @@ Triage was done by the agent under the owner's standing instruction not to wait 
 - **Location**: Phase 2 — Progress route
 - **Detail**: `toggle-step` reads and rewrites the array, so two very quick clicks can lose one. Each click is a full page POST by one owner, so this is unlikely, and a refresh shows it.
 - **Fix**: Record last-write-wins in the plan, without an atomic update.
-- **Decision**: ACCEPTED, recorded in the plan
+- **Decision**: FIXED via Fix
 
 ### F6 — Saving the track closes an unstarted card
 
@@ -83,7 +83,7 @@ Triage was done by the agent under the owner's standing instruction not to wait 
 - **Location**: Phase 3 — Track page
 - **Detail**: The track edit route redirects to the bare URL, so `?recipe=` is dropped. A card with no stored progress closes, and nothing is lost.
 - **Fix**: Record this behaviour in the plan and leave the edit route unchanged.
-- **Decision**: ACCEPTED, recorded in the plan
+- **Decision**: FIXED via Fix
 
 ### F7 — Ordering claim was stronger than the design
 
