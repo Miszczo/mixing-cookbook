@@ -3,7 +3,7 @@ project: "Sound Intent & Mixing Cookbook CMS"
 version: 1
 status: draft
 created: 2026-09-23
-updated: 2026-11-01
+updated: 2026-11-03
 prd_version: 1
 main_goal: speed
 top_blocker: capacity
@@ -47,7 +47,7 @@ Przepis miksowy powinien być kontekstowy: połączenie intencji, posiadanych pl
 | S-01  | primary-daw-profile           | sign in and choose a primary DAW                          | F-01                    | FR-001, FR-002            | done |
 | S-02  | plugin-inventory-favorites    | add, edit, and delete plugins, and mark favorites         | F-01                    | FR-003, FR-004            | done |
 | S-03  | track-stage-status            | create and edit a track with a name and stage             | F-01                    | FR-010                    | done |
-| S-04  | in-track-sidechain-card       | get a matched sidechain recipe card inside a Miks track   | S-01, S-02, S-03        | US-01, FR-008, FR-009, FR-011 | in-progress |
+| S-04  | in-track-sidechain-card       | get a matched sidechain recipe card inside a Miks track   | S-01, S-02, S-03        | US-01, FR-008, FR-009, FR-011 | done |
 | S-05  | author-recipe-with-screenshot | save an own recipe with checklist and screenshot          | F-01                    | FR-006, FR-007            | ready |
 | S-06  | search-recipes-by-intent      | search and filter starter and own recipes by intent       | S-04, S-05              | FR-005                    | proposed |
 | S-07  | track-listening-notes         | add a listening note to a track and read them in order    | S-03                    | US-01, FR-012, FR-013     | proposed |
@@ -220,3 +220,4 @@ None. The PRD lists no open questions, and sequencing did not add a cross-slice 
 | S-01       | primary-daw-profile          | 2026-11-01 | User can sign in and choose a primary DAW. Archived to `context/archive/2026-10-20-primary-daw-profile/`. Lesson: —. |
 | S-02 | plugin-inventory-favorites | 2026-11-01 | User can add, edit, and delete owned plugins with a name and a type, and can mark favorites. Archived to `context/archive/2026-11-01-plugin-inventory-favorites/`. Lesson: —. |
 | S-03 | track-stage-status | 2026-11-01 | User can create and edit a track with a name and a stage such as Aranż, Miks, or Master. Archived to `context/archive/2026-11-01-track-stage-status/`. Lesson: —. |
+| S-04 | in-track-sidechain-card | 2026-11-03 | User can open a Miks track, choose "Sidechain stopy z basem" and see a recipe card with a checklist, a screenshot and a suggested tool. Archived to `context/archive/2026-11-01-in-track-sidechain-card/`. Lesson: —. |
