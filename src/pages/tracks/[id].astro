@@ -50,9 +50,9 @@ const recipeLoadFailed =
 
 const requestedRecipeId = Astro.url.searchParams.get("recipe");
 const stored = progressRows.success ? progressRows.data : [];
-const recipe = RECIPES.find(
-  (candidate) => candidate.id === requestedRecipeId || stored.some((row) => row.recipe_id === candidate.id),
-);
+const recipe =
+  RECIPES.find((candidate) => candidate.id === requestedRecipeId) ??
+  RECIPES.find((candidate) => stored.some((row) => row.recipe_id === candidate.id));
 const progress = stored.find((row) => row.recipe_id === recipe?.id);
 const choice = choiceFromProgress(progress);
 const selection =

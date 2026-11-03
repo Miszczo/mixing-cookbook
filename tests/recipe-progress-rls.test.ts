@@ -96,6 +96,51 @@ describe("track_recipe_progress row rules", () => {
     expect(anonymous.error).not.toBeNull();
   }, 30_000);
 
+  it("refuses anonymous inserts and updates", async () => {
+    const before = await ownerRow();
+    const anon = anonClient();
+
+    const insert = await anon
+      .from("track_recipe_progress")
+      .insert({ track_id: trackId, recipe_id: "anon-recipe", user_id: owner.userId });
+    expect(insert.error).not.toBeNull();
+
+    const update = await anon
+      .from("track_recipe_progress")
+      .update({ completed_steps: ["anon"] })
+      .eq("track_id", trackId);
+    expect(update.error).not.toBeNull();
+
+    expect(await ownerRow()).toEqual(before);
+  }, 30_000);
+
+  it("refuses an insert that spoofs another user's id", async () => {
+    const asOther = await other.client
+      .from("track_recipe_progress")
+      .insert({ track_id: otherTrackId, recipe_id: RECIPE, user_id: owner.userId });
+    expect(asOther.error).not.toBeNull();
+
+    const asOwner = await owner.client
+      .from("track_recipe_progress")
+      .insert({ track_id: otherTrackId, recipe_id: RECIPE, user_id: owner.userId });
+    expect(asOwner.error).not.toBeNull();
+  }, 30_000);
+
+  it("refuses moving a row to another track and refuses deletes", async () => {
+    const before = await ownerRow();
+
+    const move = await owner.client
+      .from("track_recipe_progress")
+      .update({ track_id: otherTrackId })
+      .eq("track_id", trackId);
+    expect(move.error).not.toBeNull();
+
+    const removed = await owner.client.from("track_recipe_progress").delete().eq("track_id", trackId);
+    expect(removed.error).not.toBeNull();
+
+    expect(await ownerRow()).toEqual(before);
+  }, 30_000);
+
   it("refuses another user's update and insert on the owner's track", async () => {
     const before = await ownerRow();
 

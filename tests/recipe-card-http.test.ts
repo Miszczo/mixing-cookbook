@@ -45,6 +45,18 @@ describe("recipe card on a track", () => {
     return jar;
   }
 
+  // Sign-ups share a per-IP rate limit with the other integration files, so tests that need
+  // the same account state reuse one user. Each test still works on its own track.
+  const shared = new Map<string, Promise<Jar>>();
+  function sharedUser(tag: string): Promise<Jar> {
+    let jar = shared.get(tag);
+    if (!jar) {
+      jar = user(tag);
+      shared.set(tag, jar);
+    }
+    return jar;
+  }
+
   async function setDaw(jar: Jar, dawId: string) {
     const saved = await request(origin, jar, "/api/profile/primary-daw", { method: "POST", form: { daw_id: dawId } });
     expect(saved.status).toBe(303);
@@ -71,7 +83,8 @@ describe("recipe card on a track", () => {
     request(origin, jar, `/api${trackPath}/recipes/${RECIPE}`, { method: "POST", form });
 
   it("offers the recipe on a Miks track and names the DAW's native tool with no plugins", async () => {
-    const jar = await user("native");
+    // "bare": never gets plugins, sets its own DAW.
+    const jar = await sharedUser("bare");
     await setDaw(jar, "reaper");
     const trackPath = await addTrack(jar, "miks");
 
@@ -94,7 +107,8 @@ describe("recipe card on a track", () => {
   }, 60_000);
 
   it("shows a generic native tool and a dashboard link with no plugins and no DAW", async () => {
-    const jar = await user("nodaw");
+    // "plain": never sets a DAW and never gets plugins.
+    const jar = await sharedUser("plain");
     const trackPath = await addTrack(jar, "miks");
 
     const card = await openCard(jar, trackPath);
@@ -167,7 +181,7 @@ describe("recipe card on a track", () => {
   }, 60_000);
 
   it("shows no recipe outside Miks, refuses writes there, and restores progress on return", async () => {
-    const jar = await user("stage");
+    const jar = await sharedUser("bare");
     await setDaw(jar, "bitwig-studio");
     const trackPath = await addTrack(jar, "miks");
     await post(jar, trackPath, { action: "toggle-step", step: "route-kick", done: "true" });
@@ -193,7 +207,7 @@ describe("recipe card on a track", () => {
   }, 60_000);
 
   it("rejects anonymous callers and another user's reads and writes", async () => {
-    const owner = await user("owner");
+    const owner = await sharedUser("plain");
     const trackPath = await addTrack(owner, "miks");
     await post(owner, trackPath, { action: "toggle-step", step: "route-kick", done: "true" });
 
@@ -201,7 +215,7 @@ describe("recipe card on a track", () => {
     const anonymousPost = await post(anonymous, trackPath, { action: "toggle-step", step: "release", done: "true" });
     expect(anonymousPost.status).toBe(401);
 
-    const other = await user("other");
+    const other = await sharedUser("foreign");
     const foreignRead = await request(origin, other, `${trackPath}?recipe=${RECIPE}`);
     expect(foreignRead.status).toBe(404);
     expect(foreignRead.body).not.toContain(FIRST_STEP);
@@ -225,7 +239,7 @@ describe("recipe card on a track", () => {
     const trackPath = await addTrack(jar, "miks");
     await addPlugin(jar, "Alpha Comp");
 
-    const other = await user("invalid-other");
+    const other = await sharedUser("foreign");
     const otherTrack = await addTrack(other, "miks");
     await addPlugin(other, "Foreign Comp");
     const foreignPlugin = pluginIdFromCard(await openCard(other, otherTrack), "Foreign Comp");
