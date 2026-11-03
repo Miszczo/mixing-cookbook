@@ -1,6 +1,10 @@
 ---
 import { z } from "zod";
+import RecipeCard from "@/components/recipes/RecipeCard.astro";
 import AppLayout from "@/layouts/AppLayout.astro";
+import { PLUGIN_COLUMNS, pluginRowSchema } from "@/lib/plugins";
+import { PRIMARY_DAW_IDS } from "@/lib/primary-daw";
+import { choiceFromProgress, PROGRESS_COLUMNS, progressRowSchema, RECIPES, selectTool } from "@/lib/recipes";
 import { createClient } from "@/lib/supabase";
 import { TRACK_COLUMNS, TRACK_STAGES, trackRowSchema } from "@/lib/tracks";
 
@@ -17,6 +21,45 @@ if (!track) {
 }
 
 const showInvalid = Astro.url.searchParams.get("error") === "invalid_track";
+const showInvalidRecipe = Astro.url.searchParams.get("error") === "invalid_recipe_action";
+
+// A failed read must not look like "no plugins", or the card would wrongly offer the native tool.
+const isMiks = track?.stage === "miks";
+const [pluginsResult, profileResult, progressResult] =
+  isMiks && supabase
+    ? await Promise.all([
+        supabase.from("plugins").select(PLUGIN_COLUMNS),
+        supabase.from("daw_profiles").select("daw_id").maybeSingle(),
+        supabase.from("track_recipe_progress").select(PROGRESS_COLUMNS).eq("track_id", track.id),
+      ])
+    : [null, null, null];
+
+const plugins = z.array(pluginRowSchema).safeParse(pluginsResult?.data);
+const progressRows = z.array(progressRowSchema).safeParse(progressResult?.data);
+const storedDaw: unknown = profileResult?.data?.daw_id;
+const daw = z
+  .enum(PRIMARY_DAW_IDS)
+  .nullable()
+  .safeParse(storedDaw ?? null);
+const recipeLoadFailed =
+  isMiks &&
+  (Boolean(pluginsResult?.error ?? profileResult?.error ?? progressResult?.error) ||
+    !plugins.success ||
+    !progressRows.success ||
+    !daw.success);
+
+const requestedRecipeId = Astro.url.searchParams.get("recipe");
+const stored = progressRows.success ? progressRows.data : [];
+const recipe = RECIPES.find(
+  (candidate) => candidate.id === requestedRecipeId || stored.some((row) => row.recipe_id === candidate.id),
+);
+const progress = stored.find((row) => row.recipe_id === recipe?.id);
+const choice = choiceFromProgress(progress);
+const selection =
+  recipe && plugins.success && daw.success
+    ? selectTool({ plugins: plugins.data, dawId: daw.data, requiredType: recipe.requiredType, choice })
+    : null;
+
 const field = "rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm text-white [&>option]:text-black";
 const button = "rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm transition-colors hover:bg-white/20";
 ---
@@ -47,6 +90,47 @@ const button = "rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm 
         <p role="alert" class="mt-2 text-sm text-red-200">
           Enter a track name up to 100 characters and choose a stage.
         </p>
+      )}
+      {!isMiks && <p class="mt-6 text-sm text-blue-100/80">Switch this track to Miks to use a recipe.</p>}
+      {isMiks && (
+        <details open={!recipe} class="mt-6 rounded-xl border border-white/10 bg-white/5 p-3">
+          <summary class="cursor-pointer text-sm font-medium">Potrzebuję przepisu</summary>
+          <ul class="mt-2 flex flex-col gap-1 text-sm">
+            {RECIPES.map((item) => (
+              <li>
+                <a
+                  href={`/tracks/${track.id}?recipe=${item.id}`}
+                  class="text-purple-200 hover:text-white hover:underline"
+                >
+                  {item.intent}
+                </a>
+              </li>
+            ))}
+          </ul>
+        </details>
+      )}
+      {showInvalidRecipe && (
+        <p role="alert" class="mt-2 text-sm text-red-200">
+          That change could not be saved. Choose a tool or a step from the card.
+        </p>
+      )}
+      {recipeLoadFailed ? (
+        <p role="alert" class="mt-6 text-sm text-red-200">
+          The recipe could not be loaded. Refresh the page to try again.
+        </p>
+      ) : (
+        isMiks &&
+        recipe &&
+        selection && (
+          <RecipeCard
+            trackId={track.id}
+            recipe={recipe}
+            selection={selection}
+            choice={choice}
+            completedSteps={progress?.completed_steps ?? []}
+            hasDaw={daw.success && daw.data !== null}
+          />
+        )
       )}
     </>
   ) : (

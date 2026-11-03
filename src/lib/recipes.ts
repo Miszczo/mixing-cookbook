@@ -1,3 +1,4 @@
+import { z } from "zod";
 import type { Plugin } from "@/lib/plugins";
 import type { PrimaryDawId } from "@/lib/primary-daw";
 
@@ -49,6 +50,24 @@ export type Tool = { kind: "plugin"; id: string; label: string } | { kind: "nati
 
 /** `auto`, `native`, or the id of a chosen plugin. */
 export type ToolChoice = string;
+
+export const progressRowSchema = z.object({
+  recipe_id: z.string(),
+  completed_steps: z.array(z.string()),
+  selected_plugin_id: z.uuid().nullable(),
+  use_native: z.boolean(),
+});
+
+export type RecipeProgress = z.infer<typeof progressRowSchema>;
+
+export const PROGRESS_COLUMNS = "recipe_id, completed_steps, selected_plugin_id, use_native";
+
+export function choiceFromProgress(progress: RecipeProgress | undefined): ToolChoice {
+  if (progress?.use_native) {
+    return "native";
+  }
+  return progress?.selected_plugin_id ?? "auto";
+}
 
 export interface ToolSelection {
   /** The tool the card shows, after applying the manual choice. */

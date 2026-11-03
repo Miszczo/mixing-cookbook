@@ -58,6 +58,8 @@ function safeTail(log: string): string {
   return tail;
 }
 
+const reservedPorts = new WeakMap<ChildProcess, number>();
+
 export function startApp(port: number): ChildProcess {
   const env: NodeJS.ProcessEnv = {};
   for (const [name, value] of Object.entries(process.env)) {
@@ -71,13 +73,15 @@ export function startApp(port: number): ChildProcess {
   // Keeps `astro dev` in this process when an agent environment would otherwise detach it.
   env.ASTRO_DEV_BACKGROUND = "1";
 
-  return spawn(process.execPath, [astroBin, "dev", "--port", String(port), "--host", "127.0.0.1"], {
+  const child = spawn(process.execPath, [astroBin, "dev", "--port", String(port), "--host", "127.0.0.1"], {
     cwd: repoRoot,
     env,
     stdio: ["ignore", "pipe", "pipe"],
     windowsHide: true,
     detached: process.platform !== "win32",
   });
+  reservedPorts.set(child, port);
+  return child;
 }
 
 export function watchForLocalUrl(child: ChildProcess): Promise<string> {
@@ -100,7 +104,19 @@ export function watchForLocalUrl(child: ChildProcess): Promise<string> {
       if (log.length > 12_000) log = log.slice(-12_000);
       const match = /https?:\/\/(?:127\.0\.0\.1|localhost):\d+/.exec(log);
       const url = match?.[0];
-      if (url) settle(undefined, url.replace(/\/$/, ""));
+      if (!url) return;
+      const reserved = reservedPorts.get(child);
+      const printed = Number(new URL(url).port);
+      if (reserved !== undefined && printed !== reserved) {
+        // `astro dev` exits and prints the URL of a dev server that is already running.
+        settle(
+          new Error(
+            `astro dev printed port ${printed}, not the reserved port ${reserved}. Another dev server is probably running; stop it before running the HTTP tests.`,
+          ),
+        );
+        return;
+      }
+      settle(undefined, url.replace(/\/$/, ""));
     };
 
     child.stdout?.on("data", onData);

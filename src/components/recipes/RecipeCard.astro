@@ -1,0 +1,105 @@
+---
+import type { Recipe, ToolChoice, ToolSelection } from "@/lib/recipes";
+
+interface Props {
+  trackId: string;
+  recipe: Recipe;
+  selection: ToolSelection;
+  choice: ToolChoice;
+  completedSteps: readonly string[];
+  hasDaw: boolean;
+}
+
+const { trackId, recipe, selection, choice, completedSteps, hasDaw } = Astro.props;
+const { tool, suggested, compatible, native } = selection;
+
+const action = `/api/tracks/${trackId}/recipes/${recipe.id}`;
+const isPluginChoice = compatible.some((plugin) => plugin.id === choice);
+const selectedValue = choice === "native" || isPluginChoice ? choice : "auto";
+const isManual = selectedValue !== "auto";
+const field = "rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm text-white [&>option]:text-black";
+const button = "rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm transition-colors hover:bg-white/20";
+---
+
+<section aria-labelledby="recipe-title" class="mt-6 rounded-xl border border-white/10 bg-white/5 p-4">
+  <h2 id="recipe-title" class="text-lg font-semibold">
+    {recipe.intent}
+  </h2>
+
+  <p class="mt-3 text-sm text-blue-100/80">{isManual ? "Your choice" : "Suggested tool"}</p>
+  <p class="text-base">
+    <strong data-testid="recipe-tool">{tool.label}</strong>
+    {tool.kind === "native" && <span class="text-sm text-blue-100/80">(native)</span>}
+  </p>
+  {tool.kind === "native" && !hasDaw && (
+    <p class="mt-1 text-sm">
+      <a href="/dashboard" class="text-purple-200 hover:text-white hover:underline">
+        Choose your primary DAW
+      </a>{" "}
+      to see the exact tool name.
+    </p>
+  )}
+  {compatible.length > 0 && (
+    <p class="mt-1 text-sm text-blue-100/80">You can replace this tool with another compatible one.</p>
+  )}
+
+  <form method="POST" action={action} class="mt-3 flex flex-col gap-2 sm:flex-row">
+    <input type="hidden" name="action" value="choose-tool" />
+    <label class="sr-only" for="recipe-tool-choice">
+      Tool for this recipe
+    </label>
+    <select id="recipe-tool-choice" name="tool" class:list={[field, "grow"]}>
+      <option value="auto" selected={selectedValue === "auto"}>
+        Automatic: {suggested.label}
+      </option>
+      {compatible.map((plugin) => (
+        <option value={plugin.id} selected={selectedValue === plugin.id}>
+          {plugin.is_favorite ? "★ " : ""}
+          {plugin.name}
+        </option>
+      ))}
+      <option value="native" selected={selectedValue === "native"}>
+        {native.label} (native)
+      </option>
+    </select>
+    <button type="submit" class:list={button}>
+      Use this tool
+    </button>
+  </form>
+
+  <img
+    src={recipe.screenshot.src}
+    alt={recipe.screenshot.alt}
+    width="1200"
+    height="675"
+    loading="lazy"
+    class="mt-4 h-auto w-full rounded-lg border border-white/10"
+  />
+
+  <ol class="mt-4 flex flex-col gap-2">
+    {recipe.steps.map((step) => {
+      const done = completedSteps.includes(step.id);
+      return (
+        <li>
+          <form method="POST" action={action}>
+            <input type="hidden" name="action" value="toggle-step" />
+            <input type="hidden" name="step" value={step.id} />
+            <input type="hidden" name="done" value={String(!done)} />
+            <button
+              type="submit"
+              data-step={step.id}
+              aria-pressed={done ? "true" : "false"}
+              class:list={[
+                "flex w-full items-start gap-2 rounded-lg border border-white/10 p-2 text-left text-sm transition-colors hover:bg-white/10",
+                done && "bg-white/10",
+              ]}
+            >
+              <span aria-hidden="true">{done ? "☑" : "☐"}</span>
+              <span class:list={[done && "text-blue-100/70 line-through"]}>{step.text}</span>
+            </button>
+          </form>
+        </li>
+      );
+    })}
+  </ol>
+</section>

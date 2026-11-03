@@ -315,23 +315,23 @@ The migration only adds a table. Existing tracks have no row until the first act
 
 #### Automated
 
-- [x] 2.1 Local Supabase applies the migration: `npx supabase migration up --local`
-- [x] 2.2 `npx vitest run tests/recipe-progress-rls.test.ts` passes
-- [x] 2.3 `npm run lint` passes
-- [x] 2.4 `npx astro check` passes
+- [x] 2.1 Local Supabase applies the migration: `npx supabase migration up --local` — 3ed57d8
+- [x] 2.2 `npx vitest run tests/recipe-progress-rls.test.ts` passes — 3ed57d8
+- [x] 2.3 `npm run lint` passes — 3ed57d8
+- [x] 2.4 `npx astro check` passes — 3ed57d8
 
 ### Phase 3: Card on the track page
 
 #### Automated
 
-- [ ] 3.1 `npm test` passes
-- [ ] 3.2 `npm run lint` passes
-- [ ] 3.3 `npx astro check` passes
-- [ ] 3.4 `npm run build` passes
+- [x] 3.1 `npm test` passes
+- [x] 3.2 `npm run lint` passes
+- [x] 3.3 `npx astro check` passes
+- [x] 3.4 `npm run build` passes
 
 #### Manual
 
-- [ ] 3.5 On a Miks track, "Potrzebuję przepisu" and "Sidechain stopy z basem" open a card with a tool, an image, and six steps
-- [ ] 3.6 A checked step and a replaced tool remain after a browser refresh
-- [ ] 3.7 Removing all compressors shows the native tool of the selected DAW, and the card is not empty
-- [ ] 3.8 The card is usable at phone width
+- [x] 3.5 On a Miks track, "Potrzebuję przepisu" and "Sidechain stopy z basem" open a card with a tool, an image, and six steps
+- [x] 3.6 A checked step and a replaced tool remain after a browser refresh
+- [x] 3.7 Removing all compressors shows the native tool of the selected DAW, and the card is not empty
+- [x] 3.8 The card is usable at phone width
