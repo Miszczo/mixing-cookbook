@@ -1,7 +1,7 @@
 ---
 change_id: in-track-sidechain-card
 title: In track sidechain card
-status: implementing
+status: implemented
 created: 2026-11-01
 updated: 2026-11-03
 archived_at: null
