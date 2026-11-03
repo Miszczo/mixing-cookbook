@@ -1,5 +1,5 @@
 /// <reference types="vitest/globals" />
-import { selectTool } from "@/lib/recipes";
+import { recipeFromRow, recipeRowSchema, selectTool } from "@/lib/recipes";
 import type { Plugin } from "@/lib/plugins";
 import type { PrimaryDawId } from "@/lib/primary-daw";
 
@@ -78,6 +78,41 @@ describe("selectTool", () => {
     expect(chosen.tool).toMatchObject({ kind: "plugin", label: "Glue" });
   });
 
+  it("returns a non-empty generic native label for a type without a named native tool", () => {
+    const plugins = [plugin("1", "Valhalla", { plugin_type: "reverb" })];
+
+    for (const dawId of [null, "reaper"] as const) {
+      const result = selectTool({ plugins, dawId, requiredType: "eq", choice: "auto" });
+
+      expect(result.tool.kind).toBe("native");
+      expect(result.tool.label).toContain("DAW");
+      expect(result.tool.label).toContain("EQ");
+      expect(result.native.label).toBe(result.tool.label);
+    }
+  });
+
+  it("uses a plugin of a non-compressor type and puts the favorite first", () => {
+    const plugins = [
+      plugin("1", "Pro-Q", { plugin_type: "eq" }),
+      plugin("2", "Kirchhoff", { plugin_type: "eq", is_favorite: true }),
+      plugin("3", "Pro-C", { is_favorite: true }),
+    ];
+
+    const result = selectTool({ plugins, dawId: "logic-pro", requiredType: "eq", choice: "auto" });
+
+    expect(result.tool).toMatchObject({ kind: "plugin", label: "Kirchhoff" });
+    expect(result.compatible.map((item) => item.name)).toEqual(["Kirchhoff", "Pro-Q"]);
+  });
+
+  it("does not offer a compressor as compatible with an EQ recipe", () => {
+    const compressor = plugin("1", "Pro-C", { is_favorite: true });
+
+    const result = selectTool({ plugins: [compressor], dawId: "reaper", requiredType: "eq", choice: compressor.id });
+
+    expect(result.compatible).toEqual([]);
+    expect(result.tool.kind).toBe("native");
+  });
+
   it("treats a chosen plugin that is gone or no longer compatible as automatic", () => {
     const favorite = plugin("1", "Pro-C", { is_favorite: true });
     const reverb = plugin("2", "Valhalla", { plugin_type: "reverb" });
@@ -85,5 +120,34 @@ describe("selectTool", () => {
     expect(select([favorite], "reaper", plugin("9", "Deleted").id).tool).toMatchObject({ label: "Pro-C" });
     expect(select([favorite, reverb], "reaper", reverb.id).tool).toMatchObject({ label: "Pro-C" });
     expect(select([reverb], "reaper", reverb.id).tool).toMatchObject({ kind: "native", label: "ReaComp" });
+  });
+});
+
+describe("recipeFromRow", () => {
+  const row = {
+    id: "11111111-1111-4111-8111-111111111111",
+    intent: "Czyszczenie dołu w wokalu",
+    required_type: "eq",
+    steps: [{ id: "step-1", text: "Wstaw EQ." }],
+  };
+
+  it("turns a stored recipe into a card recipe whose image comes from the owner-only route", () => {
+    const recipe = recipeFromRow(recipeRowSchema.parse(row));
+
+    expect(recipe).toEqual({
+      id: row.id,
+      intent: "Czyszczenie dołu w wokalu",
+      requiredType: "eq",
+      steps: [{ id: "step-1", text: "Wstaw EQ." }],
+      screenshot: {
+        src: `/api/recipes/${row.id}/image`,
+        alt: "Zrzut ustawień: Czyszczenie dołu w wokalu",
+      },
+    });
+  });
+
+  it("rejects a row with an unknown type or a bad id", () => {
+    expect(recipeRowSchema.safeParse({ ...row, required_type: "limiter" }).success).toBe(false);
+    expect(recipeRowSchema.safeParse({ ...row, id: "not-a-uuid" }).success).toBe(false);
   });
 });

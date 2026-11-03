@@ -1,15 +1,37 @@
 import { z } from "zod";
-import type { Plugin } from "@/lib/plugins";
+import { PLUGIN_TYPES, pluginTypeLabel, type Plugin, type PluginTypeId } from "@/lib/plugins";
 import type { PrimaryDawId } from "@/lib/primary-daw";
-
-export type RecipeToolType = "compressor";
 
 export interface Recipe {
   id: string;
   intent: string;
-  requiredType: RecipeToolType;
+  requiredType: PluginTypeId;
   steps: readonly { id: string; text: string }[];
   screenshot: { src: string; alt: string };
+}
+
+const PLUGIN_TYPE_IDS = PLUGIN_TYPES.map((type) => type.id) as [PluginTypeId, ...PluginTypeId[]];
+
+/** A stored own recipe, without the image: lists never read the image column. */
+export const recipeRowSchema = z.object({
+  id: z.uuid(),
+  intent: z.string(),
+  required_type: z.enum(PLUGIN_TYPE_IDS),
+  steps: z.array(z.object({ id: z.string(), text: z.string() })),
+});
+
+export type RecipeRow = z.infer<typeof recipeRowSchema>;
+
+export const RECIPE_COLUMNS = "id, intent, required_type, steps";
+
+export function recipeFromRow(row: RecipeRow): Recipe {
+  return {
+    id: row.id,
+    intent: row.intent,
+    requiredType: row.required_type,
+    steps: row.steps,
+    screenshot: { src: `/api/recipes/${row.id}/image`, alt: `Zrzut ustawień: ${row.intent}` },
+  };
 }
 
 export const RECIPES: readonly Recipe[] = [
@@ -32,7 +54,8 @@ export const RECIPES: readonly Recipe[] = [
   },
 ];
 
-const NATIVE_TOOLS: Record<RecipeToolType, Record<PrimaryDawId, string>> = {
+/** Only the compressor has named native tools; other types use the generic label. */
+const NATIVE_TOOLS: Partial<Record<PluginTypeId, Record<PrimaryDawId, string>>> = {
   compressor: {
     "ableton-live": "Compressor",
     "fl-studio": "Fruity Limiter (sekcja kompresji)",
@@ -42,9 +65,11 @@ const NATIVE_TOOLS: Record<RecipeToolType, Record<PrimaryDawId, string>> = {
   },
 };
 
-const GENERIC_NATIVE_TOOLS: Record<RecipeToolType, string> = {
-  compressor: "natywny kompresor Twojego DAW",
-};
+function genericNativeLabel(type: PluginTypeId): string {
+  return type === "compressor"
+    ? "natywny kompresor Twojego DAW"
+    : `natywne narzędzie Twojego DAW (${pluginTypeLabel(type)})`;
+}
 
 export type Tool = { kind: "plugin"; id: string; label: string } | { kind: "native"; label: string };
 
@@ -92,14 +117,14 @@ function pluginTool(plugin: Plugin): Tool {
 export function selectTool(input: {
   plugins: readonly Plugin[];
   dawId: PrimaryDawId | null;
-  requiredType: RecipeToolType;
+  requiredType: PluginTypeId;
   choice: ToolChoice;
 }): ToolSelection {
   const { plugins, dawId, requiredType, choice } = input;
   const compatible = plugins.filter((plugin) => plugin.plugin_type === requiredType).sort(byFavoriteThenName);
   const native = {
     kind: "native",
-    label: dawId ? NATIVE_TOOLS[requiredType][dawId] : GENERIC_NATIVE_TOOLS[requiredType],
+    label: (dawId ? NATIVE_TOOLS[requiredType]?.[dawId] : undefined) ?? genericNativeLabel(requiredType),
   } as const;
   const suggested = compatible.length > 0 ? pluginTool(compatible[0]) : native;
   const chosen = compatible.find((plugin) => plugin.id === choice);
