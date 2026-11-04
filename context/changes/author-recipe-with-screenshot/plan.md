@@ -336,26 +336,26 @@ The migration only adds a table, a function, and a trigger. Existing data is unt
 
 #### Automated
 
-- [x] 2.1 Local Supabase applies the migration: `npx supabase migration up --local`
-- [x] 2.2 RLS tests pass: `npx vitest run tests/recipes-rls.test.ts`
-- [x] 2.3 Linting passes: `npm run lint`
-- [x] 2.4 Type checking passes: `npx astro check`
+- [x] 2.1 Local Supabase applies the migration: `npx supabase migration up --local` — 2533b20
+- [x] 2.2 RLS tests pass: `npx vitest run tests/recipes-rls.test.ts` — 2533b20
+- [x] 2.3 Linting passes: `npm run lint` — 2533b20
+- [x] 2.4 Type checking passes: `npx astro check` — 2533b20
 
 ### Phase 3: Create and list recipes
 
 #### Automated
 
-- [ ] 3.1 HTTP tests pass: `npx vitest run tests/recipes-http.test.ts`
-- [ ] 3.2 Linting passes: `npm run lint`
-- [ ] 3.3 Type checking passes: `npx astro check`
-- [ ] 3.4 Build passes: `npm run build`
+- [x] 3.1 HTTP tests pass: `npx vitest run tests/recipes-http.test.ts`
+- [x] 3.2 Linting passes: `npm run lint`
+- [x] 3.3 Type checking passes: `npx astro check`
+- [x] 3.4 Build passes: `npm run build`
 
 #### Manual
 
-- [ ] 3.5 A recipe with a real settings screenshot saves and appears in `/recipes` with its image
-- [ ] 3.6 A file over 1 MB shows a clear message and the typed text is still in the form
-- [ ] 3.7 Deleting a recipe removes it from the list
-- [ ] 3.8 The form and the list are usable at phone width
+- [x] 3.5 A recipe with a real settings screenshot saves and appears in `/recipes` with its image
+- [x] 3.6 A file over 1 MB shows a clear message and the typed text is still in the form
+- [x] 3.7 Deleting a recipe removes it from the list
+- [x] 3.8 The form and the list are usable at phone width
 
 ### Phase 4: Own recipe in the track
 

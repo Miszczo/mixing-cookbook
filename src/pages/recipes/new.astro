@@ -1,0 +1,146 @@
+---
+import AppLayout from "@/layouts/AppLayout.astro";
+import { PLUGIN_TYPES, type PluginTypeId } from "@/lib/plugins";
+import {
+  buildSteps,
+  encodeImage,
+  MAX_IMAGE_BYTES,
+  parseStepLines,
+  recipeInputSchema,
+  sniffImage,
+} from "@/lib/recipe-input";
+import { createClient } from "@/lib/supabase";
+
+const MAX_BODY_BYTES = 5 * 1024 * 1024;
+
+const field = "rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm text-white [&>option]:text-black";
+const button = "rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm transition-colors hover:bg-white/20";
+
+let errorMessage = "";
+let intentValue = "";
+let typeValue = "";
+let stepsValue = "";
+
+function redirect(path: string, status: number): void {
+  Astro.response.status = status;
+  Astro.response.headers.set("Location", path);
+}
+
+async function handlePost(): Promise<void> {
+  const declaredLength = Astro.request.headers.get("content-length");
+  // A missing Content-Length is not an oversize request; only a declared size above 5 MB is rejected unread.
+  if (declaredLength !== null && Number(declaredLength) > MAX_BODY_BYTES) {
+    Astro.response.status = 413;
+    errorMessage = "The upload is larger than 5 MB. Choose the image again.";
+    return;
+  }
+
+  const { user } = Astro.locals;
+  const supabase = createClient(Astro.request.headers, Astro.cookies);
+  let form: FormData | null;
+  try {
+    form = await Astro.request.formData();
+  } catch {
+    form = null;
+  }
+
+  const intent = form?.get("intent");
+  const requiredType = form?.get("required_type");
+  const steps = form?.get("steps");
+  intentValue = typeof intent === "string" ? intent : "";
+  typeValue = typeof requiredType === "string" ? requiredType : "";
+  stepsValue = typeof steps === "string" ? steps : "";
+
+  const image = form?.get("image");
+  const parsed = recipeInputSchema.safeParse({
+    intent: intentValue,
+    required_type: typeValue,
+    steps: parseStepLines(stepsValue),
+  });
+  const file = image instanceof File && image.size > 0 ? image : null;
+
+  if (!user) {
+    redirect("/auth/signin", 303);
+    return;
+  }
+  if (!supabase) {
+    Astro.response.status = 503;
+    errorMessage = "Recipes could not be saved. Choose the image again.";
+  } else if (!form) {
+    Astro.response.status = 400;
+    errorMessage = "The recipe could not be read. Choose the image again.";
+  } else if (file && file.size > MAX_IMAGE_BYTES) {
+    Astro.response.status = 413;
+    errorMessage = "The image must be 1 MB or smaller. Choose the image again.";
+  } else if (!parsed.success || !file) {
+    Astro.response.status = 400;
+    errorMessage = "Enter an intent, a tool type, and at least one step, and choose an image. Choose the image again.";
+  } else {
+    const bytes = new Uint8Array(await file.arrayBuffer());
+    const mime = sniffImage(bytes);
+    if (!mime) {
+      Astro.response.status = 400;
+      errorMessage = "The image must be a PNG, JPEG, or WebP. Choose the image again.";
+    } else {
+      const { error } = await supabase.from("recipes").insert({
+        user_id: user.id,
+        intent: parsed.data.intent,
+        required_type: parsed.data.required_type,
+        steps: buildSteps(parsed.data.steps),
+        image_data: encodeImage(bytes),
+        image_mime: mime,
+      });
+      if (error) {
+        Astro.response.status = 500;
+        errorMessage = "The recipe could not be saved. Choose the image again.";
+      } else {
+        redirect("/recipes", 303);
+        return;
+      }
+    }
+  }
+}
+
+if (Astro.request.method === "POST") {
+  await handlePost();
+}
+
+const selectedType: PluginTypeId | "" = PLUGIN_TYPES.some((type) => type.id === typeValue)
+  ? (typeValue as PluginTypeId)
+  : "";
+---
+
+<AppLayout title="New recipe">
+  <form method="POST" enctype="multipart/form-data" class="flex flex-col gap-3">
+    <label class="flex flex-col gap-1 text-sm" for="recipe-intent">
+      Intent
+      <input id="recipe-intent" name="intent" required maxlength="100" value={intentValue} class:list={field} />
+    </label>
+    <label class="flex flex-col gap-1 text-sm" for="recipe-type">
+      Tool type
+      <select id="recipe-type" name="required_type" class:list={field}>
+        {PLUGIN_TYPES.map((type) => (
+          <option value={type.id} selected={type.id === selectedType}>
+            {type.label}
+          </option>
+        ))}
+      </select>
+    </label>
+    <label class="flex flex-col gap-1 text-sm" for="recipe-steps">
+      Steps, one per line
+      <textarea id="recipe-steps" name="steps" rows="8" class:list={field}>{stepsValue}</textarea>
+    </label>
+    <label class="flex flex-col gap-1 text-sm" for="recipe-image">
+      Screenshot
+      <input id="recipe-image" name="image" type="file" accept="image/png,image/jpeg,image/webp" class="text-sm" />
+    </label>
+    <button type="submit" class:list={[button, "self-start"]}>
+      Save recipe
+    </button>
+  </form>
+  {errorMessage && (
+    <p role="alert" class="mt-4 text-sm text-red-200">
+      {errorMessage}
+    </p>
+  )}
+</AppLayout>

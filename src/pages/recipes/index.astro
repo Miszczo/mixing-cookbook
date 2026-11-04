@@ -1,0 +1,49 @@
+---
+import { z } from "zod";
+import AppLayout from "@/layouts/AppLayout.astro";
+import { pluginTypeLabel } from "@/lib/plugins";
+import { RECIPE_COLUMNS, recipeFromRow, recipeRowSchema } from "@/lib/recipes";
+import { createClient } from "@/lib/supabase";
+
+const supabase = createClient(Astro.request.headers, Astro.cookies);
+const result = supabase
+  ? await supabase.from("recipes").select(RECIPE_COLUMNS).order("created_at", { ascending: false })
+  : null;
+const rows = z.array(recipeRowSchema).safeParse(result?.data);
+const recipes = result && !result.error && rows.success ? rows.data.map(recipeFromRow) : null;
+
+const button = "rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm transition-colors hover:bg-white/20";
+---
+
+<AppLayout title="Recipes">
+  <a href="/recipes/new" class:list={button}>
+    New recipe
+  </a>
+
+  {!recipes ? (
+    <p role="alert" class="mt-6">
+      Recipes could not be loaded.
+    </p>
+  ) : recipes.length === 0 ? (
+    <p class="mt-6 text-blue-100/80">No recipes yet. The starter recipe is available on Miks tracks.</p>
+  ) : (
+    <ul class="mt-6 flex flex-col gap-3">
+      {recipes.map((recipe) => (
+        <li class="flex flex-col gap-2 rounded-xl border border-white/10 bg-white/5 p-3">
+          <p class="font-semibold">{recipe.intent}</p>
+          <p class="text-sm text-blue-100/80">{pluginTypeLabel(recipe.requiredType)}</p>
+          <p class="text-sm text-blue-100/80">
+            {recipe.steps.length === 1 ? "1 step" : `${recipe.steps.length} steps`}
+          </p>
+          <img src={recipe.screenshot.src} alt={recipe.screenshot.alt} class="h-16 w-auto max-w-full rounded" />
+          <form method="POST" action={`/api/recipes/${recipe.id}`}>
+            <input type="hidden" name="action" value="delete" />
+            <button type="submit" class:list={button}>
+              Delete
+            </button>
+          </form>
+        </li>
+      ))}
+    </ul>
+  )}
+</AppLayout>
