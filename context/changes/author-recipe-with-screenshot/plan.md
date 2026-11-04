@@ -361,14 +361,14 @@ The migration only adds a table, a function, and a trigger. Existing data is unt
 
 #### Automated
 
-- [x] 4.1 All tests pass: `npm test`
-- [x] 4.2 Linting passes: `npm run lint`
-- [x] 4.3 Type checking passes: `npx astro check`
-- [x] 4.4 Build passes: `npm run build`
+- [x] 4.1 All tests pass: `npm test` — 7564528
+- [x] 4.2 Linting passes: `npm run lint` — 7564528
+- [x] 4.3 Type checking passes: `npx astro check` — 7564528
+- [x] 4.4 Build passes: `npm run build` — 7564528
 
 #### Manual
 
-- [x] 4.5 On a Miks track, an own recipe is listed and opens a card with the user's image, steps, and a tool
-- [x] 4.6 A checked step remains after a browser refresh
-- [x] 4.7 With no plugin of the required type, the card shows the DAW's native tool, not an empty card
-- [x] 4.8 A deleted recipe disappears from the track's list
+- [x] 4.5 On a Miks track, an own recipe is listed and opens a card with the user's image, steps, and a tool — 7564528
+- [x] 4.6 A checked step remains after a browser refresh — 7564528
+- [x] 4.7 With no plugin of the required type, the card shows the DAW's native tool, not an empty card — 7564528
+- [x] 4.8 A deleted recipe disappears from the track's list — 7564528
