@@ -1,3 +1,4 @@
+import type { SupabaseClient } from "@supabase/supabase-js";
 import { z } from "zod";
 import { PLUGIN_TYPES, pluginTypeLabel, type Plugin, type PluginTypeId } from "@/lib/plugins";
 import type { PrimaryDawId } from "@/lib/primary-daw";
@@ -53,6 +54,29 @@ export const RECIPES: readonly Recipe[] = [
     },
   },
 ];
+
+export async function findRecipe(supabase: SupabaseClient, id: string): Promise<Recipe | null | "error"> {
+  const starter = RECIPES.find((recipe) => recipe.id === id);
+  if (starter) {
+    return starter;
+  }
+  if (!z.uuid().safeParse(id).success) {
+    return null;
+  }
+
+  const result = await supabase.from("recipes").select(RECIPE_COLUMNS).eq("id", id).maybeSingle();
+  if (result.error) {
+    return "error";
+  }
+  if (!result.data) {
+    return null;
+  }
+  const parsed = recipeRowSchema.safeParse(result.data);
+  if (!parsed.success) {
+    return "error";
+  }
+  return recipeFromRow(parsed.data);
+}
 
 /** Only the compressor has named native tools; other types use the generic label. */
 const NATIVE_TOOLS: Partial<Record<PluginTypeId, Record<PrimaryDawId, string>>> = {

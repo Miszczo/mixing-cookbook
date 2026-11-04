@@ -1,7 +1,7 @@
 import type { APIRoute } from "astro";
 import { z } from "zod";
 import { createClient } from "@/lib/supabase";
-import { RECIPES } from "@/lib/recipes";
+import { findRecipe } from "@/lib/recipes";
 
 export const prerender = false;
 
@@ -24,8 +24,16 @@ export const POST: APIRoute = async (context) => {
   }
 
   const id = idSchema.safeParse(context.params.id);
-  const recipe = RECIPES.find((candidate) => candidate.id === context.params.recipeId);
-  if (!id.success || !recipe) {
+  const recipeId = context.params.recipeId;
+  if (!id.success || !recipeId) {
+    return Response.json({ error: "not_found" }, { status: 404 });
+  }
+
+  const recipe = await findRecipe(supabase, recipeId);
+  if (recipe === "error") {
+    return Response.json({ error: "save_failed" }, { status: 500 });
+  }
+  if (!recipe) {
     return Response.json({ error: "not_found" }, { status: 404 });
   }
 

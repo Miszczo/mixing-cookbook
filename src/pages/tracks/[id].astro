@@ -4,7 +4,17 @@ import RecipeCard from "@/components/recipes/RecipeCard.astro";
 import AppLayout from "@/layouts/AppLayout.astro";
 import { PLUGIN_COLUMNS, pluginRowSchema } from "@/lib/plugins";
 import { PRIMARY_DAW_IDS } from "@/lib/primary-daw";
-import { choiceFromProgress, PROGRESS_COLUMNS, progressRowSchema, RECIPES, selectTool } from "@/lib/recipes";
+import {
+  choiceFromProgress,
+  findRecipe,
+  PROGRESS_COLUMNS,
+  progressRowSchema,
+  RECIPE_COLUMNS,
+  recipeFromRow,
+  recipeRowSchema,
+  RECIPES,
+  selectTool,
+} from "@/lib/recipes";
 import { createClient } from "@/lib/supabase";
 import { TRACK_COLUMNS, TRACK_STAGES, trackRowSchema } from "@/lib/tracks";
 
@@ -25,34 +35,42 @@ const showInvalidRecipe = Astro.url.searchParams.get("error") === "invalid_recip
 
 // A failed read must not look like "no plugins", or the card would wrongly offer the native tool.
 const isMiks = track?.stage === "miks";
-const [pluginsResult, profileResult, progressResult] =
+const ownRecipeListColumns = `${RECIPE_COLUMNS}, created_at`;
+const [pluginsResult, profileResult, progressResult, ownResult] =
   isMiks && supabase
     ? await Promise.all([
         supabase.from("plugins").select(PLUGIN_COLUMNS),
         supabase.from("daw_profiles").select("daw_id").maybeSingle(),
         supabase.from("track_recipe_progress").select(PROGRESS_COLUMNS).eq("track_id", track.id),
+        supabase.from("recipes").select(ownRecipeListColumns).order("created_at", { ascending: false }),
       ])
-    : [null, null, null];
+    : [null, null, null, null];
 
 const plugins = z.array(pluginRowSchema).safeParse(pluginsResult?.data);
 const progressRows = z.array(progressRowSchema).safeParse(progressResult?.data);
+const ownRows = z.array(recipeRowSchema).safeParse(ownResult?.data);
 const storedDaw: unknown = profileResult?.data?.daw_id;
 const daw = z
   .enum(PRIMARY_DAW_IDS)
   .nullable()
   .safeParse(storedDaw ?? null);
-const recipeLoadFailed =
-  isMiks &&
-  (Boolean(pluginsResult?.error ?? profileResult?.error ?? progressResult?.error) ||
-    !plugins.success ||
-    !progressRows.success ||
-    !daw.success);
 
 const requestedRecipeId = Astro.url.searchParams.get("recipe");
 const stored = progressRows.success ? progressRows.data : [];
-const recipe =
-  RECIPES.find((candidate) => candidate.id === requestedRecipeId) ??
-  RECIPES.find((candidate) => stored.some((row) => row.recipe_id === candidate.id));
+const recipes = [...RECIPES, ...(ownRows.success ? ownRows.data.map(recipeFromRow) : [])];
+const listed =
+  recipes.find((candidate) => candidate.id === requestedRecipeId) ??
+  recipes.find((candidate) => stored.some((row) => row.recipe_id === candidate.id));
+const resolved = listed && supabase ? await findRecipe(supabase, listed.id) : null;
+const recipe = resolved === "error" ? null : resolved;
+const recipeLoadFailed =
+  isMiks &&
+  (Boolean(pluginsResult?.error ?? profileResult?.error ?? progressResult?.error ?? ownResult?.error) ||
+    resolved === "error" ||
+    !plugins.success ||
+    !progressRows.success ||
+    !ownRows.success ||
+    !daw.success);
 const progress = stored.find((row) => row.recipe_id === recipe?.id);
 const choice = choiceFromProgress(progress);
 const selection =
@@ -96,7 +114,7 @@ const button = "rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm 
         <details open={!recipe} class="mt-6 rounded-xl border border-white/10 bg-white/5 p-3">
           <summary class="cursor-pointer text-sm font-medium">Potrzebuję przepisu</summary>
           <ul class="mt-2 flex flex-col gap-1 text-sm">
-            {RECIPES.map((item) => (
+            {recipes.map((item) => (
               <li>
                 <a
                   href={`/tracks/${track.id}?recipe=${item.id}`}

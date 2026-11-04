@@ -345,30 +345,30 @@ The migration only adds a table, a function, and a trigger. Existing data is unt
 
 #### Automated
 
-- [x] 3.1 HTTP tests pass: `npx vitest run tests/recipes-http.test.ts`
-- [x] 3.2 Linting passes: `npm run lint`
-- [x] 3.3 Type checking passes: `npx astro check`
-- [x] 3.4 Build passes: `npm run build`
+- [x] 3.1 HTTP tests pass: `npx vitest run tests/recipes-http.test.ts` — 8251d45
+- [x] 3.2 Linting passes: `npm run lint` — 8251d45
+- [x] 3.3 Type checking passes: `npx astro check` — 8251d45
+- [x] 3.4 Build passes: `npm run build` — 8251d45
 
 #### Manual
 
-- [x] 3.5 A recipe with a real settings screenshot saves and appears in `/recipes` with its image
-- [x] 3.6 A file over 1 MB shows a clear message and the typed text is still in the form
-- [x] 3.7 Deleting a recipe removes it from the list
-- [x] 3.8 The form and the list are usable at phone width
+- [x] 3.5 A recipe with a real settings screenshot saves and appears in `/recipes` with its image — 8251d45
+- [x] 3.6 A file over 1 MB shows a clear message and the typed text is still in the form — 8251d45
+- [x] 3.7 Deleting a recipe removes it from the list — 8251d45
+- [x] 3.8 The form and the list are usable at phone width — 8251d45
 
 ### Phase 4: Own recipe in the track
 
 #### Automated
 
-- [ ] 4.1 All tests pass: `npm test`
-- [ ] 4.2 Linting passes: `npm run lint`
-- [ ] 4.3 Type checking passes: `npx astro check`
-- [ ] 4.4 Build passes: `npm run build`
+- [x] 4.1 All tests pass: `npm test`
+- [x] 4.2 Linting passes: `npm run lint`
+- [x] 4.3 Type checking passes: `npx astro check`
+- [x] 4.4 Build passes: `npm run build`
 
 #### Manual
 
-- [ ] 4.5 On a Miks track, an own recipe is listed and opens a card with the user's image, steps, and a tool
-- [ ] 4.6 A checked step remains after a browser refresh
-- [ ] 4.7 With no plugin of the required type, the card shows the DAW's native tool, not an empty card
-- [ ] 4.8 A deleted recipe disappears from the track's list
+- [x] 4.5 On a Miks track, an own recipe is listed and opens a card with the user's image, steps, and a tool
+- [x] 4.6 A checked step remains after a browser refresh
+- [x] 4.7 With no plugin of the required type, the card shows the DAW's native tool, not an empty card
+- [x] 4.8 A deleted recipe disappears from the track's list
