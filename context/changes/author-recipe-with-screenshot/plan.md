@@ -327,19 +327,19 @@ The migration only adds a table, a function, and a trigger. Existing data is unt
 
 #### Automated
 
-- [x] 1.1 Input tests pass: `npx vitest run tests/recipe-input.test.ts`
-- [x] 1.2 Selection tests pass: `npx vitest run tests/recipe-tool-selection.test.ts`
-- [x] 1.3 Linting passes: `npm run lint`
-- [x] 1.4 Type checking passes: `npx astro check`
+- [x] 1.1 Input tests pass: `npx vitest run tests/recipe-input.test.ts` — 2a1fd71
+- [x] 1.2 Selection tests pass: `npx vitest run tests/recipe-tool-selection.test.ts` — 2a1fd71
+- [x] 1.3 Linting passes: `npm run lint` — 2a1fd71
+- [x] 1.4 Type checking passes: `npx astro check` — 2a1fd71
 
 ### Phase 2: Recipes table and row-level security
 
 #### Automated
 
-- [ ] 2.1 Local Supabase applies the migration: `npx supabase migration up --local`
-- [ ] 2.2 RLS tests pass: `npx vitest run tests/recipes-rls.test.ts`
-- [ ] 2.3 Linting passes: `npm run lint`
-- [ ] 2.4 Type checking passes: `npx astro check`
+- [x] 2.1 Local Supabase applies the migration: `npx supabase migration up --local`
+- [x] 2.2 RLS tests pass: `npx vitest run tests/recipes-rls.test.ts`
+- [x] 2.3 Linting passes: `npm run lint`
+- [x] 2.4 Type checking passes: `npx astro check`
 
 ### Phase 3: Create and list recipes
 
