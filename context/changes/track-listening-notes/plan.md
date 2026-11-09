@@ -257,18 +257,18 @@ The migration only adds a table and its policies; existing data is untouched. Pr
 
 #### Automated
 
-- [x] 1.1 Note tests pass: `npx vitest run tests/listening-notes.test.ts`
-- [x] 1.2 Linting passes: `npm run lint`
-- [x] 1.3 Type checking passes: `npx astro check`
+- [x] 1.1 Note tests pass: `npx vitest run tests/listening-notes.test.ts` — c82da2c
+- [x] 1.2 Linting passes: `npm run lint` — c82da2c
+- [x] 1.3 Type checking passes: `npx astro check` — c82da2c
 
 ### Phase 2: Listening notes table and row-level security
 
 #### Automated
 
-- [ ] 2.1 Local Supabase applies the migration: `npx supabase migration up --local`
-- [ ] 2.2 RLS tests pass: `npx vitest run tests/listening-notes-rls.test.ts`
-- [ ] 2.3 Linting passes: `npm run lint`
-- [ ] 2.4 Type checking passes: `npx astro check`
+- [x] 2.1 Local Supabase applies the migration: `npx supabase migration up --local`
+- [x] 2.2 RLS tests pass: `npx vitest run tests/listening-notes-rls.test.ts`
+- [x] 2.3 Linting passes: `npm run lint`
+- [x] 2.4 Type checking passes: `npx astro check`
 
 ### Phase 3: Notes on the track page
 
