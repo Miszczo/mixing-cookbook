@@ -1,10 +1,10 @@
 ---
 change_id: author-recipe-with-screenshot
 title: Author a recipe with a screenshot
-status: impl_reviewed
+status: archived
 created: 2026-11-03
-updated: 2026-11-04
-archived_at: null
+updated: 2026-11-09
+archived_at: 2026-11-09T15:26:00Z
 ---
 
 ## Notes
