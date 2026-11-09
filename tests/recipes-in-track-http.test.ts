@@ -158,6 +158,11 @@ describe("own recipe on a track", () => {
 
     const reloaded = await request(origin, owner.jar, `${trackPath}?recipe=${id}`);
     expect(reloaded.body).toMatch(/data-step="step-1"[^>]*aria-pressed="true"/);
+    const remembered = await request(origin, owner.jar, trackPath);
+    expect(activeTool(remembered.body)).toBe("Air EQ");
+    const missing = await request(origin, owner.jar, `${trackPath}?recipe=00000000-0000-4000-8000-000000000000`);
+    expect(missing.status).toBe(200);
+    expect(activeTool(missing.body)).toBeUndefined();
     expect(reloaded.body).toMatch(/data-step="step-2"[^>]*aria-pressed="false"/);
     expect(await progressRecipeIds(owner.email, trackId(trackPath))).toEqual([id]);
 

@@ -118,6 +118,14 @@ describe("recipes row rules", () => {
       .from("recipes")
       .insert(recipeRow(owner.userId, { image_data: "x".repeat(1_400_001) }));
     expect(huge.error).not.toBeNull();
+
+    const shapeless = await owner.client.from("recipes").insert(recipeRow(owner.userId, { steps: ["not-an-object"] }));
+    expect(shapeless.error).not.toBeNull();
+
+    const longStep = await owner.client
+      .from("recipes")
+      .insert(recipeRow(owner.userId, { steps: [{ id: "step-1", text: "x".repeat(201) }] }));
+    expect(longStep.error).not.toBeNull();
   }, 30_000);
 
   it("removes progress for the deleted recipe and leaves the starter recipe", async () => {

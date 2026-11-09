@@ -59,8 +59,9 @@ const requestedRecipeId = Astro.url.searchParams.get("recipe");
 const stored = progressRows.success ? progressRows.data : [];
 const recipes = [...RECIPES, ...(ownRows.success ? ownRows.data.map(recipeFromRow) : [])];
 const listed =
-  recipes.find((candidate) => candidate.id === requestedRecipeId) ??
-  recipes.find((candidate) => stored.some((row) => row.recipe_id === candidate.id));
+  requestedRecipeId === null
+    ? recipes.find((candidate) => stored.some((row) => row.recipe_id === candidate.id))
+    : recipes.find((candidate) => candidate.id === requestedRecipeId);
 const resolved = listed && supabase ? await findRecipe(supabase, listed.id) : null;
 const recipe = resolved === "error" ? null : resolved;
 const recipeLoadFailed =

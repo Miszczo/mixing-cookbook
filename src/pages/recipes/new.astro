@@ -28,8 +28,9 @@ function redirect(path: string, status: number): void {
 
 async function handlePost(): Promise<void> {
   const declaredLength = Astro.request.headers.get("content-length");
-  // A missing Content-Length is not an oversize request; only a declared size above 5 MB is rejected unread.
-  if (declaredLength !== null && Number(declaredLength) > MAX_BODY_BYTES) {
+  const declaredBytes = declaredLength !== null && /^\d+$/.test(declaredLength) ? Number(declaredLength) : Number.NaN;
+  // Read the body only when its declared size is a plain integer within 5 MB.
+  if (!Number.isFinite(declaredBytes) || declaredBytes > MAX_BODY_BYTES) {
     Astro.response.status = 413;
     errorMessage = "The upload is larger than 5 MB. Choose the image again.";
     return;
