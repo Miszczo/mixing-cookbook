@@ -265,26 +265,26 @@ The migration only adds a table and its policies; existing data is untouched. Pr
 
 #### Automated
 
-- [x] 2.1 Local Supabase applies the migration: `npx supabase migration up --local`
-- [x] 2.2 RLS tests pass: `npx vitest run tests/listening-notes-rls.test.ts`
-- [x] 2.3 Linting passes: `npm run lint`
-- [x] 2.4 Type checking passes: `npx astro check`
+- [x] 2.1 Local Supabase applies the migration: `npx supabase migration up --local` — 0f84d8a
+- [x] 2.2 RLS tests pass: `npx vitest run tests/listening-notes-rls.test.ts` — 0f84d8a
+- [x] 2.3 Linting passes: `npm run lint` — 0f84d8a
+- [x] 2.4 Type checking passes: `npx astro check` — 0f84d8a
 
 ### Phase 3: Notes on the track page
 
 #### Automated
 
-- [ ] 3.1 HTTP tests pass: `npx vitest run tests/listening-notes-http.test.ts`
-- [ ] 3.2 All tests pass: `npm test`
-- [ ] 3.3 Linting passes: `npm run lint`
-- [ ] 3.4 Type checking passes: `npx astro check`
-- [ ] 3.5 Build passes: `npm run build`
+- [x] 3.1 HTTP tests pass: `npx vitest run tests/listening-notes-http.test.ts`
+- [x] 3.2 All tests pass: `npm test`
+- [x] 3.3 Linting passes: `npm run lint`
+- [x] 3.4 Type checking passes: `npx astro check`
+- [x] 3.5 Build passes: `npm run build`
 
 #### Manual
 
-- [ ] 3.6 On a Miks track, a saved note appears at the top with Polish date and time, the equipment, and "Miks", and is still there after a browser refresh and after signing out and in
-- [ ] 3.7 Equipment suggestions show earlier equipment while typing
-- [ ] 3.8 An empty notes field shows the message and the typed equipment is still in the form
-- [ ] 3.9 After switching the track to Master the history is still visible and old notes keep "Miks"
-- [ ] 3.10 Deleting a note removes it from the list
-- [ ] 3.11 The form and the list are usable at phone width
+- [x] 3.6 On a Miks track, a saved note appears at the top with Polish date and time, the equipment, and "Miks", and is still there after a browser refresh and after signing out and in
+- [x] 3.7 Equipment suggestions show earlier equipment while typing
+- [x] 3.8 An empty notes field shows the message and the typed equipment is still in the form
+- [x] 3.9 After switching the track to Master the history is still visible and old notes keep "Miks"
+- [x] 3.10 Deleting a note removes it from the list
+- [x] 3.11 The form and the list are usable at phone width

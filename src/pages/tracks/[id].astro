@@ -15,8 +15,17 @@ import {
   RECIPES,
   selectTool,
 } from "@/lib/recipes";
+import {
+  equipmentSuggestions,
+  formatNoteDate,
+  LISTENING_NOTE_COLUMNS,
+  listeningNoteInputSchema,
+  listeningNoteRowSchema,
+  MAX_EQUIPMENT_LENGTH,
+  MAX_NOTE_LENGTH,
+} from "@/lib/listening-notes";
 import { createClient } from "@/lib/supabase";
-import { TRACK_COLUMNS, TRACK_STAGES, trackRowSchema } from "@/lib/tracks";
+import { TRACK_COLUMNS, TRACK_STAGES, trackRowSchema, trackStageLabel } from "@/lib/tracks";
 
 const id = z.uuid().safeParse(Astro.params.id);
 const supabase = createClient(Astro.request.headers, Astro.cookies);
@@ -33,6 +42,74 @@ if (!track) {
 const showInvalid = Astro.url.searchParams.get("error") === "invalid_track";
 const showInvalidRecipe = Astro.url.searchParams.get("error") === "invalid_recipe_action";
 
+// The note form posts to this page so a failed save can show the typed text again.
+let noteError = "";
+let equipmentValue = "";
+let bodyValue = "";
+const state = { redirected: false };
+
+function redirect(path: string): void {
+  state.redirected = true;
+  Astro.response.status = 303;
+  Astro.response.headers.set("Location", path);
+}
+
+if (track && supabase && Astro.request.method === "POST") {
+  let form: FormData | null;
+  try {
+    form = await Astro.request.formData();
+  } catch {
+    form = null;
+  }
+  const equipment = form?.get("equipment");
+  const body = form?.get("body");
+  equipmentValue = typeof equipment === "string" ? equipment : "";
+  bodyValue = typeof body === "string" ? body : "";
+  const noteInput = listeningNoteInputSchema.safeParse({ equipment: equipmentValue, body: bodyValue });
+  const { user } = Astro.locals;
+
+  if (!user) {
+    redirect("/auth/signin");
+  } else if (form?.get("action") !== "add-note") {
+    Astro.response.status = 400;
+    noteError = "That action is not supported.";
+  } else if (!noteInput.success) {
+    Astro.response.status = 400;
+    noteError = "Enter the equipment (up to 100 characters) and your notes (up to 2000 characters).";
+  } else {
+    // The stage comes from the track row read above, not from the form.
+    const { error } = await supabase.from("listening_notes").insert({
+      track_id: track.id,
+      user_id: user.id,
+      equipment: noteInput.data.equipment,
+      body: noteInput.data.body,
+      stage: track.stage,
+    });
+    if (error) {
+      Astro.response.status = 500;
+      noteError = "The note could not be saved.";
+    } else {
+      const recipeParam = Astro.url.searchParams.get("recipe");
+      const query = recipeParam === null ? "" : `?recipe=${encodeURIComponent(recipeParam)}`;
+      redirect(`/tracks/${track.id}${query}#notes`);
+    }
+  }
+}
+
+// Started now so the notes load while the Miks reads below are in flight.
+const noteReads =
+  track && supabase && !state.redirected
+    ? Promise.all([
+        supabase
+          .from("listening_notes")
+          .select(LISTENING_NOTE_COLUMNS)
+          .eq("track_id", track.id)
+          .order("created_at", { ascending: false })
+          .order("id", { ascending: false }),
+        supabase.from("listening_notes").select("equipment").order("created_at", { ascending: false }).limit(200),
+      ])
+    : null;
+
 // A failed read must not look like "no plugins", or the card would wrongly offer the native tool.
 const isMiks = track?.stage === "miks";
 const ownRecipeListColumns = `${RECIPE_COLUMNS}, created_at`;
@@ -45,6 +122,14 @@ const [pluginsResult, profileResult, progressResult, ownResult] =
         supabase.from("recipes").select(ownRecipeListColumns).order("created_at", { ascending: false }),
       ])
     : [null, null, null, null];
+
+const [notesResult, equipmentResult] = (await noteReads) ?? [null, null];
+// A failed read must not look like "No listening notes yet."; a failed suggestions read only drops the suggestions.
+const noteRows = z.array(listeningNoteRowSchema).safeParse(notesResult?.data);
+const notes = noteRows.success ? noteRows.data : [];
+const notesFailed = Boolean(track) && !state.redirected && (Boolean(notesResult?.error) || !noteRows.success);
+const equipmentRows = z.array(z.object({ equipment: z.string() })).safeParse(equipmentResult?.data);
+const suggestions = equipmentSuggestions(equipmentRows.success ? equipmentRows.data.map((row) => row.equipment) : []);
 
 const plugins = z.array(pluginRowSchema).safeParse(pluginsResult?.data);
 const progressRows = z.array(progressRowSchema).safeParse(progressResult?.data);
@@ -151,6 +236,79 @@ const button = "rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm 
           />
         )
       )}
+      <section id="notes" aria-labelledby="notes-heading" class="mt-8">
+        <h2 id="notes-heading" class="text-lg font-semibold">
+          Listening notes
+        </h2>
+        <form method="POST" class="mt-3 flex flex-col gap-3">
+          <input type="hidden" name="action" value="add-note" />
+          <label class="flex flex-col gap-1 text-sm" for="note-equipment">
+            Equipment
+            <input
+              id="note-equipment"
+              name="equipment"
+              list="note-equipment-options"
+              autocomplete="off"
+              maxlength={MAX_EQUIPMENT_LENGTH}
+              value={equipmentValue}
+              class:list={field}
+            />
+          </label>
+          <datalist id="note-equipment-options">
+            {suggestions.map((value) => (
+              <option value={value} />
+            ))}
+          </datalist>
+          <label class="flex flex-col gap-1 text-sm" for="note-body">
+            Notes
+            <textarea
+              id="note-body"
+              name="body"
+              rows="4"
+              maxlength={MAX_NOTE_LENGTH}
+              class:list={field}
+            >{bodyValue}</textarea>
+          </label>
+          <button type="submit" class:list={[button, "self-start"]}>
+            Save note
+          </button>
+        </form>
+        {noteError && (
+          <p role="alert" class="mt-2 text-sm text-red-200">
+            {noteError}
+          </p>
+        )}
+        {notesFailed ? (
+          <p role="alert" class="mt-4 text-sm text-red-200">
+            Listening notes could not be loaded. Refresh the page to try again.
+          </p>
+        ) : notes.length === 0 ? (
+          <p class="mt-4 text-sm text-blue-100/80">No listening notes yet.</p>
+        ) : (
+          <ul class="mt-4 flex flex-col gap-3">
+            {notes.map((note) => (
+              <li class="rounded-xl border border-white/10 bg-white/5 p-3">
+                <div class="flex flex-wrap items-start justify-between gap-2 text-sm">
+                  <p class="flex flex-wrap items-baseline gap-x-2">
+                    <time datetime={note.created_at} class="text-blue-100/80">
+                      {formatNoteDate(note.created_at)}
+                    </time>
+                    <span class="font-medium">{note.equipment}</span>
+                    <span class="rounded-full border border-white/20 px-2 text-xs">{trackStageLabel(note.stage)}</span>
+                  </p>
+                  <form method="POST" action={`/api/tracks/${track.id}/notes/${note.id}`}>
+                    <input type="hidden" name="action" value="delete" />
+                    <button type="submit" class:list={button}>
+                      Delete
+                    </button>
+                  </form>
+                </div>
+                <p class="mt-2 text-sm whitespace-pre-line">{note.body}</p>
+              </li>
+            ))}
+          </ul>
+        )}
+      </section>
     </>
   ) : (
     <a href="/tracks" class="text-purple-200 hover:text-white hover:underline">

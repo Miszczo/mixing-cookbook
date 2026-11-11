@@ -3,7 +3,7 @@ change_id: track-listening-notes
 title: Track listening notes
 status: implementing
 created: 2026-11-09
-updated: 2026-11-09
+updated: 2026-11-11
 archived_at: null
 ---
 

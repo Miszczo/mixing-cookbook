@@ -50,7 +50,7 @@ Przepis miksowy powinien być kontekstowy: połączenie intencji, posiadanych pl
 | S-04  | in-track-sidechain-card       | get a matched sidechain recipe card inside a Miks track   | S-01, S-02, S-03        | US-01, FR-008, FR-009, FR-011 | done |
 | S-05  | author-recipe-with-screenshot | save an own recipe with checklist and screenshot          | F-01                    | FR-006, FR-007            | done |
 | S-06  | search-recipes-by-intent      | search and filter starter and own recipes by intent       | S-04, S-05              | FR-005                    | proposed |
-| S-07  | track-listening-notes         | add a listening note to a track and read them in order    | S-03                    | US-01, FR-012, FR-013     | proposed |
+| S-07  | track-listening-notes         | add a listening note to a track and read them in order    | S-03                    | US-01, FR-012, FR-013     | in-progress |
 
 ## Streams
 
@@ -176,7 +176,7 @@ Foundations below assume these are present and do NOT re-scaffold them.
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** The note is required, but it does not feed the card, so it stays off the path into S-04 and can run as soon as a track exists.
-- **Status:** proposed
+- **Status:** in-progress
 
 ## Backlog Handoff
 
