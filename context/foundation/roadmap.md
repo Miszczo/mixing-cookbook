@@ -3,29 +3,29 @@ project: "Sound Intent & Mixing Cookbook CMS"
 version: 1
 status: draft
 created: 2026-09-23
-updated: 2026-11-11
+updated: 2026-11-22
 prd_version: 1
 main_goal: speed
 top_blocker: capacity
-milestone_id: in-track-sidechain-recipe
-milestone_seq: 1
+milestone_id: nice-to-have-polish
+milestone_seq: 2
 milestone_status: open
 ---
 
 # Roadmap: Sound Intent & Mixing Cookbook CMS
 
 > Derived from context/foundation/prd.md (v1) + auto-researched codebase baseline.
-> Edit-in-place; archive when superseded.
+> Edit-in-place; the next milestone continues this file. Archive only when an independent roadmap replaces it.
 > Slices below are listed in dependency order. The "At a glance" table is the index.
 
 ## Milestone
 
-**M-1: In-track sidechain recipe** — Status: open
+**M-2: Nice-to-have polish** — Status: open
 
-- **Intent:** A signed-in producer can open a track in the Miks stage, choose the intent "Sidechain stopy z basem", and get one recipe card with a checklist, a settings screenshot, and a concrete tool — a favorite matching plugin, or the DAW's native tool when no match exists. Listening notes on a track ship in the same milestone because they are required, but they are not the first proof.
+- **Intent:** The required product path from M-1 is done; this milestone adds three small conveniences from the PRD's nice-to-have list that make everyday use faster: a ready listening-note template, a one-click Markdown copy of a recipe checklist, and a filter of listening notes by reference equipment.
 - **Source materials:** `context/foundation/prd.md` (v1)
 - **Done when:** every F-NN and S-NN below is `done`.
-- **Scope anchors:** FR-001–FR-013, US-01
+- **Scope anchors:** FR-014, FR-015, FR-017
 
 ## Vision recap
 
@@ -35,165 +35,93 @@ Przepis miksowy powinien być kontekstowy: połączenie intencji, posiadanych pl
 
 ## North star
 
-**S-04: User can open a Miks track, choose "Sidechain stopy z basem", and get a matched recipe card** — speed puts this first among user-visible work, because the required path should prove the product before own-recipe browsing and the listening worklog.
+**S-08: User can insert a listening-note template into the worklog text field** — speed puts this first: the PRD names the template in its secondary success criteria, so it is the only slice here that serves a stated success criterion.
 
-> North star means the smallest end-to-end slice whose delivery would prove the core hypothesis — the belief that a recipe is useful only when intent, owned plugins, and a native DAW fallback produce one concrete action. It sits as early as its prerequisites allow, because the other slices matter only if this works.
+> North star means the smallest end-to-end slice whose delivery would prove the milestone's main point. It sits first because its prerequisites are already done.
 
 ## At a glance
 
-| ID    | Change ID                     | Outcome (user can …)                                      | Prerequisites           | PRD refs                  | Status   |
-| ----- | ----------------------------- | --------------------------------------------------------- | ----------------------- | ------------------------- | -------- |
-| F-01  | per-user-row-isolation        | (foundation) per-user row isolation for new app data      | —                       | FR-001                    | done |
-| S-01  | primary-daw-profile           | sign in and choose a primary DAW                          | F-01                    | FR-001, FR-002            | done |
-| S-02  | plugin-inventory-favorites    | add, edit, and delete plugins, and mark favorites         | F-01                    | FR-003, FR-004            | done |
-| S-03  | track-stage-status            | create and edit a track with a name and stage             | F-01                    | FR-010                    | done |
-| S-04  | in-track-sidechain-card       | get a matched sidechain recipe card inside a Miks track   | S-01, S-02, S-03        | US-01, FR-008, FR-009, FR-011 | done |
-| S-05  | author-recipe-with-screenshot | save an own recipe with checklist and screenshot          | F-01                    | FR-006, FR-007            | done |
-| S-06  | search-recipes-by-intent      | search and filter starter and own recipes by intent       | S-04, S-05              | FR-005                    | proposed |
-| S-07  | track-listening-notes         | add a listening note to a track and read them in order    | S-03                    | US-01, FR-012, FR-013     | done |
+| ID    | Change ID                      | Outcome (user can …)                                           | Prerequisites | PRD refs | Status |
+| ----- | ------------------------------ | -------------------------------------------------------------- | ------------- | -------- | ------ |
+| S-08  | listening-note-template        | insert a listening-note template into the note field           | S-07          | FR-015   | done        |
+| S-09  | copy-checklist-as-markdown     | copy a recipe checklist to the clipboard as Markdown           | S-04          | FR-014   | ready  |
+| S-10  | filter-notes-by-equipment      | filter listening notes across all tracks by reference equipment | S-07          | FR-017   | ready  |
 
 ## Streams
 
-Navigation aid — groups items that share a Prerequisites chain. Canonical ordering still lives in the dependency graph below; this table is the proposed reading order across parallel tracks.
+Navigation aid — groups items that share a Prerequisites chain. Canonical ordering still lives in the dependency graph below.
 
-| Stream | Theme                 | Chain                    | Note                                                                                          |
-| ------ | --------------------- | ------------------------ | --------------------------------------------------------------------------------------------- |
-| A      | In-track recipe       | `F-01` → `S-01` → `S-04` | Shortest required path to the card; `S-04` is where streams B and C join.                    |
-| B      | Plugin inventory      | `S-02`                   | Runs beside stream A after `F-01`; joins stream A at `S-04`.                                 |
-| C      | Tracks and listening  | `S-03` → `S-07`          | Joins stream A at `S-04`; the listening note stays off the card's critical path.             |
-| D      | Own cookbook          | `S-05` → `S-06`          | Joins stream A at `S-04`, because search includes the starter recipe the card already shows. |
+| Stream | Theme            | Chain   | Note                                                        |
+| ------ | ---------------- | ------- | ----------------------------------------------------------- |
+| A      | Listening worklog | `S-08`  | Serves the secondary success criterion; first for speed.    |
+| B      | Recipe card      | `S-09`  | Standalone on the S-04 recipe card.                         |
+| C      | Notes overview   | `S-10`  | Reads the notes from S-07 across tracks; standalone.        |
 
 ## Baseline
 
-What's already in place in the codebase as of 2026-09-23 (auto-researched + user-confirmed).
-Foundations below assume these are present and do NOT re-scaffold them.
+What's already in place in the codebase as of 2026-11-22 (all M-1 slices archived and done).
+No foundations are needed: every slice below builds on pages and data that already exist.
 
-- **Frontend:** present — Astro + React + Tailwind, file-based pages, shadcn/ui (`package.json`, `astro.config.mjs`, `src/pages/index.astro`, `components.json`)
-- **Backend / API:** present — server-rendered app with wired sign-in, sign-up, and sign-out handlers (`astro.config.mjs`, `src/pages/api/auth/`)
-- **Data:** partial — database client exists; no application tables or migrations (`src/lib/supabase.ts`, `supabase/config.toml` only)
-- **Auth:** present — sign-in issues a session and middleware checks it on protected routes (`src/pages/api/auth/signin.ts`, `src/middleware.ts`)
-- **Deploy / infra:** partial — hosting adapter is configured; CI checks, builds, and smoke-tests, and does not deploy (`wrangler.jsonc`, `.github/workflows/ci.yml`)
-- **Observability:** partial — no application logging or error tracking; platform observability flag only (`wrangler.jsonc`)
+- **Frontend:** present — Astro + React + Tailwind, track pages and recipe card (`src/pages/tracks/[id].astro`, `src/pages/recipes/index.astro`)
+- **Backend / API:** present — server-rendered app with API routes
+- **Data:** present — tracks, plugins, recipes and listening notes with per-user row isolation (`supabase/migrations/`)
+- **Auth:** present — session middleware on protected routes (`src/middleware.ts`)
+- **Deploy / infra:** partial — hosting adapter configured; CI checks, builds, smoke-tests, no auto-deploy
+- **Observability:** partial — no application logging or error tracking
 
 ## Foundations
 
-### F-01: Per-user row isolation
-
-- **Outcome:** (foundation) New application rows are stored so a signed-in user can read and write only their own; product tables are still created by the first slice that needs each one.
-- **Change ID:** per-user-row-isolation
-- **PRD refs:** FR-001, Access Control
-- **Unlocks:** S-01, S-02, S-03, S-04, S-05, S-07; verification path that a second signed-in user cannot read the first user's rows
-- **Prerequisites:** —
-- **Parallel with:** —
-- **Blockers:** —
-- **Unknowns:** —
-- **Risk:** Sequenced first because every later slice stores private data and the baseline has no application tables; the isolation rule is fixed once here so those slices do not invent their own.
-- **Status:** done
+None. The Baseline already covers everything these slices need, and no layer would be built ahead of a user-visible slice.
 
 ## Slices
 
-### S-01: Primary DAW on the profile
+### S-08: Insert a listening-note template into the note field
 
-- **Outcome:** User can sign in and choose a primary DAW so later recipes can name that DAW's native tools.
-- **Change ID:** primary-daw-profile
-- **PRD refs:** FR-001, FR-002
-- **Prerequisites:** F-01
-- **Parallel with:** S-02, S-03, S-05, S-07
+- **Outcome:** User can insert a listening-note template into the note field.
+- **Change ID:** listening-note-template
+- **PRD refs:** FR-015
+- **Prerequisites:** S-07
+- **Parallel with:** S-09, S-10
 - **Blockers:** —
 - **Unknowns:** —
-- **Risk:** Sign-in already exists, so this slice only adds the DAW choice; without it the native fallback in S-04 has nothing to name.
+- **Risk:** Small change on the existing note form; the risk is overwriting text the user already typed, so insertion must keep it.
 - **Status:** done
 
-### S-02: Plugin inventory and favorites
+### S-09: Copy a recipe checklist to the clipboard as Markdown
 
-- **Outcome:** User can add, edit, and delete owned plugins with a name and a type, and can mark favorites.
-- **Change ID:** plugin-inventory-favorites
-- **PRD refs:** FR-003, FR-004
-- **Prerequisites:** F-01
-- **Parallel with:** S-01, S-03, S-05, S-07
+- **Outcome:** User can copy a recipe checklist to the clipboard as Markdown.
+- **Change ID:** copy-checklist-as-markdown
+- **PRD refs:** FR-014
+- **Prerequisites:** S-04
+- **Parallel with:** S-08, S-10
 - **Blockers:** —
 - **Unknowns:** —
-- **Risk:** Catalog fields stay limited to what matching needs; an empty inventory is valid and is what S-04's native fallback is for.
-- **Status:** done
+- **Risk:** Clipboard access needs a secure context and a user click; a failed copy must show a clear message.
+- **Status:** ready
 
-### S-03: Track name and stage
+### S-10: Filter listening notes across all tracks by reference equipment
 
-- **Outcome:** User can create and edit a track with a name and a stage such as Aranż, Miks, or Master.
-- **Change ID:** track-stage-status
-- **PRD refs:** FR-010
-- **Prerequisites:** F-01
-- **Parallel with:** S-01, S-02, S-05
+- **Outcome:** User can filter listening notes across all tracks by reference equipment.
+- **Change ID:** filter-notes-by-equipment
+- **PRD refs:** FR-017
+- **Prerequisites:** S-07
+- **Parallel with:** S-08, S-09
 - **Blockers:** —
 - **Unknowns:** —
-- **Risk:** The card in S-04 and the listening note in S-07 both need a track; stage is enough, and tempo or genre stay out.
-- **Status:** done
-
-### S-04: Sidechain recipe card inside a track
-
-- **Outcome:** User can open a track in the Miks stage, choose "Sidechain stopy z basem", and see a recipe card with a checklist, a settings screenshot, and a suggested tool — a favorite matching plugin first, otherwise the primary DAW's native tool — then mark checklist steps done.
-- **Change ID:** in-track-sidechain-card
-- **PRD refs:** US-01, FR-008, FR-009, FR-011
-- **Prerequisites:** S-01, S-02, S-03
-- **Parallel with:** S-05, S-07
-- **Blockers:** —
-- **Unknowns:**
-  - Which DAW names and native-tool labels belong in the first fallback map — Owner: user. Block: no.
-  - Checklist text and settings screenshot for the starter "Sidechain stopy z basem" recipe — Owner: user. Block: no.
-- **Risk:** This is the earliest slice that exercises matching; own-recipe authoring is not a prerequisite, so a starter recipe is seeded here rather than waiting on S-05.
-- **Status:** in-progress
-
-### S-05: Author a recipe with a screenshot
-
-- **Outcome:** User can create a recipe with an intent, a required plugin type, a checklist, and an uploaded settings image.
-- **Change ID:** author-recipe-with-screenshot
-- **PRD refs:** FR-006, FR-007
-- **Prerequisites:** F-01
-- **Parallel with:** S-01, S-02, S-03, S-04, S-07
-- **Blockers:** —
-- **Unknowns:** —
-- **Risk:** Authoring can run beside the card because the starter recipe already proves S-04; image upload starts here, where the user first supplies a file.
-- **Status:** done
-
-### S-06: Search recipes by intent
-
-- **Outcome:** User can search and filter starter recipes and their own recipes by intent.
-- **Change ID:** search-recipes-by-intent
-- **PRD refs:** FR-005
-- **Prerequisites:** S-04, S-05
-- **Parallel with:** S-07
-- **Blockers:** —
-- **Unknowns:** —
-- **Risk:** Search waits until both the starter card and an own recipe exist, so the filter is not an empty browser shipped before the card.
-- **Status:** proposed
-
-### S-07: Listening notes on a track
-
-- **Outcome:** User can add a listening note to a track with reference equipment and sound notes, and can read that track's notes in chronological order after a refresh.
-- **Change ID:** track-listening-notes
-- **PRD refs:** US-01, FR-012, FR-013
-- **Prerequisites:** S-03
-- **Parallel with:** S-01, S-02, S-04, S-05, S-06
-- **Blockers:** —
-- **Unknowns:** —
-- **Risk:** The note is required, but it does not feed the card, so it stays off the path into S-04 and can run as soon as a track exists.
-- **Status:** done
+- **Risk:** Needs a view over notes from all tracks; the risk is leaking another user's notes, so it must stay under the same row isolation.
+- **Status:** ready
 
 ## Backlog Handoff
 
-| Roadmap ID | Change ID                     | Suggested issue title                                      | Ready for `/10x-plan` | Notes                                      |
-| ---------- | ----------------------------- | ---------------------------------------------------------- | --------------------- | ------------------------------------------ |
-| F-01       | per-user-row-isolation        | Isolate each signed-in user's application rows             | no                    | Implemented and impl-reviewed; not archived |
-| S-01       | primary-daw-profile           | Let the user choose a primary DAW                          | yes                   | F-01 is done                               |
-| S-02       | plugin-inventory-favorites    | Let the user catalog plugins and mark favorites            | yes                   | F-01 is done; parallel with S-01 and S-03  |
-| S-03       | track-stage-status            | Let the user create a track with a stage                   | yes                   | F-01 is done; parallel with S-01 and S-02  |
-| S-04       | in-track-sidechain-card       | Show a matched sidechain recipe card inside a Miks track   | no                    | After S-01, S-02, and S-03                 |
-| S-05       | author-recipe-with-screenshot | Let the user save a recipe with a checklist and screenshot | yes                   | F-01 is done; parallel with the card path  |
-| S-06       | search-recipes-by-intent      | Let the user search recipes by intent                      | no                    | After S-04 and S-05                        |
-| S-07       | track-listening-notes         | Let the user keep ordered listening notes on a track       | no                    | After S-03; parallel with the card path    |
+| Roadmap ID | Change ID                  | Suggested issue title                                  | Ready for `/10x-plan` | Notes |
+| ---------- | -------------------------- | ------------------------------------------------------ | --------------------- | ----- |
+| S-08       | listening-note-template    | Insert a listening-note template into the note field   | yes                   | Run `/10x-plan listening-note-template` |
+| S-09       | copy-checklist-as-markdown | Copy a recipe checklist as Markdown                    | yes                   | Parallel with S-08 and S-10 |
+| S-10       | filter-notes-by-equipment  | Filter listening notes across tracks by equipment      | yes                   | Parallel with S-08 and S-09 |
 
 ## Open Roadmap Questions
 
-None. The PRD lists no open questions, and sequencing did not add a cross-slice decision. Per-slice unknowns stay on S-04 and do not gate planning.
+None. The PRD lists no open questions, and these slices add no cross-slice decision.
 
 ## Parked
 
@@ -201,16 +129,13 @@ None. The PRD lists no open questions, and sequencing did not add a cross-slice 
 - **DAW or VST preset file export** — Why parked: PRD §Non-Goals; a recipe stays an instruction and a checklist.
 - **A plugin or integration inside the DAW, including parameter automation** — Why parked: PRD §Non-Goals; the DAW is only the context for native-tool names.
 - **Popularity ranking or recommendations from other users' plugins** — Why parked: PRD §Non-Goals; matching stays per user.
-- **FR-014: Copy a checklist to the clipboard as Markdown** — Why parked: nice-to-have; speed keeps it off the required path.
-- **FR-015: Insert a listening-note template** — Why parked: nice-to-have, including the secondary success criterion; speed keeps it off the required path.
-- **FR-016: Paste a screenshot from the clipboard** — Why parked: nice-to-have; file upload in S-05 is enough.
-- **FR-017: Filter listening notes across tracks by equipment** — Why parked: nice-to-have; per-track history in S-07 is enough.
-- **FR-018: Percentage progress on a track** — Why parked: nice-to-have; the PRD keeps it out of the first version.
-- **Production auto-deploy** — Why parked: hosting config exists and CI already checks the app; capacity and speed keep this milestone on the required product path, with local verification enough for these slices.
+- **FR-016: Paste a screenshot from the clipboard** — Why parked: nice-to-have; PRD notes it complicates image handling and file upload is enough.
+- **FR-018: Percentage progress on a track** — Why parked: nice-to-have; PRD keeps it out of the MVP because it creates false precision.
+- **Production auto-deploy** — Why parked: capacity and speed keep this milestone on small product slices; local verification is enough.
 
 ## Milestone History
 
-(Empty on the first milestone.)
+- **M-1: In-track sidechain recipe** (`in-track-sidechain-recipe`) — closed 2026-11-22. A signed-in producer can open a Miks track, get the sidechain recipe card, author own recipes with a screenshot, search recipes by intent, and keep listening notes.
 
 ## Done
 
@@ -223,3 +148,5 @@ None. The PRD lists no open questions, and sequencing did not add a cross-slice 
 | S-04 | in-track-sidechain-card | 2026-11-03 | User can open a Miks track, choose "Sidechain stopy z basem" and see a recipe card with a checklist, a screenshot and a suggested tool. Archived to `context/archive/2026-11-01-in-track-sidechain-card/`. Lesson: —. |
 | S-05 | author-recipe-with-screenshot | 2026-11-09 | User can create a recipe with an intent, a required plugin type, a checklist, and an uploaded settings image. Archived to `context/archive/2026-11-03-author-recipe-with-screenshot/`. Lesson: —. |
 | S-07 | track-listening-notes | 2026-11-11 | User can add a listening note to a track with reference equipment and sound notes, and can read that track's notes in chronological order after a refresh. Archived to `context/archive/2026-11-09-track-listening-notes/`. Lesson: —. |
+| S-06 | search-recipes-by-intent | 2026-11-22 | User can search and filter starter recipes and their own recipes by intent. Archived to `context/archive/2026-11-11-search-recipes-by-intent/`. Lesson: —. |
+| S-08 | listening-note-template | 2026-11-22 | User can insert a listening-note template into the note field. Archived to `context/archive/2026-11-22-listening-note-template/`. Lesson: —. |
