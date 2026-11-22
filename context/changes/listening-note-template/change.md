@@ -1,7 +1,7 @@
 ---
 change_id: listening-note-template
 title: Listening-note template
-status: implementing
+status: implemented
 created: 2026-11-22
 updated: 2026-11-22
 ---

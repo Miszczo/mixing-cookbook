@@ -189,16 +189,16 @@ None. No data or schema change.
 
 #### Automated
 
-- [x] 2.1 HTTP tests pass (needs local Supabase): `npx vitest run tests/listening-notes-http.test.ts`
-- [x] 2.2 Whole suite passes: `npm test`
-- [x] 2.3 Type check passes: `npx astro check`
-- [x] 2.4 Linting passes: `npm run lint`
-- [x] 2.5 Production build passes: `npm run build`
+- [x] 2.1 HTTP tests pass (needs local Supabase): `npx vitest run tests/listening-notes-http.test.ts` — d5c1a61
+- [x] 2.2 Whole suite passes: `npm test` — d5c1a61
+- [x] 2.3 Type check passes: `npx astro check` — d5c1a61
+- [x] 2.4 Linting passes: `npm run lint` — d5c1a61
+- [x] 2.5 Production build passes: `npm run build` — d5c1a61
 
 #### Manual
 
-- [x] 2.6 On an empty Notes field, "Insert template" fills in the five labels and the caret is in the field.
-- [x] 2.7 With text already typed, the template is added below it after a blank line and the typed text is unchanged.
-- [x] 2.8 With about 1990 characters typed, clicking shows the "does not fit" message and the field is unchanged.
-- [x] 2.9 A note saved after inserting the template appears in the list with the labels and the user's answers.
-- [x] 2.10 With JavaScript disabled, the form works and no "Insert template" button is shown.
+- [x] 2.6 On an empty Notes field, "Insert template" fills in the five labels and the caret is in the field. — d5c1a61
+- [x] 2.7 With text already typed, the template is added below it after a blank line and the typed text is unchanged. — d5c1a61
+- [x] 2.8 With about 1990 characters typed, clicking shows the "does not fit" message and the field is unchanged. — d5c1a61
+- [x] 2.9 A note saved after inserting the template appears in the list with the labels and the user's answers. — d5c1a61
+- [x] 2.10 With JavaScript disabled, the form works and no "Insert template" button is shown. — d5c1a61
