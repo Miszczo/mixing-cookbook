@@ -55,6 +55,44 @@ export const RECIPES: readonly Recipe[] = [
   },
 ];
 
+export type RecipeSource = "starter" | "own";
+
+export interface ListedRecipe {
+  recipe: Recipe;
+  source: RecipeSource;
+}
+
+export const recipeSearchSchema = z.object({
+  q: z
+    .string()
+    .trim()
+    .transform((value) => value.slice(0, 100))
+    .default("")
+    .catch(""),
+  type: z
+    .enum([...PLUGIN_TYPE_IDS, "all"])
+    .default("all")
+    .catch("all"),
+  source: z.enum(["all", "starter", "own"]).default("all").catch("all"),
+});
+
+export type RecipeSearch = z.infer<typeof recipeSearchSchema>;
+
+/** Lower case without diacritics; ł does not decompose under NFD, so it is mapped explicitly. */
+export function normalizeIntent(text: string): string {
+  return text.toLowerCase().normalize("NFD").replace(/\p{M}/gu, "").replace(/ł/g, "l");
+}
+
+export function filterRecipes(items: readonly ListedRecipe[], search: RecipeSearch): ListedRecipe[] {
+  const words = normalizeIntent(search.q).split(/\s+/).filter(Boolean);
+  return items.filter(
+    (item) =>
+      (search.type === "all" || item.recipe.requiredType === search.type) &&
+      (search.source === "all" || item.source === search.source) &&
+      words.every((word) => normalizeIntent(item.recipe.intent).includes(word)),
+  );
+}
+
 export async function findRecipe(supabase: SupabaseClient, id: string): Promise<Recipe | null | "error"> {
   const starter = RECIPES.find((recipe) => recipe.id === id);
   if (starter) {
