@@ -152,23 +152,23 @@ None. No schema change.
 
 #### Automated
 
-- [x] 1.1 Search tests pass: `npx vitest run tests/recipe-search.test.ts`
-- [x] 1.2 Linting passes: `npm run lint`
-- [x] 1.3 Type checking passes: `npx astro check`
+- [x] 1.1 Search tests pass: `npx vitest run tests/recipe-search.test.ts` — 6eaf470
+- [x] 1.2 Linting passes: `npm run lint` — 6eaf470
+- [x] 1.3 Type checking passes: `npx astro check` — 6eaf470
 
 ### Phase 2: Search on /recipes
 
 #### Automated
 
-- [ ] 2.1 Search HTTP tests pass: `npx vitest run tests/recipes-search-http.test.ts`
-- [ ] 2.2 All tests pass: `npm test`
-- [ ] 2.3 Linting passes: `npm run lint`
-- [ ] 2.4 Type checking passes: `npx astro check`
-- [ ] 2.5 Build passes: `npm run build`
+- [x] 2.1 Search HTTP tests pass: `npx vitest run tests/recipes-search-http.test.ts`
+- [x] 2.2 All tests pass: `npm test`
+- [x] 2.3 Linting passes: `npm run lint`
+- [x] 2.4 Type checking passes: `npx astro check`
+- [x] 2.5 Build passes: `npm run build`
 
 #### Manual
 
-- [ ] 2.6 Typing "dol wokal" on `/recipes` finds the own recipe "Czyszczenie dołu w wokalu", and the field keeps its value after submitting
-- [ ] 2.7 The starter recipe is listed with the label "Starter" and no Delete button
-- [ ] 2.8 Combining type and source filters narrows the list, and a search with no matches shows the message
-- [ ] 2.9 The form and the list are usable at phone width
+- [x] 2.6 Typing "dol wokal" on `/recipes` finds the own recipe "Czyszczenie dołu w wokalu", and the field keeps its value after submitting
+- [x] 2.7 The starter recipe is listed with the label "Starter" and no Delete button
+- [x] 2.8 Combining type and source filters narrows the list, and a search with no matches shows the message
+- [x] 2.9 The form and the list are usable at phone width
