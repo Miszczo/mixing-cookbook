@@ -260,7 +260,12 @@ const button = "rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm 
             ))}
           </datalist>
           <label class="flex flex-col gap-1 text-sm" for="note-body">
-            Notes
+            <span class="flex flex-wrap items-center justify-between gap-2">
+              Notes
+              <button type="button" id="note-template-button" hidden class:list={button}>
+                Insert template
+              </button>
+            </span>
             <textarea
               id="note-body"
               name="body"
@@ -268,6 +273,9 @@ const button = "rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm 
               maxlength={MAX_NOTE_LENGTH}
               class:list={field}
             >{bodyValue}</textarea>
+            <p id="note-template-message" role="status" hidden class="text-xs text-red-200">
+              The template does not fit: notes are limited to {MAX_NOTE_LENGTH} characters.
+            </p>
           </label>
           <button type="submit" class:list={[button, "self-start"]}>
             Save note
@@ -316,3 +324,27 @@ const button = "rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm 
     </a>
   )}
 </AppLayout>
+
+<script>
+  import { appendListeningNoteTemplate } from "@/lib/listening-note-template";
+
+  const button = document.getElementById("note-template-button");
+  const textarea = document.getElementById("note-body");
+  const message = document.getElementById("note-template-message");
+
+  if (button instanceof HTMLButtonElement && textarea instanceof HTMLTextAreaElement && message) {
+    button.hidden = false;
+    button.addEventListener("click", () => {
+      const result = appendListeningNoteTemplate(textarea.value, textarea.maxLength);
+      if (!result.inserted) {
+        message.hidden = false;
+        return;
+      }
+      message.hidden = true;
+      textarea.value = result.text;
+      textarea.dispatchEvent(new Event("input", { bubbles: true }));
+      textarea.focus();
+      textarea.setSelectionRange(result.text.length, result.text.length);
+    });
+  }
+</script>

@@ -108,6 +108,18 @@ describe("listening notes on the track page", () => {
     expect(datalistOptions(afterThird.body)).toEqual(["dt 770", "Samochód"]);
   }, 90_000);
 
+  it("renders the insert-template button as a non-submitting control", async () => {
+    const jar = await user("template");
+    const trackPath = await newTrack(jar, "miks");
+
+    const page = await request(origin, jar, trackPath);
+    expect(page.status).toBe(200);
+    const section = notesSection(page.body);
+    expect(section).toMatch(/<button[^>]*id="note-template-button"[^>]*>/);
+    expect(/<button[^>]*id="note-template-button"[^>]*>/.exec(section)?.[0]).toContain('type="button"');
+    expect(section).toContain('id="note-template-message"');
+  }, 60_000);
+
   it("keeps the typed text and saves nothing when the input is rejected", async () => {
     const jar = await user("invalid");
     const trackPath = await newTrack(jar, "aranz");

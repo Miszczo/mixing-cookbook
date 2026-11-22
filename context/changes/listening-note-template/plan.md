@@ -181,24 +181,24 @@ None. No data or schema change.
 
 #### Automated
 
-- [x] 1.1 Template unit tests pass: `npx vitest run tests/listening-note-template.test.ts`
-- [x] 1.2 Type check passes: `npx astro check`
-- [x] 1.3 Linting passes: `npm run lint`
+- [x] 1.1 Template unit tests pass: `npx vitest run tests/listening-note-template.test.ts` — 577b0fa
+- [x] 1.2 Type check passes: `npx astro check` — 577b0fa
+- [x] 1.3 Linting passes: `npm run lint` — 577b0fa
 
 ### Phase 2: Insert button on the track page
 
 #### Automated
 
-- [ ] 2.1 HTTP tests pass (needs local Supabase): `npx vitest run tests/listening-notes-http.test.ts`
-- [ ] 2.2 Whole suite passes: `npm test`
-- [ ] 2.3 Type check passes: `npx astro check`
-- [ ] 2.4 Linting passes: `npm run lint`
-- [ ] 2.5 Production build passes: `npm run build`
+- [x] 2.1 HTTP tests pass (needs local Supabase): `npx vitest run tests/listening-notes-http.test.ts`
+- [x] 2.2 Whole suite passes: `npm test`
+- [x] 2.3 Type check passes: `npx astro check`
+- [x] 2.4 Linting passes: `npm run lint`
+- [x] 2.5 Production build passes: `npm run build`
 
 #### Manual
 
-- [ ] 2.6 On an empty Notes field, "Insert template" fills in the five labels and the caret is in the field.
-- [ ] 2.7 With text already typed, the template is added below it after a blank line and the typed text is unchanged.
-- [ ] 2.8 With about 1990 characters typed, clicking shows the "does not fit" message and the field is unchanged.
-- [ ] 2.9 A note saved after inserting the template appears in the list with the labels and the user's answers.
-- [ ] 2.10 With JavaScript disabled, the form works and no "Insert template" button is shown.
+- [x] 2.6 On an empty Notes field, "Insert template" fills in the five labels and the caret is in the field.
+- [x] 2.7 With text already typed, the template is added below it after a blank line and the typed text is unchanged.
+- [x] 2.8 With about 1990 characters typed, clicking shows the "does not fit" message and the field is unchanged.
+- [x] 2.9 A note saved after inserting the template appears in the list with the labels and the user's answers.
+- [x] 2.10 With JavaScript disabled, the form works and no "Insert template" button is shown.
