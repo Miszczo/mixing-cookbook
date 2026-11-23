@@ -1,0 +1,125 @@
+---
+import { z } from "zod";
+import AppLayout from "@/layouts/AppLayout.astro";
+import {
+  equipmentFilterOptions,
+  escapeLikePattern,
+  formatNoteDate,
+  LISTENING_NOTE_OVERVIEW_COLUMNS,
+  listeningNoteOverviewRowSchema,
+  MAX_EQUIPMENT_SCAN,
+  MAX_NOTES_OVERVIEW,
+  notesFilterSchema,
+  sameEquipment,
+} from "@/lib/listening-notes";
+import { createClient } from "@/lib/supabase";
+import { trackStageLabel } from "@/lib/tracks";
+import { cn } from "@/lib/utils";
+
+const { equipment: filter } = notesFilterSchema.parse(Object.fromEntries(Astro.url.searchParams));
+
+const supabase = createClient(Astro.request.headers, Astro.cookies);
+const overviewQuery = supabase
+  ?.from("listening_notes")
+  .select(LISTENING_NOTE_OVERVIEW_COLUMNS)
+  .order("created_at", { ascending: false })
+  .order("id", { ascending: false })
+  .limit(MAX_NOTES_OVERVIEW + 1);
+const [namesResult, notesResult] = supabase
+  ? await Promise.all([
+      supabase
+        .from("listening_notes")
+        .select("equipment")
+        .order("created_at", { ascending: false })
+        .limit(MAX_EQUIPMENT_SCAN),
+      // ilike is only a prefilter (`*` becomes `%`); every row is re-checked with sameEquipment below.
+      filter ? overviewQuery?.ilike("equipment", escapeLikePattern(filter)) : overviewQuery,
+    ])
+  : [null, null];
+
+const nameRows = z.array(z.object({ equipment: z.string() })).safeParse(namesResult?.data);
+const namesFailed = Boolean(namesResult?.error) || !nameRows.success;
+const options = equipmentFilterOptions(nameRows.success ? nameRows.data.map((row) => row.equipment) : []);
+const hasSelected = options.some((value) => sameEquipment(value, filter));
+const extraOption = filter && !hasSelected ? filter : null;
+
+const noteRows = z.array(listeningNoteOverviewRowSchema).safeParse(notesResult?.data);
+const notesFailed = !supabase || Boolean(notesResult?.error) || !noteRows.success;
+const matching = noteRows.success ? noteRows.data.filter((row) => !filter || sameEquipment(row.equipment, filter)) : [];
+const notes = matching.slice(0, MAX_NOTES_OVERVIEW);
+const hasMore = matching.length > MAX_NOTES_OVERVIEW;
+
+const field = "rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm text-white [&>option]:text-black";
+const button = "rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm transition-colors hover:bg-white/20";
+---
+
+<AppLayout title="Notes">
+  <form method="get" action="/notes" class="flex flex-col gap-3 sm:flex-row sm:items-end">
+    <div class="flex flex-col gap-1">
+      <label for="notes-equipment" class="text-sm">
+        Equipment
+      </label>
+      <select id="notes-equipment" name="equipment" class:list={cn(field, "sm:w-auto")}>
+        <option value="" selected={!filter}>
+          All
+        </option>
+        {options.map((value) => (
+          <option value={value} selected={sameEquipment(value, filter)}>
+            {value}
+          </option>
+        ))}
+        {extraOption && (
+          <option value={extraOption} selected>
+            {extraOption}
+          </option>
+        )}
+      </select>
+    </div>
+    <button type="submit" class:list={cn(button)}>
+      Filter
+    </button>
+  </form>
+
+  {namesFailed && (
+    <p role="alert" class="mt-4 text-sm text-red-200">
+      The equipment list could not be loaded.
+    </p>
+  )}
+
+  <section id="notes-overview" aria-label="Listening notes" class="mt-6">
+    {notesFailed ? (
+      <p role="alert" class="text-sm text-red-200">
+        Listening notes could not be loaded. Refresh the page to try again.
+      </p>
+    ) : notes.length === 0 ? (
+      <p class="text-sm text-blue-100/80">{filter ? "No notes for this equipment." : "No listening notes yet."}</p>
+    ) : (
+      <>
+        <ul class="flex flex-col gap-3">
+          {notes.map((note) => (
+            <li class="rounded-xl border border-white/10 bg-white/5 p-3">
+              <div class="flex flex-wrap items-start justify-between gap-2 text-sm">
+                <p class="flex flex-wrap items-baseline gap-x-2">
+                  <time datetime={note.created_at} class="text-blue-100/80">
+                    {formatNoteDate(note.created_at)}
+                  </time>
+                  <span class="font-medium">{note.equipment}</span>
+                  <span class="rounded-full border border-white/20 px-2 text-xs">{trackStageLabel(note.stage)}</span>
+                </p>
+                <a href={`/tracks/${note.track_id}#notes`} class="text-purple-200 hover:text-white hover:underline">
+                  {note.tracks.name}
+                </a>
+              </div>
+              <p class="mt-2 text-sm whitespace-pre-line">{note.body}</p>
+            </li>
+          ))}
+        </ul>
+        {hasMore && (
+          <p class="mt-4 text-sm text-blue-100/80">
+            Showing the {MAX_NOTES_OVERVIEW} newest notes. Choose equipment to narrow the list.
+          </p>
+        )}
+      </>
+    )}
+  </section>
+</AppLayout>

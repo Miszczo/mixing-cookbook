@@ -208,25 +208,25 @@ None. No schema or data changes.
 
 #### Automated
 
-- [x] 1.1 Unit tests pass: `npx vitest run tests/listening-notes.test.ts`
-- [x] 1.2 Linting passes: `npm run lint`
-- [x] 1.3 Type checking passes: `npx astro check`
+- [x] 1.1 Unit tests pass: `npx vitest run tests/listening-notes.test.ts` — e26e069
+- [x] 1.2 Linting passes: `npm run lint` — e26e069
+- [x] 1.3 Type checking passes: `npx astro check` — e26e069
 
 #### Manual
 
-- [ ] 1.4 The track page datalist still offers the same suggestions as before
+- [x] 1.4 The track page datalist still offers the same suggestions as before — e26e069
 
 ### Phase 2: Notes overview page
 
 #### Automated
 
-- [ ] 2.1 All tests pass against local Supabase: `npm test`
-- [ ] 2.2 Linting passes: `npm run lint`
-- [ ] 2.3 Type checking passes: `npx astro check`
-- [ ] 2.4 Build succeeds: `npm run build`
+- [x] 2.1 All tests pass against local Supabase: `npm test`
+- [x] 2.2 Linting passes: `npm run lint`
+- [x] 2.3 Type checking passes: `npx astro check`
+- [x] 2.4 Build succeeds: `npm run build`
 
 #### Manual
 
-- [ ] 2.5 "Notes" in the navigation opens the overview; choosing equipment and pressing Filter narrows the list and keeps the choice selected after reload
-- [ ] 2.6 Track links open the right track at the notes section
-- [ ] 2.7 The page is readable on a phone-width window
+- [x] 2.5 "Notes" in the navigation opens the overview; choosing equipment and pressing Filter narrows the list and keeps the choice selected after reload
+- [x] 2.6 Track links open the right track at the notes section
+- [x] 2.7 The page is readable on a phone-width window
