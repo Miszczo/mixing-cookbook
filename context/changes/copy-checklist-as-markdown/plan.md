@@ -171,24 +171,24 @@ None. No data or schema change.
 
 #### Automated
 
-- [x] 1.1 Formatter unit tests pass: `npx vitest run tests/recipe-checklist-markdown.test.ts`
-- [x] 1.2 Type check passes: `npx astro check`
-- [x] 1.3 Linting passes: `npm run lint`
+- [x] 1.1 Formatter unit tests pass: `npx vitest run tests/recipe-checklist-markdown.test.ts` — 591fd44
+- [x] 1.2 Type check passes: `npx astro check` — 591fd44
+- [x] 1.3 Linting passes: `npm run lint` — 591fd44
 
 ### Phase 2: Copy button on the recipe card
 
 #### Automated
 
-- [ ] 2.1 HTTP tests pass (needs local Supabase): `npx vitest run tests/recipe-card-http.test.ts`
-- [ ] 2.2 Whole suite passes: `npm test`
-- [ ] 2.3 Type check passes: `npx astro check`
-- [ ] 2.4 Linting passes: `npm run lint`
-- [ ] 2.5 Production build passes: `npm run build`
+- [x] 2.1 HTTP tests pass (needs local Supabase): `npx vitest run tests/recipe-card-http.test.ts`
+- [x] 2.2 Whole suite passes: `npm test`
+- [x] 2.3 Type check passes: `npx astro check`
+- [x] 2.4 Linting passes: `npm run lint`
+- [x] 2.5 Production build passes: `npm run build`
 
 #### Manual
 
-- [ ] 2.6 On a Miks track, "Copy as Markdown" copies the heading, the Tool line and the steps; pasted into a Markdown editor, done steps show as checked.
-- [ ] 2.7 After toggling a step and reloading, the copied text reflects the new state.
-- [ ] 2.8 With a native tool chosen, the Tool line ends with "(native)".
-- [ ] 2.9 When the clipboard write fails (e.g. open via LAN IP over http, or block clipboard permission), the red message and a selected textarea with the Markdown appear.
-- [ ] 2.10 With JavaScript disabled, no button is shown and the checklist still works.
+- [x] 2.6 On a Miks track, "Copy as Markdown" copies the heading, the Tool line and the steps; pasted into a Markdown editor, done steps show as checked.
+- [x] 2.7 After toggling a step and reloading, the copied text reflects the new state.
+- [x] 2.8 With a native tool chosen, the Tool line ends with "(native)".
+- [x] 2.9 When the clipboard write fails (e.g. open via LAN IP over http, or block clipboard permission), the red message and a selected textarea with the Markdown appear.
+- [x] 2.10 With JavaScript disabled, no button is shown and the checklist still works.

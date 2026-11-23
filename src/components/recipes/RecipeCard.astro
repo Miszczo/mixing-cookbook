@@ -1,4 +1,5 @@
 ---
+import { recipeChecklistToMarkdown } from "@/lib/recipe-checklist-markdown";
 import type { Recipe, ToolChoice, ToolSelection } from "@/lib/recipes";
 
 interface Props {
@@ -19,6 +20,12 @@ const selectedValue = choice === "native" || isPluginChoice ? choice : "auto";
 const isManual = selectedValue !== "auto";
 const field = "rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm text-white [&>option]:text-black";
 const button = "rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm transition-colors hover:bg-white/20";
+const markdown = recipeChecklistToMarkdown({
+  intent: recipe.intent,
+  tool,
+  steps: recipe.steps,
+  completedSteps,
+});
 ---
 
 <section aria-labelledby="recipe-title" class="mt-6 rounded-xl border border-white/10 bg-white/5 p-4">
@@ -74,6 +81,21 @@ const button = "rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm 
     class="mt-4 h-auto w-full rounded-lg border border-white/10"
   />
 
+  <div class="mt-4">
+    <button type="button" id="recipe-copy-markdown" hidden data-markdown={markdown} class:list={button}>
+      Copy as Markdown
+    </button>
+    <p id="recipe-copy-status" role="status" hidden class="mt-2 text-sm text-blue-100/80"></p>
+    <textarea
+      id="recipe-copy-fallback"
+      readonly
+      hidden
+      rows="8"
+      aria-label="Recipe checklist as Markdown"
+      class:list={[field, "mt-2 w-full"]}
+    ></textarea>
+  </div>
+
   <ol class="mt-4 flex flex-col gap-2">
     {recipe.steps.map((step) => {
       const done = completedSteps.includes(step.id);
@@ -101,3 +123,39 @@ const button = "rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm 
     })}
   </ol>
 </section>
+
+<script>
+  const button = document.getElementById("recipe-copy-markdown");
+  const status = document.getElementById("recipe-copy-status");
+  const fallback = document.getElementById("recipe-copy-fallback");
+
+  if (button instanceof HTMLButtonElement && status instanceof HTMLElement && fallback instanceof HTMLTextAreaElement) {
+    button.hidden = false;
+    button.addEventListener("click", async () => {
+      const markdown = button.dataset.markdown ?? "";
+      let copied = false;
+      try {
+        if (navigator.clipboard?.writeText) {
+          await navigator.clipboard.writeText(markdown);
+          copied = true;
+        }
+      } catch {
+        copied = false;
+      }
+
+      status.hidden = false;
+      status.classList.toggle("text-red-200", !copied);
+      status.classList.toggle("text-blue-100/80", copied);
+      if (copied) {
+        status.textContent = "Copied to clipboard.";
+        fallback.hidden = true;
+        return;
+      }
+      status.textContent = "Could not copy to the clipboard. Select the text below and copy it manually.";
+      fallback.value = markdown;
+      fallback.hidden = false;
+      fallback.focus();
+      fallback.select();
+    });
+  }
+</script>

@@ -106,6 +106,19 @@ describe("recipe card on a track", () => {
     expect(image.headers.get("content-type")).toContain("image/png");
   }, 60_000);
 
+  it("renders the copy-as-Markdown button with its data, status and fallback field", async () => {
+    const jar = await sharedUser("bare");
+    const trackPath = await addTrack(jar, "miks");
+
+    const card = await openCard(jar, trackPath);
+    const buttonTag = /<button\b[^>]*\bid="recipe-copy-markdown"[^>]*>/.exec(card)?.[0];
+    expect(buttonTag).toBeDefined();
+    expect(buttonTag).toMatch(/\btype="button"/);
+    expect(buttonTag).toMatch(/\bdata-markdown="## /);
+    expect(card).toMatch(/<p\b[^>]*\bid="recipe-copy-status"/);
+    expect(card).toMatch(/<textarea\b[^>]*\bid="recipe-copy-fallback"/);
+  }, 60_000);
+
   it("shows a generic native tool and a dashboard link with no plugins and no DAW", async () => {
     // "plain": never sets a DAW and never gets plugins.
     const jar = await sharedUser("plain");
