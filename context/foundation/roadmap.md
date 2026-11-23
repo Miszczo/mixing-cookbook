@@ -45,7 +45,7 @@ Przepis miksowy powinien być kontekstowy: połączenie intencji, posiadanych pl
 | ----- | ------------------------------ | -------------------------------------------------------------- | ------------- | -------- | ------ |
 | S-08  | listening-note-template        | insert a listening-note template into the note field           | S-07          | FR-015   | done        |
 | S-09  | copy-checklist-as-markdown     | copy a recipe checklist to the clipboard as Markdown           | S-04          | FR-014   | done |
-| S-10  | filter-notes-by-equipment      | filter listening notes across all tracks by reference equipment | S-07          | FR-017   | in-progress |
+| S-10  | filter-notes-by-equipment      | filter listening notes across all tracks by reference equipment | S-07          | FR-017   | done |
 
 ## Streams
 
@@ -109,7 +109,7 @@ None. The Baseline already covers everything these slices need, and no layer wou
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Needs a view over notes from all tracks; the risk is leaking another user's notes, so it must stay under the same row isolation.
-- **Status:** in-progress
+- **Status:** done
 
 ## Backlog Handoff
 
@@ -151,3 +151,4 @@ None. The PRD lists no open questions, and these slices add no cross-slice decis
 | S-06 | search-recipes-by-intent | 2026-11-22 | User can search and filter starter recipes and their own recipes by intent. Archived to `context/archive/2026-11-11-search-recipes-by-intent/`. Lesson: —. |
 | S-08 | listening-note-template | 2026-11-22 | User can insert a listening-note template into the note field. Archived to `context/archive/2026-11-22-listening-note-template/`. Lesson: —. |
 | S-09 | copy-checklist-as-markdown | 2026-11-23 | User can copy a recipe checklist to the clipboard as Markdown. Archived to `context/archive/2026-11-23-copy-checklist-as-markdown/`. Lesson: —. |
+| S-10 | filter-notes-by-equipment | 2026-11-23 | User can filter listening notes across all tracks by reference equipment. Archived to `context/archive/2026-11-23-filter-notes-by-equipment/`. Lesson: —. |
