@@ -22,8 +22,26 @@ export type ListeningNote = z.infer<typeof listeningNoteRowSchema>;
 
 export const LISTENING_NOTE_COLUMNS = "id, equipment, body, stage, created_at";
 
-/** Input is newest first; keeps the newest spelling of each name, case-insensitively. */
-export function equipmentSuggestions(values: string[]): string[] {
+export const listeningNoteOverviewRowSchema = listeningNoteRowSchema.extend({
+  track_id: z.uuid(),
+  tracks: z.object({ name: z.string() }),
+});
+
+export type ListeningNoteOverviewRow = z.infer<typeof listeningNoteOverviewRowSchema>;
+
+export const LISTENING_NOTE_OVERVIEW_COLUMNS = "id, equipment, body, stage, created_at, track_id, tracks(name)";
+
+export const MAX_NOTES_OVERVIEW = 200;
+/** Rows read to build the equipment select. */
+export const MAX_EQUIPMENT_SCAN = 1000;
+
+/** Empty equipment means "All". Invalid input falls back to "". */
+export const notesFilterSchema = z.object({
+  equipment: z.string().trim().max(MAX_EQUIPMENT_LENGTH).default("").catch(""),
+});
+
+/** Input is newest first; keeps the newest spelling of each name, case-insensitively. No cap. */
+export function distinctEquipment(values: string[]): string[] {
   const seen = new Set<string>();
   const result: string[] = [];
   for (const value of values) {
@@ -33,9 +51,25 @@ export function equipmentSuggestions(values: string[]): string[] {
     if (seen.has(key)) continue;
     seen.add(key);
     result.push(trimmed);
-    if (result.length === MAX_EQUIPMENT_SUGGESTIONS) break;
   }
   return result;
+}
+
+export function equipmentSuggestions(values: string[]): string[] {
+  return distinctEquipment(values).slice(0, MAX_EQUIPMENT_SUGGESTIONS);
+}
+
+export function equipmentFilterOptions(values: string[]): string[] {
+  return distinctEquipment(values).sort((a, b) => a.localeCompare(b, "pl", { sensitivity: "base" }));
+}
+
+export function sameEquipment(a: string, b: string): boolean {
+  return a.trim().toLowerCase() === b.trim().toLowerCase();
+}
+
+/** Escapes `\`, `%` and `_` for use in a SQL LIKE/ILIKE pattern. */
+export function escapeLikePattern(value: string): string {
+  return value.replace(/[\\%_]/g, "\\$&");
 }
 
 const warsawFormat = new Intl.DateTimeFormat("pl-PL", {
