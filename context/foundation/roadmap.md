@@ -45,7 +45,7 @@ Przepis miksowy powinien być kontekstowy: połączenie intencji, posiadanych pl
 | ----- | ------------------------------ | -------------------------------------------------------------- | ------------- | -------- | ------ |
 | S-08  | listening-note-template        | insert a listening-note template into the note field           | S-07          | FR-015   | done        |
 | S-09  | copy-checklist-as-markdown     | copy a recipe checklist to the clipboard as Markdown           | S-04          | FR-014   | done |
-| S-10  | filter-notes-by-equipment      | filter listening notes across all tracks by reference equipment | S-07          | FR-017   | ready  |
+| S-10  | filter-notes-by-equipment      | filter listening notes across all tracks by reference equipment | S-07          | FR-017   | in-progress |
 
 ## Streams
 
@@ -109,7 +109,7 @@ None. The Baseline already covers everything these slices need, and no layer wou
 - **Blockers:** —
 - **Unknowns:** —
 - **Risk:** Needs a view over notes from all tracks; the risk is leaking another user's notes, so it must stay under the same row isolation.
-- **Status:** ready
+- **Status:** in-progress
 
 ## Backlog Handoff
 
