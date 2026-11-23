@@ -220,13 +220,13 @@ None. No schema or data changes.
 
 #### Automated
 
-- [x] 2.1 All tests pass against local Supabase: `npm test`
-- [x] 2.2 Linting passes: `npm run lint`
-- [x] 2.3 Type checking passes: `npx astro check`
-- [x] 2.4 Build succeeds: `npm run build`
+- [x] 2.1 All tests pass against local Supabase: `npm test` — e633f2e
+- [x] 2.2 Linting passes: `npm run lint` — e633f2e
+- [x] 2.3 Type checking passes: `npx astro check` — e633f2e
+- [x] 2.4 Build succeeds: `npm run build` — e633f2e
 
 #### Manual
 
-- [x] 2.5 "Notes" in the navigation opens the overview; choosing equipment and pressing Filter narrows the list and keeps the choice selected after reload
-- [x] 2.6 Track links open the right track at the notes section
-- [x] 2.7 The page is readable on a phone-width window
+- [x] 2.5 "Notes" in the navigation opens the overview; choosing equipment and pressing Filter narrows the list and keeps the choice selected after reload — e633f2e
+- [x] 2.6 Track links open the right track at the notes section — e633f2e
+- [x] 2.7 The page is readable on a phone-width window — e633f2e
