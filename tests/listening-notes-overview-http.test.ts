@@ -130,6 +130,48 @@ describe("listening notes overview page", () => {
     expect(overviewSection(page.body)).not.toContain("Pięćset");
   }, 90_000);
 
+  it("treats asterisks and regex characters in the filter literally", async () => {
+    const jar = await user("asterisk");
+    const track = await newTrack(jar, "Asterisk track");
+    await addNote(jar, track, "Mic*", "Gwiazdka");
+    await addNote(jar, track, "Mic Pre", "Przedwzmacniacz");
+    await addNote(jar, track, "A.B (x)", "Nawiasy");
+    await addNote(jar, track, "AxB x", "Kropka");
+
+    const star = await request(origin, jar, "/notes?equipment=Mic*");
+    expect(star.status).toBe(200);
+    const starItems = overviewItems(star.body);
+    expect(starItems).toHaveLength(1);
+    expect(starItems[0]).toContain("Gwiazdka");
+
+    const regex = await request(origin, jar, "/notes?equipment=A.B%20(x)");
+    expect(regex.status).toBe(200);
+    const regexItems = overviewItems(regex.body);
+    expect(regexItems).toHaveLength(1);
+    expect(regexItems[0]).toContain("Nawiasy");
+  }, 90_000);
+
+  it("treats underscores and backslashes in the filter literally", async () => {
+    const jar = await user("underscore");
+    const track = await newTrack(jar, "Underscore track");
+    await addNote(jar, track, "A_B", "Podkreślnik");
+    await addNote(jar, track, "AxB", "Dowolny znak");
+    await addNote(jar, track, "C\\D", "Ukośnik");
+    await addNote(jar, track, "CD", "Bez ukośnika");
+
+    const underscore = await request(origin, jar, "/notes?equipment=A_B");
+    expect(underscore.status).toBe(200);
+    const underscoreItems = overviewItems(underscore.body);
+    expect(underscoreItems).toHaveLength(1);
+    expect(underscoreItems[0]).toContain("Podkreślnik");
+
+    const backslash = await request(origin, jar, "/notes?equipment=C%5CD");
+    expect(backslash.status).toBe(200);
+    const backslashItems = overviewItems(backslash.body);
+    expect(backslashItems).toHaveLength(1);
+    expect(backslashItems[0]).toContain("Ukośnik");
+  }, 90_000);
+
   it("shows another user nothing of the owner's notes", async () => {
     const owner = await user("owner2");
     const track = await newTrack(owner, "Prywatny track");

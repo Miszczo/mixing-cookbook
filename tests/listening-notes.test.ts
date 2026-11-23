@@ -4,6 +4,7 @@ import {
   equipmentFilterOptions,
   equipmentSuggestions,
   escapeLikePattern,
+  exactMatchRegex,
   formatNoteDate,
   listeningNoteInputSchema,
   listeningNoteOverviewRowSchema,
@@ -138,6 +139,14 @@ describe("sameEquipment", () => {
 
   it("does not match a different name", () => {
     expect(sameEquipment("DT 770", "DT 770 Pro")).toBe(false);
+  });
+});
+
+describe("exactMatchRegex", () => {
+  it("anchors the value and escapes regex metacharacters including *", () => {
+    expect(exactMatchRegex("Mic*")).toBe("^Mic\\*$");
+    expect(exactMatchRegex(" DT 770 (Pro) ")).toBe("^DT 770 \\(Pro\\)$");
+    expect(exactMatchRegex("a.b|c\\d")).toBe("^a\\.b\\|c\\\\d$");
   });
 });
 

@@ -1,7 +1,7 @@
 ---
 change_id: filter-notes-by-equipment
 title: Filter notes by equipment
-status: implemented
+status: impl_reviewed
 created: 2026-11-23
 updated: 2026-11-23
 archived_at: null

@@ -72,6 +72,11 @@ export function escapeLikePattern(value: string): string {
   return value.replace(/[\\%_]/g, "\\$&");
 }
 
+/** Anchored, escaped POSIX regex for an exact match; PostgREST does not rewrite `*` in `imatch` the way it does in `ilike`. */
+export function exactMatchRegex(value: string): string {
+  return `^${value.trim().replace(/[\\^$.|?*+()[\]{}]/g, "\\$&")}$`;
+}
+
 const warsawFormat = new Intl.DateTimeFormat("pl-PL", {
   timeZone: "Europe/Warsaw",
   year: "numeric",

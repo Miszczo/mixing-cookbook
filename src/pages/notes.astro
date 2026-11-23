@@ -3,7 +3,7 @@ import { z } from "zod";
 import AppLayout from "@/layouts/AppLayout.astro";
 import {
   equipmentFilterOptions,
-  escapeLikePattern,
+  exactMatchRegex,
   formatNoteDate,
   LISTENING_NOTE_OVERVIEW_COLUMNS,
   listeningNoteOverviewRowSchema,
@@ -32,14 +32,15 @@ const [namesResult, notesResult] = supabase
         .select("equipment")
         .order("created_at", { ascending: false })
         .limit(MAX_EQUIPMENT_SCAN),
-      // ilike is only a prefilter (`*` becomes `%`); every row is re-checked with sameEquipment below.
-      filter ? overviewQuery?.ilike("equipment", escapeLikePattern(filter)) : overviewQuery,
+      // imatch with an anchored, escaped regex (ilike would turn `*` into `%`); rows are still re-checked with sameEquipment below.
+      filter ? overviewQuery?.filter("equipment", "imatch", exactMatchRegex(filter)) : overviewQuery,
     ])
   : [null, null];
 
 const nameRows = z.array(z.object({ equipment: z.string() })).safeParse(namesResult?.data);
 const namesFailed = Boolean(namesResult?.error) || !nameRows.success;
 const options = equipmentFilterOptions(nameRows.success ? nameRows.data.map((row) => row.equipment) : []);
+const namesTruncated = nameRows.success && nameRows.data.length >= MAX_EQUIPMENT_SCAN;
 const hasSelected = options.some((value) => sameEquipment(value, filter));
 const extraOption = filter && !hasSelected ? filter : null;
 
@@ -84,6 +85,10 @@ const button = "rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm 
     <p role="alert" class="mt-4 text-sm text-red-200">
       The equipment list could not be loaded.
     </p>
+  )}
+
+  {namesTruncated && (
+    <p class="mt-4 text-sm text-blue-100/80">Equipment list may be incomplete: it is built from your newest notes.</p>
   )}
 
   <section id="notes-overview" aria-label="Listening notes" class="mt-6">
