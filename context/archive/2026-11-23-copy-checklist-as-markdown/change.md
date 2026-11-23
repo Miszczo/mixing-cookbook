@@ -1,10 +1,10 @@
 ---
 change_id: copy-checklist-as-markdown
 title: Copy a recipe checklist as Markdown
-status: implemented
+status: archived
 created: 2026-11-23
 updated: 2026-11-23
-archived_at: null
+archived_at: 2026-11-23T14:46:08Z
 ---
 
 ## Notes
