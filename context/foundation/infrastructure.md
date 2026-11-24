@@ -116,3 +116,13 @@ The following were not evaluated in this research:
 - Docker image configuration
 - CI/CD pipeline setup
 - Production-scale architecture (multi-region, HA, DR)
+
+## Deployed
+
+Deployed on 2026-11-24 to https://mixing-cookbook.mcglowack.workers.dev as a Cloudflare Worker, following the recommendation above.
+
+- **Supabase Cloud**: one project in eu-west-2. The schema comes from `npx supabase link --project-ref <ref>` and `npx supabase db push` of the files in `supabase/migrations/`.
+- **Auth**: Email "Confirm email" is off. Supabase built-in mail reaches only organization members, so with confirmation on, reviewers and the smoke test could not sign up. Site URL is set to the workers.dev address.
+- **Worker secrets**: `SUPABASE_URL` and `SUPABASE_KEY` (anon key only), set with `npx wrangler secret put`.
+- **Deploy command (manual)**: `npm run build && npx wrangler deploy`. Not `wrangler pages deploy`.
+- **Production smoke**: `SMOKE_EMAIL_DOMAIN=mailinator.com BASE_URL=https://mixing-cookbook.mcglowack.workers.dev npm run smoke`. Hosted Supabase rejects `example.com`.

@@ -328,33 +328,33 @@ The Supabase Cloud database starts empty, and `db push` applies the 8 repo migra
 
 #### Automated
 
-- [x] 2.1 Production build passes: `npm run build`
-- [x] 2.2 Worker version is listed after deploy: `npx wrangler versions list`
-- [x] 2.3 Smoke flow passes against production: `BASE_URL=https://<worker>.workers.dev npm run smoke`
-- [x] 2.4 No runtime errors while signing in: `npx wrangler tail` shows no exceptions during the manual sign-in below
+- [x] 2.1 Production build passes: `npm run build` — 85cfd2b
+- [x] 2.2 Worker version is listed after deploy: `npx wrangler versions list` — 85cfd2b
+- [x] 2.3 Smoke flow passes against production: `BASE_URL=https://<worker>.workers.dev npm run smoke` — 85cfd2b
+- [x] 2.4 No runtime errors while signing in: `npx wrangler tail` shows no exceptions during the manual sign-in below — 85cfd2b
 
 #### Manual
 
-- [x] 2.5 `npx supabase db push` reported all migrations applied, and the tables are visible in the Supabase dashboard
-- [x] 2.6 In a private window, a new e-mail address can sign up and reach `/dashboard` without a confirmation e-mail
-- [x] 2.7 The demo account signs in and shows its DAW, plugins, Miks track, and a recipe card with a tool and steps
-- [x] 2.8 A second account does not see the demo account's plugins, tracks, or recipes
-- [x] 2.9 The Cloudflare dashboard shows no `SESSION` KV namespace or Images binding for this Worker
+- [x] 2.5 `npx supabase db push` reported all migrations applied, and the tables are visible in the Supabase dashboard — 85cfd2b
+- [x] 2.6 In a private window, a new e-mail address can sign up and reach `/dashboard` without a confirmation e-mail — 85cfd2b
+- [x] 2.7 The demo account signs in and shows its DAW, plugins, Miks track, and a recipe card with a tool and steps — 85cfd2b
+- [x] 2.8 A second account does not see the demo account's plugins, tracks, or recipes — 85cfd2b
+- [x] 2.9 The Cloudflare dashboard shows no `SESSION` KV namespace or Images binding for this Worker — 85cfd2b
 
 ### Phase 3: Evidence Documents
 
 #### Automated
 
-- [ ] 3.1 No `TBD` or "not started" is left in `test-plan.md` for a risk that has tests: `grep -nE "TBD|not started" context/foundation/test-plan.md`
-- [ ] 3.2 Every test file named in `test-plan.md` exists in `tests/`
-- [ ] 3.3 README contains the `workers.dev` address: `grep -n "workers.dev" README.md`
-- [ ] 3.4 No secrets in the diff: `git diff master --stat` and a scan of README for keys or passwords
-- [ ] 3.5 Linting passes: `npm run lint`
+- [x] 3.1 No `TBD` or "not started" is left in `test-plan.md` for a risk that has tests: `grep -nE "TBD|not started" context/foundation/test-plan.md`
+- [x] 3.2 Every test file named in `test-plan.md` exists in `tests/`
+- [x] 3.3 README contains the `workers.dev` address: `grep -n "workers.dev" README.md`
+- [x] 3.4 No secrets in the diff: `git diff master --stat` and a scan of README for keys or passwords
+- [x] 3.5 Linting passes: `npm run lint`
 
 #### Manual
 
-- [ ] 3.6 Reading only README, you can point to where each Builder requirement is met
-- [ ] 3.7 The risk → test mapping in `test-plan.md` matches what the tests actually check
+- [x] 3.6 Reading only README, you can point to where each Builder requirement is met
+- [x] 3.7 The risk → test mapping in `test-plan.md` matches what the tests actually check
 
 ### Phase 4: Merge and Final Check
 
