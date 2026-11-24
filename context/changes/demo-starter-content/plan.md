@@ -263,21 +263,21 @@ There is no schema migration. The production run replaces the hand-made demo dat
 
 #### Automated
 
-- [x] 2.1 `npm test -- tests/seed-demo.test.ts` passes against local Supabase
-- [x] 2.2 `npm test` passes
-- [x] 2.3 `npm run lint` and `npx astro check` pass
-- [x] 2.4 `npm run seed:demo` with a non-local `SUPABASE_URL` and no `--yes` exits non-zero without writing
+- [x] 2.1 `npm test -- tests/seed-demo.test.ts` passes against local Supabase — 8986974
+- [x] 2.2 `npm test` passes — 8986974
+- [x] 2.3 `npm run lint` and `npx astro check` pass — 8986974
+- [x] 2.4 `npm run seed:demo` with a non-local `SUPABASE_URL` and no `--yes` exits non-zero without writing — 8986974
 
 #### Manual
 
-- [x] 2.5 Locally, `DEMO_EMAIL=… DEMO_PASSWORD=… npm run seed:demo` run twice prints the same counts, and signing in as that user shows 3 tracks, 6 plugins, 2 own recipes and notes filterable by equipment
-- [x] 2.6 The Miks track "Nocna jazda" opens the sidechain card with 3 steps ticked and Pro-C 2 selected
+- [x] 2.5 Locally, `DEMO_EMAIL=… DEMO_PASSWORD=… npm run seed:demo` run twice prints the same counts, and signing in as that user shows 3 tracks, 6 plugins, 2 own recipes and notes filterable by equipment — 8986974
+- [x] 2.6 The Miks track "Nocna jazda" opens the sidechain card with 3 steps ticked and Pro-C 2 selected — 8986974
 
 ### Phase 3: Production and README
 
 #### Automated
 
-- [ ] 3.1 `npm run lint` passes
+- [x] 3.1 `npm run lint` passes
 - [ ] 3.2 CI on the PR is green (`ci` and `smoke` jobs)
 
 #### Manual
