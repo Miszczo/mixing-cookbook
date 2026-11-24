@@ -53,6 +53,104 @@ export const RECIPES: readonly Recipe[] = [
       alt: "Przykładowa grafika w miejscu zrzutu ustawień kompresora (atrapa)",
     },
   },
+  {
+    id: "drum-bus-glue",
+    intent: "Klej na sumie perkusji",
+    requiredType: "compressor",
+    steps: [
+      { id: "insert-on-bus", text: "Wstaw kompresor na sumę perkusji (drum bus)." },
+      { id: "ratio-attack", text: "Ustaw ratio na ok. 2:1 i attack na 10–30 ms, żeby uderzenia zachowały swój pazur." },
+      { id: "release", text: "Dobierz release tak, żeby kompresor wracał do zera w tempie utworu." },
+      {
+        id: "threshold",
+        text: "Obniżaj threshold, aż wskaźnik pokaże ok. 1–3 dB redukcji wzmocnienia na mocnych uderzeniach.",
+      },
+      { id: "makeup-gain", text: "Wyrównaj głośność makeup gain, żeby po włączeniu kompresora nie brzmiało głośniej." },
+      { id: "check-mix", text: "Porównaj perkusję z kompresorem i bez niego w całym miksie." },
+    ],
+    screenshot: {
+      src: "/recipes/drum-bus-glue-mock.svg",
+      alt: "Przykładowa grafika w miejscu zrzutu ustawień kompresora na sumie perkusji (atrapa)",
+    },
+  },
+  {
+    id: "vocal-low-cut",
+    intent: "Wyczyść dół wokalu",
+    requiredType: "eq",
+    steps: [
+      { id: "insert-eq", text: "Wstaw korektor (EQ) na ślad wokalu." },
+      { id: "high-pass", text: "Włącz filtr górnoprzepustowy (high-pass) i przesuwaj go od ok. 60 Hz w górę." },
+      { id: "listen-body", text: "Zatrzymaj się tuż przed miejscem, w którym wokal traci ciało i ciepło." },
+      {
+        id: "mud-cut",
+        text: "Opcjonalnie zrób szerokie, delikatne cięcie w okolicy 200–400 Hz, jeśli wokal brzmi muliście.",
+      },
+      { id: "check-mix", text: "Sprawdź efekt w całym miksie, włączając i wyłączając korektor." },
+    ],
+    screenshot: {
+      src: "/recipes/vocal-low-cut-mock.svg",
+      alt: "Przykładowa grafika w miejscu zrzutu ustawień korektora na wokalu (atrapa)",
+    },
+  },
+  {
+    id: "snare-plate-reverb",
+    intent: "Pogłos płytowy na werbel",
+    requiredType: "reverb",
+    steps: [
+      { id: "create-send", text: "Utwórz ścieżkę zwrotną (return) i wstaw na niej pogłos." },
+      { id: "plate-preset", text: "Wybierz algorytm płytowy (plate) i wyłącz w nim wszelkie dodatkowe modulacje." },
+      { id: "pre-delay", text: "Ustaw pre-delay na 10–30 ms, żeby uderzenie werbla zostało przed pogłosem." },
+      { id: "decay", text: "Ustaw decay na ok. 1–1,5 s, tak żeby ogon kończył się przed kolejnym uderzeniem." },
+      {
+        id: "filter-return",
+        text: "Odfiltruj return: obetnij niskie tony poniżej ok. 200 Hz i szczyt wysokich tonów.",
+      },
+      { id: "send-level", text: "Dozuj wysyłkę werbla, aż pogłos będzie wyczuwalny, ale nie zasłoni werbla." },
+    ],
+    screenshot: {
+      src: "/recipes/snare-plate-reverb-mock.svg",
+      alt: "Przykładowa grafika w miejscu zrzutu ustawień pogłosu płytowego (atrapa)",
+    },
+  },
+  {
+    id: "vocal-throw-delay",
+    intent: "Echo na końcówkach fraz wokalu",
+    requiredType: "delay",
+    steps: [
+      { id: "create-send", text: "Utwórz ścieżkę zwrotną (return) i wstaw na niej delay." },
+      { id: "sync-time", text: "Włącz synchronizację z tempem i ustaw czas na 1/4 lub 1/8." },
+      { id: "feedback", text: "Ustaw feedback na ok. 20–35%, żeby powtórki wygasały po kilku odbiciach." },
+      {
+        id: "filter-return",
+        text: "Odfiltruj return: obetnij niskie i najwyższe tony, żeby echo nie zagłuszało wokalu.",
+      },
+      { id: "automate-send", text: "Zautomatyzuj wysyłkę wokalu tak, żeby otwierała się tylko na końcówkach fraz." },
+      { id: "check-mix", text: "Posłuchaj w całym miksie, czy echo nie zasłania początku kolejnej frazy." },
+    ],
+    screenshot: {
+      src: "/recipes/vocal-throw-delay-mock.svg",
+      alt: "Przykładowa grafika w miejscu zrzutu ustawień delaya na wokalu (atrapa)",
+    },
+  },
+  {
+    id: "bass-saturation",
+    intent: "Saturacja basu na małe głośniki",
+    requiredType: "saturation",
+    steps: [
+      { id: "insert-saturator", text: "Wstaw saturator na ślad basu." },
+      { id: "drive", text: "Zwiększaj drive, aż w basie pojawią się wyraźne wyższe harmoniczne." },
+      { id: "mix", text: "Ustaw mix na ok. 30–50%, żeby zachować czysty dół obok nasyconej części." },
+      { id: "level-match", text: "Wyrównaj głośność wyjściową, żeby porównanie było uczciwe." },
+      {
+        id: "small-speakers",
+        text: "Sprawdź bas na małych głośnikach lub słuchawkach: powinien być słyszalny bez podbijania dołu.",
+      },
+    ],
+    screenshot: {
+      src: "/recipes/bass-saturation-mock.svg",
+      alt: "Przykładowa grafika w miejscu zrzutu ustawień saturatora na basie (atrapa)",
+    },
+  },
 ];
 
 export type RecipeSource = "starter" | "own";

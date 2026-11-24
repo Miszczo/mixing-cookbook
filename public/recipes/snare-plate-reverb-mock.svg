@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 675" role="img" aria-label="MOCK: reverb settings">
+<g font-family="Arial, Helvetica, sans-serif">
+  <rect width="1200" height="675" fill="#212a3a"/>
+  <rect x="40" y="40" width="1120" height="595" rx="24" fill="#2b3548" stroke="#4b5a78" stroke-width="3"/>
+  <text x="80" y="120" font-size="44" font-weight="bold" fill="#e8edf7">REVERB</text>
+  <text x="80" y="165" font-size="28" fill="#9aa8c4">Snare plate</text>
+  <text x="1120" y="120" text-anchor="end" font-size="28" fill="#fbbf24">MOCK</text>
+  <circle cx="150" cy="330" r="62" fill="#161c28" stroke="#4b5a78" stroke-width="4"/>
+  <line x1="150" y1="330" x2="106.2" y2="333.8" stroke="#7dd3fc" stroke-width="6" stroke-linecap="round"/>
+  <text x="150" y="430" text-anchor="middle" font-size="26" fill="#9aa8c4">TYPE</text>
+  <text x="150" y="470" text-anchor="middle" font-size="32" font-weight="bold" fill="#e8edf7">Plate</text>
+  <circle cx="450" cy="330" r="62" fill="#161c28" stroke="#4b5a78" stroke-width="4"/>
+  <line x1="450" y1="330" x2="421.7" y2="296.3" stroke="#7dd3fc" stroke-width="6" stroke-linecap="round"/>
+  <text x="450" y="430" text-anchor="middle" font-size="26" fill="#9aa8c4">PRE-DELAY</text>
+  <text x="450" y="470" text-anchor="middle" font-size="32" font-weight="bold" fill="#e8edf7">20 ms</text>
+  <circle cx="750" cy="330" r="62" fill="#161c28" stroke="#4b5a78" stroke-width="4"/>
+  <line x1="750" y1="330" x2="761.4" y2="287.5" stroke="#7dd3fc" stroke-width="6" stroke-linecap="round"/>
+  <text x="750" y="430" text-anchor="middle" font-size="26" fill="#9aa8c4">DECAY</text>
+  <text x="750" y="470" text-anchor="middle" font-size="32" font-weight="bold" fill="#e8edf7">1.2 s</text>
+  <circle cx="1050" cy="330" r="62" fill="#161c28" stroke="#4b5a78" stroke-width="4"/>
+  <line x1="1050" y1="330" x2="1091.3" y2="315.0" stroke="#7dd3fc" stroke-width="6" stroke-linecap="round"/>
+  <text x="1050" y="430" text-anchor="middle" font-size="26" fill="#9aa8c4">LOW CUT</text>
+  <text x="1050" y="470" text-anchor="middle" font-size="32" font-weight="bold" fill="#e8edf7">200 Hz</text>
+  <text x="600" y="590" text-anchor="middle" font-size="26" fill="#9aa8c4">MOCK: reverb settings (placeholder)</text>
+</g>
+</svg>
