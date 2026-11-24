@@ -1,9 +1,9 @@
 ---
 change_id: paste-recipe-screenshot-from-clipboard
 title: Paste recipe screenshot from clipboard
-status: implementing
+status: implemented
 created: 2026-11-23
-updated: 2026-11-23
+updated: 2026-11-24
 archived_at: null
 ---
 

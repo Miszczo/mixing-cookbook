@@ -217,19 +217,19 @@ None. No database, route or configuration change. A rollback reverts `new.astro`
 
 #### Automated
 
-- [x] 2.1 Recipe HTTP tests pass: `npx vitest run tests/recipes-http.test.ts`
-- [x] 2.2 All tests pass: `npm test`
-- [x] 2.3 Linting passes: `npm run lint`
-- [x] 2.4 Type checking passes: `npx astro check`
-- [x] 2.5 Build passes: `npm run build`
+- [x] 2.1 Recipe HTTP tests pass: `npx vitest run tests/recipes-http.test.ts` — 6a06f9a
+- [x] 2.2 All tests pass: `npm test` — 6a06f9a
+- [x] 2.3 Linting passes: `npm run lint` — 6a06f9a
+- [x] 2.4 Type checking passes: `npx astro check` — 6a06f9a
+- [x] 2.5 Build passes: `npm run build` — 6a06f9a
 
 #### Manual
 
-- [x] 2.6 A screenshot pasted with the Intent field focused, and again with nothing focused right after load, shows the thumbnail, and saving puts the recipe with that image in `/recipes`
-- [x] 2.7 Text still pastes normally into Intent and Steps
-- [x] 2.8 Pasting over a chosen file replaces it, and choosing a file after a paste replaces the pasted image; each change is announced in the status line
-- [x] 2.9 "Remove image" clears the thumbnail and the selection, works with the keyboard alone, and returns focus to the file input
-- [x] 2.10 A text-only clipboard outside a text field, a GIF or SVG, and a screenshot over 1 MB each show a clear message and keep the previous selection
-- [x] 2.11 Pasting works in Chrome and at least one of Firefox or Safari; where the browser cannot attach the image, the message points to the file picker
-- [x] 2.12 With JavaScript off, the file input works as before and no paste hint or thumbnail is shown
-- [x] 2.13 The form, thumbnail and Remove button are usable at phone width
+- [x] 2.6 A screenshot pasted with the Intent field focused, and again with nothing focused right after load, shows the thumbnail, and saving puts the recipe with that image in `/recipes` — 6a06f9a
+- [x] 2.7 Text still pastes normally into Intent and Steps — 6a06f9a
+- [x] 2.8 Pasting over a chosen file replaces it, and choosing a file after a paste replaces the pasted image; each change is announced in the status line — 6a06f9a
+- [x] 2.9 "Remove image" clears the thumbnail and the selection, works with the keyboard alone, and returns focus to the file input — 6a06f9a
+- [x] 2.10 A text-only clipboard outside a text field, a GIF or SVG, and a screenshot over 1 MB each show a clear message and keep the previous selection — 6a06f9a
+- [x] 2.11 Pasting works in Chrome and at least one of Firefox or Safari; where the browser cannot attach the image, the message points to the file picker — 6a06f9a
+- [x] 2.12 With JavaScript off, the file input works as before and no paste hint or thumbnail is shown — 6a06f9a
+- [x] 2.13 The form, thumbnail and Remove button are usable at phone width — 6a06f9a
