@@ -313,16 +313,16 @@ The Supabase Cloud database starts empty, and `db push` applies the 8 repo migra
 
 #### Automated
 
-- [x] 1.1 Workflow pins the CLI: `.github/workflows/ci.yml` contains `version: 2.117.0` and no `version: latest`
-- [x] 1.2 Local suite passes against local Supabase: `npm test`
-- [x] 1.3 Linting passes: `npm run lint`
-- [x] 1.4 Type checking passes: `npx astro check`
-- [ ] 1.5 Latest PR #1 run has `ci` and `smoke` both successful: `gh run list --branch chore/delivery-step-0 -L 1`
+- [x] 1.1 Workflow pins the CLI: `.github/workflows/ci.yml` contains `version: 2.117.0` and no `version: latest` — 58ce382
+- [x] 1.2 Local suite passes against local Supabase: `npm test` — 58ce382
+- [x] 1.3 Linting passes: `npm run lint` — 58ce382
+- [x] 1.4 Type checking passes: `npx astro check` — 58ce382
+- [x] 1.5 Latest PR #1 run has `ci` and `smoke` both successful: `gh run list --branch chore/delivery-step-0 -L 1` — 58ce382
 
 #### Manual
 
-- [ ] 1.6 You approved the push of `chore/delivery-step-0`, and `git status` shows the branch level with `origin/chore/delivery-step-0`
-- [ ] 1.7 In the `smoke` job log, the "Run integration tests" step lists the recipe, notes, and paste test files as passed
+- [x] 1.6 You approved the push of `chore/delivery-step-0`, and `git status` shows the branch level with `origin/chore/delivery-step-0`
+- [x] 1.7 In the `smoke` job log, the "Run integration tests" step lists the recipe, notes, and paste test files as passed
 
 ### Phase 2: Production Deployment
 
