@@ -32,7 +32,7 @@ async function handlePost(): Promise<void> {
   // Read the body only when its declared size is a plain integer within 5 MB.
   if (!Number.isFinite(declaredBytes) || declaredBytes > MAX_BODY_BYTES) {
     Astro.response.status = 413;
-    errorMessage = "The upload is larger than 5 MB. Choose the image again.";
+    errorMessage = "The upload is larger than 5 MB. Choose or paste the image again.";
     return;
   }
 
@@ -66,22 +66,23 @@ async function handlePost(): Promise<void> {
   }
   if (!supabase) {
     Astro.response.status = 503;
-    errorMessage = "Recipes could not be saved. Choose the image again.";
+    errorMessage = "Recipes could not be saved. Choose or paste the image again.";
   } else if (!form) {
     Astro.response.status = 400;
-    errorMessage = "The recipe could not be read. Choose the image again.";
+    errorMessage = "The recipe could not be read. Choose or paste the image again.";
   } else if (file && file.size > MAX_IMAGE_BYTES) {
     Astro.response.status = 413;
-    errorMessage = "The image must be 1 MB or smaller. Choose the image again.";
+    errorMessage = "The image must be 1 MB or smaller. Choose or paste the image again.";
   } else if (!parsed.success || !file) {
     Astro.response.status = 400;
-    errorMessage = "Enter an intent, a tool type, and at least one step, and choose an image. Choose the image again.";
+    errorMessage =
+      "Enter an intent, a tool type, and at least one step, and choose or paste an image. Choose or paste the image again.";
   } else {
     const bytes = new Uint8Array(await file.arrayBuffer());
     const mime = sniffImage(bytes);
     if (!mime) {
       Astro.response.status = 400;
-      errorMessage = "The image must be a PNG, JPEG, or WebP. Choose the image again.";
+      errorMessage = "The image must be a PNG, JPEG, or WebP. Choose or paste the image again.";
     } else {
       const { error } = await supabase.from("recipes").insert({
         user_id: user.id,
@@ -93,7 +94,7 @@ async function handlePost(): Promise<void> {
       });
       if (error) {
         Astro.response.status = 500;
-        errorMessage = "The recipe could not be saved. Choose the image again.";
+        errorMessage = "The recipe could not be saved. Choose or paste the image again.";
       } else {
         redirect("/recipes", 303);
         return;
@@ -112,7 +113,7 @@ const selectedType: PluginTypeId | "" = PLUGIN_TYPES.some((type) => type.id === 
 ---
 
 <AppLayout title="New recipe">
-  <form method="POST" enctype="multipart/form-data" class="flex flex-col gap-3">
+  <form id="recipe-form" method="POST" enctype="multipart/form-data" class="flex flex-col gap-3">
     <label class="flex flex-col gap-1 text-sm" for="recipe-intent">
       Intent
       <input id="recipe-intent" name="intent" required maxlength="100" value={intentValue} class:list={field} />
@@ -133,8 +134,31 @@ const selectedType: PluginTypeId | "" = PLUGIN_TYPES.some((type) => type.id === 
     </label>
     <label class="flex flex-col gap-1 text-sm" for="recipe-image">
       Screenshot
-      <input id="recipe-image" name="image" type="file" accept="image/png,image/jpeg,image/webp" class="text-sm" />
+      <input
+        id="recipe-image"
+        name="image"
+        type="file"
+        accept="image/png,image/jpeg,image/webp"
+        data-max-bytes={MAX_IMAGE_BYTES}
+        aria-describedby="recipe-image-help recipe-image-status"
+        class="text-sm"
+      />
     </label>
+    <p id="recipe-image-help" hidden class="text-sm text-blue-100/80">
+      Or paste a screenshot with Ctrl/Cmd+V.
+    </p>
+    <div id="recipe-image-preview" hidden class="flex flex-col items-start gap-2">
+      <img
+        id="recipe-image-thumbnail"
+        alt="Preview of the selected screenshot"
+        class="h-auto max-h-48 max-w-full rounded-lg border border-white/10"
+      />
+      <p id="recipe-image-info" class="text-sm text-blue-100/80"></p>
+      <button type="button" id="recipe-image-remove" class:list={button}>
+        Remove image
+      </button>
+    </div>
+    <p id="recipe-image-status" role="status" class="text-sm text-blue-100/80"></p>
     <button type="submit" class:list={[button, "self-start"]}>
       Save recipe
     </button>
@@ -145,3 +169,125 @@ const selectedType: PluginTypeId | "" = PLUGIN_TYPES.some((type) => type.id === 
     </p>
   )}
 </AppLayout>
+
+<script>
+  import { formatImageSize, pasteMessage, pastedFileName, planPaste } from "@/lib/recipe-image-paste";
+
+  const form = document.getElementById("recipe-form");
+  const input = document.getElementById("recipe-image");
+  const help = document.getElementById("recipe-image-help");
+  const preview = document.getElementById("recipe-image-preview");
+  const thumbnail = document.getElementById("recipe-image-thumbnail");
+  const info = document.getElementById("recipe-image-info");
+  const removeButton = document.getElementById("recipe-image-remove");
+  const status = document.getElementById("recipe-image-status");
+
+  const TEXT_INPUT_TYPES = ["text", "search", "url", "email", "tel", "password", "number"];
+
+  if (
+    form instanceof HTMLFormElement &&
+    input instanceof HTMLInputElement &&
+    help instanceof HTMLElement &&
+    preview instanceof HTMLElement &&
+    thumbnail instanceof HTMLImageElement &&
+    info instanceof HTMLElement &&
+    removeButton instanceof HTMLButtonElement &&
+    status instanceof HTMLElement
+  ) {
+    help.hidden = false;
+
+    const rawLimit = input.dataset.maxBytes;
+    const parsedLimit = rawLimit === undefined || rawLimit.trim() === "" ? Number.NaN : Number(rawLimit);
+    const maxBytes = Number.isFinite(parsedLimit) ? parsedLimit : null;
+
+    let objectUrl: string | null = null;
+
+    const revokeUrl = () => {
+      if (objectUrl !== null) {
+        URL.revokeObjectURL(objectUrl);
+        objectUrl = null;
+      }
+    };
+
+    const showStatus = (message: string, isError: boolean) => {
+      status.textContent = message;
+      status.classList.toggle("text-red-200", isError);
+      status.classList.toggle("text-blue-100/80", !isError);
+    };
+
+    const hidePreview = () => {
+      revokeUrl();
+      thumbnail.removeAttribute("src");
+      info.textContent = "";
+      preview.hidden = true;
+    };
+
+    const showPreview = (file: File) => {
+      revokeUrl();
+      objectUrl = URL.createObjectURL(file);
+      thumbnail.src = objectUrl;
+      info.textContent = `${file.name}, ${formatImageSize(file.size)}`;
+      preview.hidden = false;
+    };
+
+    const isTextField = (target: EventTarget | null) => {
+      if (target instanceof HTMLTextAreaElement) {
+        return true;
+      }
+      return target instanceof HTMLInputElement && TEXT_INPUT_TYPES.includes(target.type);
+    };
+
+    document.addEventListener("paste", (event) => {
+      const target = event.target;
+      const inForm = target instanceof Node && form.contains(target);
+      if (!inForm && target !== document.body) {
+        return;
+      }
+
+      const clipboard = event.clipboardData;
+      const files = clipboard ? Array.from(clipboard.files) : [];
+      const hasText = clipboard ? clipboard.getData("text/plain").length > 0 : false;
+      const plan = planPaste({ files, hasText, targetIsTextField: isTextField(target), maxBytes });
+
+      if (plan.action === "ignore") {
+        return;
+      }
+      event.preventDefault();
+
+      if (plan.action === "reject") {
+        showStatus(pasteMessage(plan, maxBytes), true);
+        return;
+      }
+
+      const pasted = files[plan.index];
+      const hadFile = (input.files?.length ?? 0) > 0;
+      try {
+        const file = new File([pasted], pastedFileName(pasted.type), { type: pasted.type });
+        const transfer = new DataTransfer();
+        transfer.items.add(file);
+        input.files = transfer.files;
+        showPreview(file);
+        showStatus(hadFile ? "Pasted screenshot replaced the selected file." : "Screenshot pasted.", false);
+      } catch {
+        showStatus("This browser cannot attach a pasted image. Choose a file instead.", true);
+      }
+    });
+
+    input.addEventListener("change", () => {
+      const file = input.files?.[0];
+      if (file) {
+        showPreview(file);
+      } else {
+        hidePreview();
+      }
+      showStatus("", false);
+    });
+
+    removeButton.addEventListener("click", () => {
+      input.value = "";
+      hidePreview();
+      showStatus("Image removed.", false);
+      input.focus();
+    });
+  }
+</script>

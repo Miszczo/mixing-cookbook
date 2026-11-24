@@ -140,6 +140,18 @@ describe("own recipes", () => {
     expect(gone.status).toBe(404);
   }, 60_000);
 
+  it("serves the new recipe form with the file input and the paste hooks", async () => {
+    const jar = await sharedUser("owner");
+    const page = await request(origin, jar, "/recipes/new");
+    expect(page.status).toBe(200);
+    expect(page.body).toContain('type="file"');
+    expect(page.body).toContain('name="image"');
+    expect(page.body).toContain('data-max-bytes="1048576"');
+    expect(page.body).toContain('id="recipe-image-status"');
+    expect(page.body).toContain('role="status"');
+    expect(page.body).toContain("Save recipe");
+  }, 60_000);
+
   it("returns 413 for a file over 1 MB and keeps the typed text", async () => {
     const jar = await sharedUser("owner");
     const intent = "Too big to store";
@@ -150,6 +162,7 @@ describe("own recipes", () => {
       { name: "big.png", bytes: new Uint8Array(1_048_576 + 1) },
     );
     expect(saved.status).toBe(413);
+    expect(saved.body).toContain("paste");
     expect(saved.body).toContain(intent);
     expect(saved.body).toContain(steps);
     expect(saved.body).toContain('role="alert"');
@@ -165,6 +178,7 @@ describe("own recipes", () => {
       { name: "notes.png", bytes: new TextEncoder().encode("this is text, not a png") },
     );
     expect(saved.status).toBe(400);
+    expect(saved.body).toContain("paste");
     expect(saved.body).toContain(intent);
     expect(saved.body).toContain(steps);
     expect(saved.body).toContain('role="alert"');
@@ -175,6 +189,7 @@ describe("own recipes", () => {
     const saved = await postRecipe(jar, { intent: "Nothing to do", required_type: "delay", steps: " \n\t " });
     expect(saved.status).toBe(400);
     expect(saved.body).toContain("Nothing to do");
+    expect(saved.body).toContain("paste");
     expect(saved.body).toContain('role="alert"');
   }, 60_000);
 });

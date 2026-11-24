@@ -209,27 +209,27 @@ None. No database, route or configuration change. A rollback reverts `new.astro`
 
 #### Automated
 
-- [x] 1.1 Paste logic tests pass: `npx vitest run tests/recipe-image-paste.test.ts`
-- [x] 1.2 Linting passes: `npm run lint`
-- [x] 1.3 Type checking passes: `npx astro check`
+- [x] 1.1 Paste logic tests pass: `npx vitest run tests/recipe-image-paste.test.ts` — bb09553
+- [x] 1.2 Linting passes: `npm run lint` — bb09553
+- [x] 1.3 Type checking passes: `npx astro check` — bb09553
 
 ### Phase 2: Paste, preview and remove in the recipe form
 
 #### Automated
 
-- [ ] 2.1 Recipe HTTP tests pass: `npx vitest run tests/recipes-http.test.ts`
-- [ ] 2.2 All tests pass: `npm test`
-- [ ] 2.3 Linting passes: `npm run lint`
-- [ ] 2.4 Type checking passes: `npx astro check`
-- [ ] 2.5 Build passes: `npm run build`
+- [x] 2.1 Recipe HTTP tests pass: `npx vitest run tests/recipes-http.test.ts`
+- [x] 2.2 All tests pass: `npm test`
+- [x] 2.3 Linting passes: `npm run lint`
+- [x] 2.4 Type checking passes: `npx astro check`
+- [x] 2.5 Build passes: `npm run build`
 
 #### Manual
 
-- [ ] 2.6 A screenshot pasted with the Intent field focused, and again with nothing focused right after load, shows the thumbnail, and saving puts the recipe with that image in `/recipes`
-- [ ] 2.7 Text still pastes normally into Intent and Steps
-- [ ] 2.8 Pasting over a chosen file replaces it, and choosing a file after a paste replaces the pasted image; each change is announced in the status line
-- [ ] 2.9 "Remove image" clears the thumbnail and the selection, works with the keyboard alone, and returns focus to the file input
-- [ ] 2.10 A text-only clipboard outside a text field, a GIF or SVG, and a screenshot over 1 MB each show a clear message and keep the previous selection
-- [ ] 2.11 Pasting works in Chrome and at least one of Firefox or Safari; where the browser cannot attach the image, the message points to the file picker
-- [ ] 2.12 With JavaScript off, the file input works as before and no paste hint or thumbnail is shown
-- [ ] 2.13 The form, thumbnail and Remove button are usable at phone width
+- [x] 2.6 A screenshot pasted with the Intent field focused, and again with nothing focused right after load, shows the thumbnail, and saving puts the recipe with that image in `/recipes`
+- [x] 2.7 Text still pastes normally into Intent and Steps
+- [x] 2.8 Pasting over a chosen file replaces it, and choosing a file after a paste replaces the pasted image; each change is announced in the status line
+- [x] 2.9 "Remove image" clears the thumbnail and the selection, works with the keyboard alone, and returns focus to the file input
+- [x] 2.10 A text-only clipboard outside a text field, a GIF or SVG, and a screenshot over 1 MB each show a clear message and keep the previous selection
+- [x] 2.11 Pasting works in Chrome and at least one of Firefox or Safari; where the browser cannot attach the image, the message points to the file picker
+- [x] 2.12 With JavaScript off, the file input works as before and no paste hint or thumbnail is shown
+- [x] 2.13 The form, thumbnail and Remove button are usable at phone width
