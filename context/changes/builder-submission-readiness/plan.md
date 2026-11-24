@@ -154,6 +154,12 @@ Deploy the app to Cloudflare Workers against a new Supabase Cloud project, follo
 
 **Contract**: The credentials go only into the submission form. They are never committed.
 
+#### Addendum (impl review, 2026-11-24): smoke e-mail domain
+
+**File**: `scripts/smoke.mjs`
+
+Not in the original plan. Hosted Supabase rejects `example.com`, so check 2.3 could not pass without it. The script reads `SMOKE_EMAIL_DOMAIN` (default `example.com`, so CI is unchanged); production runs use `mailinator.com`. After the review (F2), the password is random unless `SMOKE_PASSWORD` is set, and the docs say to delete the `smoke-*` accounts after a production run.
+
 ### Success Criteria:
 
 #### Automated Verification:
@@ -360,15 +366,15 @@ The Supabase Cloud database starts empty, and `db push` applies the 8 repo migra
 
 #### Automated
 
-- [ ] 4.1 Latest run on `master` has `ci` and `smoke` successful: `gh run list --branch master -L 1`
-- [ ] 4.2 `/10x-status` shows no ⚠ warning for any change
-- [ ] 4.3 Course material is not tracked: `git ls-files 10xdevs-lessons .cursor/skills .cursor/prompts .claude/skills` returns nothing
+- [x] 4.1 Latest run on `master` has `ci` and `smoke` successful: `gh run list --branch master -L 1` — 133a681
+- [x] 4.2 `/10x-status` shows no ⚠ warning for any change — 133a681
+- [x] 4.3 Course material is not tracked: `git ls-files 10xdevs-lessons .cursor/skills .cursor/prompts .claude/skills` returns nothing — 133a681
 
 #### Manual
 
-- [ ] 4.4 Access control: the demo account sees only its own data, and a signed-out visit to `/dashboard` redirects to sign-in
-- [ ] 4.5 CRUD: on the production app you created, edited, and deleted a plugin
-- [ ] 4.6 Business logic: with no matching plugin, a recipe card shows the DAW's native tool
-- [ ] 4.7 Context documents: `prd.md`, `infrastructure.md`, `roadmap.md`, and `test-plan.md` are on `master`
-- [ ] 4.8 Tests: `test-plan.md` names at least one risk with its test set, and that set ran green in the `master` CI run
-- [ ] 4.9 Deployment: the `workers.dev` address works in a private window, and the demo credentials are noted for the form
+- [x] 4.4 Access control: the demo account sees only its own data, and a signed-out visit to `/dashboard` redirects to sign-in — 133a681
+- [x] 4.5 CRUD: on the production app you created, edited, and deleted a plugin — 133a681
+- [x] 4.6 Business logic: with no matching plugin, a recipe card shows the DAW's native tool — 133a681
+- [x] 4.7 Context documents: `prd.md`, `infrastructure.md`, `roadmap.md`, and `test-plan.md` are on `master` — 133a681
+- [x] 4.8 Tests: `test-plan.md` names at least one risk with its test set, and that set ran green in the `master` CI run — 133a681
+- [x] 4.9 Deployment: the `workers.dev` address works in a private window, and the demo credentials are noted for the form — 133a681

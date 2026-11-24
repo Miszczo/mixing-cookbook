@@ -123,6 +123,8 @@ Deployed on 2026-11-24 to https://mixing-cookbook.mcglowack.workers.dev as a Clo
 
 - **Supabase Cloud**: one project in eu-west-2. The schema comes from `npx supabase link --project-ref <ref>` and `npx supabase db push` of the files in `supabase/migrations/`.
 - **Auth**: Email "Confirm email" is off. Supabase built-in mail reaches only organization members, so with confirmation on, reviewers and the smoke test could not sign up. Site URL is set to the workers.dev address.
+- **Known risk, open sign-up**: with confirmation off and no CAPTCHA, anyone can create any number of accounts, including with someone else's address. Only the Supabase per-IP sign-up limit applies, and `/api/isolation/*` probes are writable by any signed-in user. Accepted for the MVP; after Builder, enable Supabase Auth CAPTCHA (Turnstile) or custom SMTP with confirmation on.
+- **Coupling**: `src/pages/auth/confirm-email.astro` always says "Registration successful, you can now sign in". If "Confirm email" is turned back on, restore its "Check your email" branch in the same change.
 - **Worker secrets**: `SUPABASE_URL` and `SUPABASE_KEY` (anon key only), set with `npx wrangler secret put`.
 - **Deploy command (manual)**: `npm run build && npx wrangler deploy`. Not `wrangler pages deploy`.
-- **Production smoke**: `SMOKE_EMAIL_DOMAIN=mailinator.com BASE_URL=https://mixing-cookbook.mcglowack.workers.dev npm run smoke`. Hosted Supabase rejects `example.com`.
+- **Production smoke**: `SMOKE_EMAIL_DOMAIN=mailinator.com BASE_URL=https://mixing-cookbook.mcglowack.workers.dev npm run smoke`. Hosted Supabase rejects `example.com`. Each run leaves two `smoke-*` accounts; delete them afterwards in Supabase → Authentication → Users (filter `smoke-`).
