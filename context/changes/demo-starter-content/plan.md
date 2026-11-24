@@ -277,12 +277,12 @@ There is no schema migration. The production run replaces the hand-made demo dat
 
 #### Automated
 
-- [x] 3.1 `npm run lint` passes
-- [ ] 3.2 CI on the PR is green (`ci` and `smoke` jobs)
+- [x] 3.1 `npm run lint` passes — d677ef1
+- [x] 3.2 CI on the PR is green (`ci` and `smoke` jobs) — d677ef1
 
 #### Manual
 
-- [ ] 3.3 The deployed `workers.dev` app lists 6 starter recipes for a freshly signed-up account
+- [x] 3.3 The deployed `workers.dev` app lists 6 starter recipes for a freshly signed-up account
 - [ ] 3.4 In a private window, the demo account shows the DAW, 6 plugins, 3 tracks on three stages, 2 own recipes, sidechain progress on "Nocna jazda", and the equipment filter on notes
 - [ ] 3.5 A second account sees none of the demo account's data
-- [ ] 3.6 The README section is accurate and contains no credentials
+- [x] 3.6 The README section is accurate and contains no credentials
