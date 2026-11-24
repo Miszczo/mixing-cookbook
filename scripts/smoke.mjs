@@ -1,3 +1,5 @@
+import { randomUUID } from "node:crypto";
+
 // Smoke test: proves the built app, the Cloudflare adapter and the Supabase auth flow still work together.
 // Also proves owner isolation and shared catalog read via /api/isolation/*.
 // Zero dependencies on purpose. Run against a live server: BASE_URL=http://localhost:4321 node scripts/smoke.mjs
@@ -8,7 +10,8 @@ const BASE_URL = process.env.BASE_URL ?? "http://localhost:4321";
 const EMAIL_DOMAIN = process.env.SMOKE_EMAIL_DOMAIN ?? "example.com";
 const email = `smoke-${Date.now()}@${EMAIL_DOMAIN}`;
 const emailB = `smoke-b-${Date.now()}@${EMAIL_DOMAIN}`;
-const password = "Smoke-Test-Passw0rd!";
+// Random by default so accounts left in production are not reachable with a password from this public repo.
+const password = process.env.SMOKE_PASSWORD ?? `Smoke-${randomUUID()}-1a!`;
 const jar = new Map();
 let probeIdA = null;
 

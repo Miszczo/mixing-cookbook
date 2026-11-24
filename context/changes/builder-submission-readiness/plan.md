@@ -154,6 +154,12 @@ Deploy the app to Cloudflare Workers against a new Supabase Cloud project, follo
 
 **Contract**: The credentials go only into the submission form. They are never committed.
 
+#### Addendum (impl review, 2026-11-24): smoke e-mail domain
+
+**File**: `scripts/smoke.mjs`
+
+Not in the original plan. Hosted Supabase rejects `example.com`, so check 2.3 could not pass without it. The script reads `SMOKE_EMAIL_DOMAIN` (default `example.com`, so CI is unchanged); production runs use `mailinator.com`. After the review (F2), the password is random unless `SMOKE_PASSWORD` is set, and the docs say to delete the `smoke-*` accounts after a production run.
+
 ### Success Criteria:
 
 #### Automated Verification:
