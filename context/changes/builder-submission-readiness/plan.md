@@ -345,16 +345,16 @@ The Supabase Cloud database starts empty, and `db push` applies the 8 repo migra
 
 #### Automated
 
-- [x] 3.1 No `TBD` or "not started" is left in `test-plan.md` for a risk that has tests: `grep -nE "TBD|not started" context/foundation/test-plan.md`
-- [x] 3.2 Every test file named in `test-plan.md` exists in `tests/`
-- [x] 3.3 README contains the `workers.dev` address: `grep -n "workers.dev" README.md`
-- [x] 3.4 No secrets in the diff: `git diff master --stat` and a scan of README for keys or passwords
-- [x] 3.5 Linting passes: `npm run lint`
+- [x] 3.1 No `TBD` or "not started" is left in `test-plan.md` for a risk that has tests: `grep -nE "TBD|not started" context/foundation/test-plan.md` — 779cbb3
+- [x] 3.2 Every test file named in `test-plan.md` exists in `tests/` — 779cbb3
+- [x] 3.3 README contains the `workers.dev` address: `grep -n "workers.dev" README.md` — 779cbb3
+- [x] 3.4 No secrets in the diff: `git diff master --stat` and a scan of README for keys or passwords — 779cbb3
+- [x] 3.5 Linting passes: `npm run lint` — 779cbb3
 
 #### Manual
 
-- [x] 3.6 Reading only README, you can point to where each Builder requirement is met
-- [x] 3.7 The risk → test mapping in `test-plan.md` matches what the tests actually check
+- [x] 3.6 Reading only README, you can point to where each Builder requirement is met — 779cbb3
+- [x] 3.7 The risk → test mapping in `test-plan.md` matches what the tests actually check — 779cbb3
 
 ### Phase 4: Merge and Final Check
 
