@@ -1,9 +1,10 @@
 ---
 change_id: builder-submission-readiness
 title: Make the project ready to submit for 10xBuilder
-status: impl_reviewed
+status: archived
 created: 2026-11-24
 updated: 2026-11-24
+archived_at: 2026-11-24T18:21:06Z
 ---
 
 ## Notes

@@ -55,7 +55,7 @@ describe("recipe search", () => {
     const a = await user("a");
     expect(await postRecipe(a, OWN_INTENT, "eq")).toBe(303);
 
-    const byIntent = await request(origin, a, "/recipes?q=dol+wokal");
+    const byIntent = await request(origin, a, "/recipes?q=czyszczenie+dol");
     expect(byIntent.status).toBe(200);
     expect(byIntent.body).toContain(OWN_INTENT);
     expect(byIntent.body).not.toContain(STARTER_INTENT);
@@ -70,7 +70,7 @@ describe("recipe search", () => {
     expect(compressors.body).not.toContain(OWN_INTENT);
 
     const b = await user("b");
-    const foreign = await request(origin, b, "/recipes?q=dol+wokal");
+    const foreign = await request(origin, b, "/recipes?q=czyszczenie+dol");
     expect(foreign.status).toBe(200);
     expect(foreign.body).not.toContain(OWN_INTENT);
     expect(foreign.body).toContain(NO_MATCHES);

@@ -57,6 +57,7 @@ Migrations in `supabase/migrations/` apply on `supabase start`. After pulling a 
 - `npm run lint`, `npx astro check`: lint and type check
 - `npm test`: run Vitest integration tests (needs local Supabase)
 - `npm run smoke`: run the HTTP smoke test against a running server (`BASE_URL`, default `http://localhost:4321`)
+- `npm run seed:demo`: replace the demo account's data with a fixed set; see Demo account below
 
 ## Project layout
 
@@ -67,7 +68,7 @@ src/lib/          services and Supabase client
 src/middleware.ts session lookup and PROTECTED_ROUTES
 supabase/         config and SQL migrations with RLS
 tests/            Vitest integration tests
-scripts/          smoke test
+scripts/          smoke test and demo seed
 context/          PRD, roadmap, test plan, plans, and reviews for each change
 ```
 
@@ -113,6 +114,30 @@ SMOKE_EMAIL_DOMAIN=mailinator.com BASE_URL=https://mixing-cookbook.mcglowack.wor
 ```
 
 The password is random unless you set `SMOKE_PASSWORD`. Each run leaves two `smoke-*` accounts; delete them afterwards in Supabase → Authentication → Users (filter `smoke-`).
+
+### Demo account
+
+`npm run seed:demo` (`scripts/seed-demo.mjs`) signs in as the demo account and replaces its data with a fixed set: a primary DAW, 6 plugins, 3 tracks on three stages, saved progress in a starter recipe, 2 own recipes, and 5 listening notes on 3 pieces of equipment. Running it twice gives the same state. If the account does not exist, the script signs it up.
+
+**It wipes the account's plugins, own recipes, and listening notes, and resets the tracks named in the script.** It prints the target URL and the e-mail first, and refuses a non-local URL unless you pass `--yes`.
+
+Tracks cannot be deleted by the app's database rules, so the script reuses the tracks named "Szkic: Lato", "Nocna jazda", and "Kolory" and creates the missing ones. Any other track on the account stays. Before a production run, delete the extra tracks by hand (Supabase → Table Editor → `tracks`, filter by the demo user).
+
+Run it only after the app version that defines the starter recipes is deployed, because the seeded progress points at them. Pass the production URL, the anon key, and the demo credentials explicitly; values set in the shell override `.env`. Replace the placeholders:
+
+```bash
+SUPABASE_URL=<production-url> SUPABASE_KEY=<anon-key> DEMO_EMAIL=<demo-email> DEMO_PASSWORD=<demo-password> npm run seed:demo -- --yes
+```
+
+PowerShell:
+
+```powershell
+$env:SUPABASE_URL = "<production-url>"; $env:SUPABASE_KEY = "<anon-key>"
+$env:DEMO_EMAIL = "<demo-email>"; $env:DEMO_PASSWORD = "<demo-password>"
+npm run seed:demo -- --yes
+```
+
+Locally, put the same variable names in `.env` (the local URL needs no `--yes`). The anon key is the only key the script uses.
 
 Deployment notes and platform research: [`context/foundation/infrastructure.md`](context/foundation/infrastructure.md).
 
