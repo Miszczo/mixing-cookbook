@@ -248,30 +248,30 @@ There is no schema migration. The production run replaces the hand-made demo dat
 
 #### Automated
 
-- [x] 1.1 `npm test -- tests/starter-recipes.test.ts` passes
-- [x] 1.2 `npm test` passes against local Supabase (existing sidechain-pinned tests unchanged)
-- [x] 1.3 `npm run lint` and `npx astro check` pass
-- [x] 1.4 `npm run build` succeeds
+- [x] 1.1 `npm test -- tests/starter-recipes.test.ts` passes — c643c2f
+- [x] 1.2 `npm test` passes against local Supabase (existing sidechain-pinned tests unchanged) — c643c2f
+- [x] 1.3 `npm run lint` and `npx astro check` pass — c643c2f
+- [x] 1.4 `npm run build` succeeds — c643c2f
 
 #### Manual
 
-- [x] 1.5 `/recipes` shows 6 starter recipes with their mock images. The type filter for EQ, Reverb, Delay and Saturation returns one each, and Compressor returns two
-- [x] 1.6 Searching "wokal" returns the two vocal recipes
-- [x] 1.7 Opening `vocal-low-cut` inside a Miks track with no EQ plugin shows the generic native-tool label, and the step checklist saves progress
+- [x] 1.5 `/recipes` shows 6 starter recipes with their mock images. The type filter for EQ, Reverb, Delay and Saturation returns one each, and Compressor returns two — c643c2f
+- [x] 1.6 Searching "wokal" returns the two vocal recipes — c643c2f
+- [x] 1.7 Opening `vocal-low-cut` inside a Miks track with no EQ plugin shows the generic native-tool label, and the step checklist saves progress — c643c2f
 
 ### Phase 2: Demo Seed Script
 
 #### Automated
 
-- [ ] 2.1 `npm test -- tests/seed-demo.test.ts` passes against local Supabase
-- [ ] 2.2 `npm test` passes
-- [ ] 2.3 `npm run lint` and `npx astro check` pass
-- [ ] 2.4 `npm run seed:demo` with a non-local `SUPABASE_URL` and no `--yes` exits non-zero without writing
+- [x] 2.1 `npm test -- tests/seed-demo.test.ts` passes against local Supabase
+- [x] 2.2 `npm test` passes
+- [x] 2.3 `npm run lint` and `npx astro check` pass
+- [x] 2.4 `npm run seed:demo` with a non-local `SUPABASE_URL` and no `--yes` exits non-zero without writing
 
 #### Manual
 
-- [ ] 2.5 Locally, `DEMO_EMAIL=… DEMO_PASSWORD=… npm run seed:demo` run twice prints the same counts, and signing in as that user shows 3 tracks, 6 plugins, 2 own recipes and notes filterable by equipment
-- [ ] 2.6 The Miks track "Nocna jazda" opens the sidechain card with 3 steps ticked and Pro-C 2 selected
+- [x] 2.5 Locally, `DEMO_EMAIL=… DEMO_PASSWORD=… npm run seed:demo` run twice prints the same counts, and signing in as that user shows 3 tracks, 6 plugins, 2 own recipes and notes filterable by equipment
+- [x] 2.6 The Miks track "Nocna jazda" opens the sidechain card with 3 steps ticked and Pro-C 2 selected
 
 ### Phase 3: Production and README
 
