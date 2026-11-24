@@ -328,18 +328,18 @@ The Supabase Cloud database starts empty, and `db push` applies the 8 repo migra
 
 #### Automated
 
-- [ ] 2.1 Production build passes: `npm run build`
-- [ ] 2.2 Worker version is listed after deploy: `npx wrangler versions list`
-- [ ] 2.3 Smoke flow passes against production: `BASE_URL=https://<worker>.workers.dev npm run smoke`
-- [ ] 2.4 No runtime errors while signing in: `npx wrangler tail` shows no exceptions during the manual sign-in below
+- [x] 2.1 Production build passes: `npm run build`
+- [x] 2.2 Worker version is listed after deploy: `npx wrangler versions list`
+- [x] 2.3 Smoke flow passes against production: `BASE_URL=https://<worker>.workers.dev npm run smoke`
+- [x] 2.4 No runtime errors while signing in: `npx wrangler tail` shows no exceptions during the manual sign-in below
 
 #### Manual
 
-- [ ] 2.5 `npx supabase db push` reported all migrations applied, and the tables are visible in the Supabase dashboard
-- [ ] 2.6 In a private window, a new e-mail address can sign up and reach `/dashboard` without a confirmation e-mail
-- [ ] 2.7 The demo account signs in and shows its DAW, plugins, Miks track, and a recipe card with a tool and steps
-- [ ] 2.8 A second account does not see the demo account's plugins, tracks, or recipes
-- [ ] 2.9 The Cloudflare dashboard shows no `SESSION` KV namespace or Images binding for this Worker
+- [x] 2.5 `npx supabase db push` reported all migrations applied, and the tables are visible in the Supabase dashboard
+- [x] 2.6 In a private window, a new e-mail address can sign up and reach `/dashboard` without a confirmation e-mail
+- [x] 2.7 The demo account signs in and shows its DAW, plugins, Miks track, and a recipe card with a tool and steps
+- [x] 2.8 A second account does not see the demo account's plugins, tracks, or recipes
+- [x] 2.9 The Cloudflare dashboard shows no `SESSION` KV namespace or Images binding for this Worker
 
 ### Phase 3: Evidence Documents
 
