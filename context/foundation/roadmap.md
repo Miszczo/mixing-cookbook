@@ -3,29 +3,29 @@ project: "Sound Intent & Mixing Cookbook CMS"
 version: 1
 status: draft
 created: 2026-09-23
-updated: 2026-11-23
+updated: 2026-11-24
 prd_version: 1
-main_goal: speed
-top_blocker: capacity
-milestone_id: nice-to-have-polish
-milestone_seq: 2
+main_goal: low-complexity
+top_blocker: none
+milestone_id: paste-and-track-progress
+milestone_seq: 3
 milestone_status: open
 ---
 
 # Roadmap: Sound Intent & Mixing Cookbook CMS
 
-> Derived from context/foundation/prd.md (v1) + auto-researched codebase baseline.
+> Derived from context/foundation/prd.md (v1), next tranche after M-1 and M-2, + confirmed codebase baseline.
 > Edit-in-place; the next milestone continues this file. Archive only when an independent roadmap replaces it.
 > Slices below are listed in dependency order. The "At a glance" table is the index.
 
 ## Milestone
 
-**M-2: Nice-to-have polish** — Status: open
+**M-3: Paste close-out and track progress** — Status: open
 
-- **Intent:** The required product path from M-1 is done; this milestone adds three small conveniences from the PRD's nice-to-have list that make everyday use faster: a ready listening-note template, a one-click Markdown copy of a recipe checklist, and a filter of listening notes by reference equipment.
+- **Intent:** The required product path and the earlier conveniences are done. This milestone closes out clipboard paste, which is already in the product, then adds the track progress percentage the PRD kept beside the first version because a percentage can pretend to be more precise than the work is.
 - **Source materials:** `context/foundation/prd.md` (v1)
 - **Done when:** every F-NN and S-NN below is `done`.
-- **Scope anchors:** FR-014, FR-015, FR-017
+- **Scope anchors:** FR-016, FR-018
 
 ## Vision recap
 
@@ -35,39 +35,30 @@ Przepis miksowy powinien być kontekstowy: połączenie intencji, posiadanych pl
 
 ## North star
 
-**S-08: User can insert a listening-note template into the worklog text field** — speed puts this first: the PRD names the template in its secondary success criteria, so it is the only slice here that serves a stated success criterion.
+**S-11: User can paste a screenshot from the clipboard into the new-recipe form** — low complexity puts the already-built paste first, so the milestone starts by closing that slice instead of opening a new scoring rule.
 
-> North star means the smallest end-to-end slice whose delivery would prove the milestone's main point. It sits first because its prerequisites are already done.
+> North star means the smallest end-to-end slice whose delivery would prove this milestone's point. It sits first because its prerequisites are already done.
 
 ## At a glance
 
-| ID    | Change ID                      | Outcome (user can …)                                           | Prerequisites | PRD refs | Status |
-| ----- | ------------------------------ | -------------------------------------------------------------- | ------------- | -------- | ------ |
-| S-08  | listening-note-template        | insert a listening-note template into the note field           | S-07          | FR-015   | done        |
-| S-09  | copy-checklist-as-markdown     | copy a recipe checklist to the clipboard as Markdown           | S-04          | FR-014   | done |
-| S-10  | filter-notes-by-equipment      | filter listening notes across all tracks by reference equipment | S-07          | FR-017   | done |
-
-## Streams
-
-Navigation aid — groups items that share a Prerequisites chain. Canonical ordering still lives in the dependency graph below.
-
-| Stream | Theme            | Chain   | Note                                                        |
-| ------ | ---------------- | ------- | ----------------------------------------------------------- |
-| A      | Listening worklog | `S-08`  | Serves the secondary success criterion; first for speed.    |
-| B      | Recipe card      | `S-09`  | Standalone on the S-04 recipe card.                         |
-| C      | Notes overview   | `S-10`  | Reads the notes from S-07 across tracks; standalone.        |
+| ID    | Change ID                              | Outcome (user can …)                                              | Prerequisites | PRD refs | Status |
+| ----- | -------------------------------------- | ----------------------------------------------------------------- | ------------- | -------- | ------ |
+| S-11  | paste-recipe-screenshot-from-clipboard | paste a screenshot from the clipboard into the new-recipe form    | —             | FR-016   | done   |
+| S-12  | track-progress-percent                 | see a percentage of completed checklist steps on a track          | —             | FR-018   | ready  |
 
 ## Baseline
 
-What's already in place in the codebase as of 2026-11-22 (all M-1 slices archived and done).
-No foundations are needed: every slice below builds on pages and data that already exist.
+What's already in place in the codebase as of 2026-11-24 (confirmed; no new foundations).
+No foundations are needed: both slices sit on pages and data that already exist.
 
-- **Frontend:** present — Astro + React + Tailwind, track pages and recipe card (`src/pages/tracks/[id].astro`, `src/pages/recipes/index.astro`)
+- **Frontend:** present — recipe form, track page, and recipe card already render
 - **Backend / API:** present — server-rendered app with API routes
-- **Data:** present — tracks, plugins, recipes and listening notes with per-user row isolation (`supabase/migrations/`)
-- **Auth:** present — session middleware on protected routes (`src/middleware.ts`)
-- **Deploy / infra:** partial — hosting adapter configured; CI checks, builds, smoke-tests, no auto-deploy
+- **Data:** present — tracks, plugins, recipes, checklist progress, and listening notes, each isolated per signed-in user
+- **Auth:** present — session check on protected routes
+- **Deploy / infra:** partial — hosting adapter configured; checks run in CI; no automatic production deploy
 - **Observability:** partial — no application logging or error tracking
+
+Clipboard paste into the new-recipe form is already implemented and manually checked. The change folder is still open; it is not archived.
 
 ## Foundations
 
@@ -75,49 +66,36 @@ None. The Baseline already covers everything these slices need, and no layer wou
 
 ## Slices
 
-### S-08: Insert a listening-note template into the note field
+### S-11: Paste a screenshot from the clipboard into the new-recipe form
 
-- **Outcome:** User can insert a listening-note template into the note field.
-- **Change ID:** listening-note-template
-- **PRD refs:** FR-015
-- **Prerequisites:** S-07
-- **Parallel with:** S-09, S-10
+- **Outcome:** User can paste a screenshot from the clipboard into the new-recipe form.
+- **Change ID:** paste-recipe-screenshot-from-clipboard
+- **PRD refs:** FR-016
+- **Prerequisites:** —
+- **Parallel with:** S-12
 - **Blockers:** —
 - **Unknowns:** —
-- **Risk:** Small change on the existing note form; the risk is overwriting text the user already typed, so insertion must keep it.
+- **Risk:** The behavior is already implemented. Planning it again would duplicate that change. The remaining step is to archive the open change folder.
 - **Status:** done
 
-### S-09: Copy a recipe checklist to the clipboard as Markdown
+### S-12: See a percentage of completed checklist steps on a track
 
-- **Outcome:** User can copy a recipe checklist to the clipboard as Markdown.
-- **Change ID:** copy-checklist-as-markdown
-- **PRD refs:** FR-014
-- **Prerequisites:** S-04
-- **Parallel with:** S-08, S-10
+- **Outcome:** User can see a percentage of completed checklist steps on a track.
+- **Change ID:** track-progress-percent
+- **PRD refs:** FR-018
+- **Prerequisites:** —
+- **Parallel with:** S-11
 - **Blockers:** —
 - **Unknowns:** —
-- **Risk:** Clipboard access needs a secure context and a user click; a failed copy must show a clear message.
-- **Status:** done
-
-### S-10: Filter listening notes across all tracks by reference equipment
-
-- **Outcome:** User can filter listening notes across all tracks by reference equipment.
-- **Change ID:** filter-notes-by-equipment
-- **PRD refs:** FR-017
-- **Prerequisites:** S-07
-- **Parallel with:** S-08, S-09
-- **Blockers:** —
-- **Unknowns:** —
-- **Risk:** Needs a view over notes from all tracks; the risk is leaking another user's notes, so it must stay under the same row isolation.
-- **Status:** done
+- **Risk:** The PRD allows stages or steps and warns that a percentage can pretend to be more precise than creative work is. This slice uses the checklist steps already stored for the track, and does not invent a score across stages.
+- **Status:** ready
 
 ## Backlog Handoff
 
-| Roadmap ID | Change ID                  | Suggested issue title                                  | Ready for `/10x-plan` | Notes |
-| ---------- | -------------------------- | ------------------------------------------------------ | --------------------- | ----- |
-| S-08       | listening-note-template    | Insert a listening-note template into the note field   | yes                   | Run `/10x-plan listening-note-template` |
-| S-09       | copy-checklist-as-markdown | Copy a recipe checklist as Markdown                    | yes                   | Parallel with S-08 and S-10 |
-| S-10       | filter-notes-by-equipment  | Filter listening notes across tracks by equipment      | yes                   | Parallel with S-08 and S-09 |
+| Roadmap ID | Change ID                              | Suggested issue title                                      | Ready for `/10x-plan` | Notes |
+| ---------- | -------------------------------------- | ---------------------------------------------------------- | --------------------- | ----- |
+| S-11       | paste-recipe-screenshot-from-clipboard | Paste a screenshot from the clipboard into the recipe form | no                    | Already implemented. Run `/10x-archive paste-recipe-screenshot-from-clipboard`. Do not re-plan. |
+| S-12       | track-progress-percent                 | Show a percentage of completed checklist steps on a track  | yes                   | Run `/10x-plan track-progress-percent` after S-11 is archived |
 
 ## Open Roadmap Questions
 
@@ -129,13 +107,12 @@ None. The PRD lists no open questions, and these slices add no cross-slice decis
 - **DAW or VST preset file export** — Why parked: PRD §Non-Goals; a recipe stays an instruction and a checklist.
 - **A plugin or integration inside the DAW, including parameter automation** — Why parked: PRD §Non-Goals; the DAW is only the context for native-tool names.
 - **Popularity ranking or recommendations from other users' plugins** — Why parked: PRD §Non-Goals; matching stays per user.
-- **FR-016: Paste a screenshot from the clipboard** — Why parked: nice-to-have; PRD notes it complicates image handling and file upload is enough.
-- **FR-018: Percentage progress on a track** — Why parked: nice-to-have; PRD keeps it out of the MVP because it creates false precision.
-- **Production auto-deploy** — Why parked: capacity and speed keep this milestone on small product slices; local verification is enough.
+- **Production auto-deploy** — Why parked: low complexity keeps this milestone on the two remaining product slices; local verification is enough.
 
 ## Milestone History
 
 - **M-1: In-track sidechain recipe** (`in-track-sidechain-recipe`) — closed 2026-11-22. A signed-in producer can open a Miks track, get the sidechain recipe card, author own recipes with a screenshot, search recipes by intent, and keep listening notes.
+- **M-2: Nice-to-have polish** (`nice-to-have-polish`) — closed 2026-11-24. The producer can insert a listening-note template, copy a recipe checklist as Markdown, and filter listening notes across tracks by reference equipment.
 
 ## Done
 
@@ -152,3 +129,4 @@ None. The PRD lists no open questions, and these slices add no cross-slice decis
 | S-08 | listening-note-template | 2026-11-22 | User can insert a listening-note template into the note field. Archived to `context/archive/2026-11-22-listening-note-template/`. Lesson: —. |
 | S-09 | copy-checklist-as-markdown | 2026-11-23 | User can copy a recipe checklist to the clipboard as Markdown. Archived to `context/archive/2026-11-23-copy-checklist-as-markdown/`. Lesson: —. |
 | S-10 | filter-notes-by-equipment | 2026-11-23 | User can filter listening notes across all tracks by reference equipment. Archived to `context/archive/2026-11-23-filter-notes-by-equipment/`. Lesson: —. |
+| S-11 | paste-recipe-screenshot-from-clipboard | 2026-11-24 | User can paste a screenshot from the clipboard into the new-recipe form. Archived to `context/archive/2026-11-23-paste-recipe-screenshot-from-clipboard/`. Lesson: —. |
