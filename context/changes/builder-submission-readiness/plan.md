@@ -360,15 +360,15 @@ The Supabase Cloud database starts empty, and `db push` applies the 8 repo migra
 
 #### Automated
 
-- [ ] 4.1 Latest run on `master` has `ci` and `smoke` successful: `gh run list --branch master -L 1`
-- [ ] 4.2 `/10x-status` shows no ⚠ warning for any change
-- [ ] 4.3 Course material is not tracked: `git ls-files 10xdevs-lessons .cursor/skills .cursor/prompts .claude/skills` returns nothing
+- [x] 4.1 Latest run on `master` has `ci` and `smoke` successful: `gh run list --branch master -L 1`
+- [x] 4.2 `/10x-status` shows no ⚠ warning for any change
+- [x] 4.3 Course material is not tracked: `git ls-files 10xdevs-lessons .cursor/skills .cursor/prompts .claude/skills` returns nothing
 
 #### Manual
 
-- [ ] 4.4 Access control: the demo account sees only its own data, and a signed-out visit to `/dashboard` redirects to sign-in
-- [ ] 4.5 CRUD: on the production app you created, edited, and deleted a plugin
-- [ ] 4.6 Business logic: with no matching plugin, a recipe card shows the DAW's native tool
-- [ ] 4.7 Context documents: `prd.md`, `infrastructure.md`, `roadmap.md`, and `test-plan.md` are on `master`
-- [ ] 4.8 Tests: `test-plan.md` names at least one risk with its test set, and that set ran green in the `master` CI run
-- [ ] 4.9 Deployment: the `workers.dev` address works in a private window, and the demo credentials are noted for the form
+- [x] 4.4 Access control: the demo account sees only its own data, and a signed-out visit to `/dashboard` redirects to sign-in
+- [x] 4.5 CRUD: on the production app you created, edited, and deleted a plugin
+- [x] 4.6 Business logic: with no matching plugin, a recipe card shows the DAW's native tool
+- [x] 4.7 Context documents: `prd.md`, `infrastructure.md`, `roadmap.md`, and `test-plan.md` are on `master`
+- [x] 4.8 Tests: `test-plan.md` names at least one risk with its test set, and that set ran green in the `master` CI run
+- [x] 4.9 Deployment: the `workers.dev` address works in a private window, and the demo credentials are noted for the form
