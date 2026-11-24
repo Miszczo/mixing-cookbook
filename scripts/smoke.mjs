@@ -1,10 +1,13 @@
 // Smoke test: proves the built app, the Cloudflare adapter and the Supabase auth flow still work together.
 // Also proves owner isolation and shared catalog read via /api/isolation/*.
 // Zero dependencies on purpose. Run against a live server: BASE_URL=http://localhost:4321 node scripts/smoke.mjs
+// Against production: SMOKE_EMAIL_DOMAIN=mailinator.com BASE_URL=https://<worker>.workers.dev node scripts/smoke.mjs
 
 const BASE_URL = process.env.BASE_URL ?? "http://localhost:4321";
-const email = `smoke-${Date.now()}@example.com`;
-const emailB = `smoke-b-${Date.now()}@example.com`;
+// Hosted Supabase rejects example.com, so production runs pass a real domain, e.g. SMOKE_EMAIL_DOMAIN=mailinator.com.
+const EMAIL_DOMAIN = process.env.SMOKE_EMAIL_DOMAIN ?? "example.com";
+const email = `smoke-${Date.now()}@${EMAIL_DOMAIN}`;
+const emailB = `smoke-b-${Date.now()}@${EMAIL_DOMAIN}`;
 const password = "Smoke-Test-Passw0rd!";
 const jar = new Map();
 let probeIdA = null;

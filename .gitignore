@@ -40,3 +40,7 @@ pnpm-debug.log*
 # local archives and scratch queries
 *.7z
 supabase/snippets/
+
+# local copies for Claude Code and private delivery notes
+.claude/skills
+*.local.md

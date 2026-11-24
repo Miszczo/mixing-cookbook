@@ -4,9 +4,9 @@
 > (§1–§5); cookbook patterns at the bottom (§6) fill in as phases ship.
 > Read before writing any new test.
 >
-> Refresh: re-run `/10x-test-plan --refresh` when stale (see §8).
+> Refresh: re-run `/10x-test-plan --refresh` when stale (see §8). Odświeżone ręcznie 2026-11-24 (statusy, §4, §5, §6.4–§6.6, §8).
 >
-> Last updated: 2026-10-07
+> Last updated: 2026-11-24
 
 ## 1. Strategy
 
@@ -59,20 +59,36 @@ Każdy wiersz otwiera własny folder zmiany przez `/10x-new`. Statusy poniżej s
 
 | # | Phase name | Goal (one line) | Risks covered | Test types | Status | Change folder |
 |---|------------|-----------------|---------------|------------|--------|---------------|
-| 1 | Runner i granica dostępu | Postawić runner i udowodnić, że cudze wiersze oraz ścieżka bez sesji są zamknięte | #1, #4 | Vitest, integracja | change opened | context/changes/testing-runner-access-boundary/ |
-| 2 | Dobór narzędzia na karcie | Udowodnić fallback DAW i pierwszeństwo ulubionej wtyczki, bez budowania brakującego produktu | #2 | integracja | not started | — |
-| 3 | Trwałość zapisu | Udowodnić, że zapis przeżywa odświeżenie, a złe wejście nie udaje sukcesu i nie kasuje tekstu | #3, #5 | integracja | not started | — |
-| 4 | Bramki jakości | Wpiąć suite z etapów 1–3 do CI obok lint, typecheck, build i smoke | cross-cutting | bramki | not started | — |
+| 1 | Runner i granica dostępu | Postawić runner i udowodnić, że cudze wiersze oraz ścieżka bez sesji są zamknięte | #1, #4 | Vitest, integracja | complete | context/archive/2026-10-07-testing-runner-access-boundary/ |
+| 2 | Dobór narzędzia na karcie | Udowodnić fallback DAW i pierwszeństwo ulubionej wtyczki, bez budowania brakującego produktu | #2 | integracja | complete | context/archive/2026-11-01-in-track-sidechain-card/ |
+| 3 | Trwałość zapisu | Udowodnić, że zapis przeżywa odświeżenie, a złe wejście nie udaje sukcesu i nie kasuje tekstu | #3, #5 | integracja | complete | context/archive/2026-11-03-author-recipe-with-screenshot/, context/archive/2026-11-09-track-listening-notes/ |
+| 4 | Bramki jakości | Wpiąć suite z etapów 1–3 do CI obok lint, typecheck, build i smoke | cross-cutting | bramki | complete | context/changes/builder-submission-readiness/ |
+
+Etapy 2 i 3 nie miały własnych folderów zmiany `testing-*`. Ich testy wylądowały razem ze slice'ami produktu, których foldery są w ostatniej kolumnie. Etap 4 to wpięcie `npm test` do zadania `smoke` w `.github/workflows/ci.yml`, zrobione w zmianie `builder-submission-readiness`.
+
+### Pokrycie ryzyk testami
+
+Stan na 2026-11-24. Pliki są w `tests/`. Ostatnia kolumna mówi wprost, gdzie dowodu nie ma.
+
+| # | Pliki testów | Co sprawdzają | Czego nie łapią |
+|---|--------------|---------------|-----------------|
+| 1 | `isolation-probes-rls.test.ts`, `primary-daw-rls.test.ts`, `recipes-rls.test.ts`, `recipe-progress-rls.test.ts`, `listening-notes-rls.test.ts` (selekt i zapis drugiego użytkownika na żywym Supabase); `isolation-access-http.test.ts`, `plugins-tracks-http.test.ts`, `listening-notes-http.test.ts`, `listening-notes-overview-http.test.ts`, `recipe-card-http.test.ts`, `recipes-http.test.ts`, `recipes-in-track-http.test.ts` (cudzy odczyt i zapis kończą się 404, ciało nie zawiera treści właściciela); `recipes-search-http.test.ts`, `primary-daw-http.test.ts` (drugi użytkownik nie widzi treści właściciela) | Drugi użytkownik nie widzi wierszy właściciela na poziomie polityk i na poziomie HTTP, a cudze zapisy są odrzucone | Tabele `plugins` i `tracks` nie mają osobnego testu RLS. Ich izolację dowodzą tylko testy HTTP, a 404 może pochodzić z filtra w handlerze (patrz §6.2) |
+| 2 | `recipe-tool-selection.test.ts` (reguła `selectTool`); `recipe-card-http.test.ts` (karta na stronie utworu) | Bez wtyczek karta nazywa natywne narzędzie DAW (np. ReaComp dla REAPER) albo ogólne „natywny kompresor Twojego DAW"; ulubiona wtyczka jest przed wcześniejszą alfabetycznie; każda wtyczka jest przed natywnym narzędziem; usunięcie wybranej wtyczki wraca do automatu | Nazwy narzędzi natywnych sprawdzono dla DAW użytych w testach, nie dla wszystkich |
+| 3 | `recipe-card-http.test.ts` (odhaczony krok i wybrane narzędzie po świeżych odczytach); `listening-notes-http.test.ts` (notatka na liście po osobnym GET, od najnowszej); `recipes-http.test.ts` (wgrany obraz wraca bajt w bajt z trasy właściciela); `recipes-in-track-http.test.ts` | Dane zapisane jednym żądaniem są czytane innym żądaniem z tą samą sesją | Brak testu w prawdziwej przeglądarce. „Odświeżenie" to świeży odczyt HTTP, nie przeładowanie strony |
+| 4 | `isolation-access-http.test.ts` (`/dashboard` 302, probes 401); `plugins-tracks-http.test.ts` (`/plugins`, `/tracks` 302, POST 401); `primary-daw-http.test.ts`; `listening-notes-overview-http.test.ts` (`/notes` 302); `recipe-card-http.test.ts` (anonimowy POST 401); `recipes-http.test.ts` (obraz 401 bez sesji) | Niezalogowane żądanie nie dostaje danych ani nie zapisuje; zalogowany właściciel dochodzi do własnego utworu (`plugins-tracks-http`, `listening-notes-http`) | Strona `/recipes` bez sesji nie ma własnej asercji przekierowania. Chroni ją `PROTECTED_ROUTES`, a test sprawdza tylko anonimowy odczyt obrazu |
+| 5 | `recipes-http.test.ts` (413 dla pliku ponad 1 MB, 400 dla tekstu udającego PNG, 400 bez obrazu i kroków; w odpowiedzi zostaje wpisany tekst); `listening-notes-http.test.ts` (400, zachowany tekst, nic nie zapisane); `recipe-input.test.ts`, `listening-notes.test.ts` (schematy zod i granice); `recipes-rls.test.ts`, `listening-notes-rls.test.ts` (ograniczenia CHECK w bazie); `recipe-card-http.test.ts` (zły krok, narzędzie lub cudza wtyczka nic nie zapisują) | Serwer odrzuca zły plik i złe body, nie raportuje sukcesu, a formularz oddaje wpisany tekst | Zachowanie tekstu jest sprawdzone dla formularzy przepisu i notatki. Formularze wtyczek i utworów sprawdzają odrzucenie (303), ale nie to, czy tekst zostaje. Wklejanie obrazu w przeglądarce ma tylko test logiki (`recipe-image-paste.test.ts`) |
+
+Pliki bez własnego ryzyka z §2 (czysta logika): `recipe-search.test.ts`, `recipe-checklist-markdown.test.ts`, `listening-note-template.test.ts`.
 
 ## 4. Stack
 
-Baza testów: **none**. Nie ma konfiguracji Vitest, Jest ani Playwright. CI na `master` już uruchamia lint, `astro check`, build i `npm run smoke` przeciw lokalnemu Supabase. Stos produktu: Astro 7 SSR na workerd, React, TypeScript, Supabase. Płatności, realtime i AI są poza zakresem.
+Baza testów: **Vitest 4.1.0**, 21 plików w `tests/`, uruchamianych przez `npm test`. Brak Playwright. CI na `master` i na pull requestach uruchamia lint, `astro check` i build, a w zadaniu `smoke` także `npm test` i `npm run smoke` przeciw lokalnemu Supabase. Stos produktu: Astro 7 SSR na workerd, React, TypeScript, Supabase. Płatności, realtime i AI są poza zakresem.
 
 | Layer | Tool | Version | Notes |
 |-------|------|---------|-------|
-| unit + integration | none yet — see §3 Phase 1 | — | Astro docs (checked 2026-10-07) wskazują Vitest przez `getViteConfig`. Testy kontenera komponentów idą w środowisku serwerowym, nie w jsdom. Faza 1 stawia runner. |
-| API mocking | none yet — see §3 Phase 1 | — | Izolacja wierszy potrzebuje lokalnego Supabase. Mock własności nie jest sygnałem. |
-| e2e | `npm run smoke` | — | Już w CI. Przeglądarkowy e2e nie jest wybraną warstwą dla ryzyk §2. |
+| unit + integration | Vitest (`npm test`) | 4.1.0 | Konfiguracja przez `getViteConfig` w `vitest.config.ts`, środowisko `node`, `fileParallelism: false`. Testy HTTP startują własny serwer `astro dev` (`tests/helpers/http-app.ts`) i potrzebują lokalnego Supabase. |
+| API mocking | none, celowo | — | Izolacja wierszy i reguły zapisu idą na lokalnym Supabase. Mock własności nie jest sygnałem. |
+| e2e | `npm run smoke` (`scripts/smoke.mjs`) | — | W CI przeciw podglądowi builda. Na produkcji: `SMOKE_EMAIL_DOMAIN=mailinator.com BASE_URL=<adres> npm run smoke`. Przeglądarkowy e2e nie jest wybraną warstwą dla ryzyk §2. |
 | accessibility | eslint-plugin-jsx-a11y | 6.10.2 | Tylko lint. Brak etapu axe; wygląd jest w §7. |
 | (optional) AI-native | not recommended — Playwright MCP checked: 2026-10-07 | n/a | Nazwa narzędzia, właściciel wiersza i treść notatki dają się sprawdzić asercją. Warstwa wizyjna nie wchodzi. |
 
@@ -89,10 +105,10 @@ Baza testów: **none**. Nie ma konfiguracji Vitest, Jest ani Playwright. CI na `
 | lint + typecheck | local + CI | required | dryf składni i typów |
 | build | CI | required | zepsuty build serwera |
 | smoke | CI on master | required | start aplikacji i obecne asercje skryptu smoke |
-| unit + integration | local + CI | required after §3 Phase 1 | regresja granicy dostępu (#1, #4) |
-| recipe-tool integration | local + CI | required after §3 Phase 2 | pusta karta, błąd albo zła kolejność wtyczek (#2) |
-| persistence integration | local + CI | required after §3 Phase 3 | utrata zapisu i ciche przyjęcie złego wejścia (#3, #5) |
-| suite on pull request | CI on PR | required after §3 Phase 4 | regresje z etapów 1–3 przed mergem |
+| unit + integration | local + CI (zadanie `smoke`) | required (§3 Phase 1, shipped) | regresja granicy dostępu (#1, #4) |
+| recipe-tool integration | local + CI (zadanie `smoke`) | required (§3 Phase 2, shipped) | pusta karta, błąd albo zła kolejność wtyczek (#2) |
+| persistence integration | local + CI (zadanie `smoke`) | required (§3 Phase 3, shipped) | utrata zapisu i ciche przyjęcie złego wejścia (#3, #5) |
+| suite on pull request | CI on PR (`pull_request` na `master`) | required (§3 Phase 4, shipped) | regresje z etapów 1–3 przed mergem |
 
 ## 6. Cookbook Patterns
 
@@ -118,21 +134,29 @@ Dwa dowody, oba na żywym Supabase i na sesji, nie na mocku. Notatka jest konkre
 
 ### 6.3 Adding an e2e test
 
-- TBD — żaden etap nie wybiera przeglądarkowego e2e. Istniejące sprawdzenie uruchomionej aplikacji to `npm run smoke`.
+- Brak — żaden etap nie wybiera przeglądarkowego e2e. Istniejące sprawdzenie uruchomionej aplikacji to `npm run smoke`.
 
 ### 6.4 Adding a test for recipe tool selection
 
-- TBD — see §3 Phase 2 for the empty-card / native-DAW fallback and favorite-first pattern.
+Dwa poziomy, oba w `tests/`.
+
+- **Reguła** (`recipe-tool-selection.test.ts`): czysta funkcja `selectTool` z `src/lib/recipes.ts`. Sprawdza pierwszeństwo: ulubiona wtyczka, potem inna zgodna wtyczka (remis nazw rozstrzyga `id`), potem natywne narzędzie. Sprawdza też ogólną nazwę natywną bez DAW i zignorowanie wybranej wtyczki, której już nie ma albo która nie pasuje do typu.
+- **Karta na stronie** (`recipe-card-http.test.ts`): zalogowany użytkownik na utworze w etapie Miks. Bez wtyczek karta nazywa narzędzie DAW (`ReaComp` dla REAPER) albo „natywny kompresor Twojego DAW" bez ustawionego DAW. Z dwiema wtyczkami ulubiona jest pierwsza. Oczekiwane nazwy są wpisane w teście, nie liczone funkcją doboru.
+- Czego nie kopiować: oczekiwanej nazwy wyliczonej tą samą funkcją; testu samej ulubionej wtyczki; pustej karty z kodem 200 uznanej za sukces.
 
 ### 6.5 Adding a test for saved work and rejected input
 
-- TBD — see §3 Phase 3 for the note, checklist step, and screenshot surviving refresh, and for rejected input that must not report success or drop typed text.
+- **Zapis i osobny odczyt**: zapis żądaniem POST, potem świeży GET z tą samą sesją. Krok i narzędzie: `recipe-card-http.test.ts`. Notatka: `listening-notes-http.test.ts`. Obraz: `recipes-http.test.ts` (bajty z trasy `/api/recipes/:id/image` są równe wgranym; cudzy odczyt 404, anonimowy 401).
+- **Odrzucone wejście**: serwer zwraca kod błędu (400, 413) albo przekierowanie z `error=`, nic się nie zapisuje, a odpowiedź z błędem zawiera wpisany tekst (`recipes-http.test.ts`, `listening-notes-http.test.ts`). Granice pól: `recipe-input.test.ts`, `listening-notes.test.ts`. Granice w bazie: `recipes-rls.test.ts`, `listening-notes-rls.test.ts`.
+- Czego nie kopiować: asercji odpowiedzi, którą zwrócił sam zapis; sprawdzania tylko limitu w przeglądarce.
 
 ### 6.6 Per-rollout-phase notes
 
 - Faza 1 (runner i granica dostępu) wysłała dowody z §6.1 i §6.2: `npm test`, selekt `id, note` bez predykatu `user_id` oraz bramki HTTP (dashboard 302 bez zdania dla zalogowanych, anonimowe 401 bez notatki, lista właściciela 200 z notatką, lista użytkownika B 200 bez notatki).
-- `npm run smoke` zostaje istniejącym skryptem end-to-end. Wpięcie suite do CI jest nadal §3 Faza 4.
-- Faza 1 nie dodała narzędzia AI-native. Warstwa wizyjna zostaje niezalecana; data sprawdzenia Playwright MCP, 2026-10-07, jest już w §4.
+- Fazy 2 i 3 wylądowały razem ze slice'ami S-04, S-05 i S-07 (foldery w archiwum, patrz §3). Dowody opisują §6.4 i §6.5, a mapa plików do ryzyk jest w §3.
+- Tabele `primary-daw`, `recipes`, `recipe-progress` i `listening-notes` mają test `*-rls.test.ts`. Wyjątek to `plugins` i `tracks` (patrz tabela w §3).
+- Faza 4: zadanie `smoke` w `.github/workflows/ci.yml` uruchamia `npm test`, build i `npm run smoke` na pushu do `master` i na pull requestach. Supabase w CI jest lokalny.
+- Nie dodano narzędzia AI-native ani przeglądarkowego e2e. Warstwa wizyjna zostaje niezalecana.
 
 ## 7. What We Deliberately Don't Test
 
@@ -140,8 +164,9 @@ Dwa dowody, oba na żywym Supabase i na sesji, nie na mocku. Notatka jest konkre
 
 ## 8. Freshness Ledger
 
-- Strategy (§1–§5) last reviewed: 2026-10-07
-- Stack versions last verified: 2026-10-07
+- Strategy (§1–§2) last reviewed: 2026-10-07 (bez zmian przy odświeżeniu)
+- Statuses, stack, gates and cookbook (§3–§6) refreshed by hand: 2026-11-24
+- Stack versions last verified: 2026-11-24 (Vitest 4.1.0 z `package.json`)
 - AI-native tool references last verified: 2026-10-07
 
 Refresh (`/10x-test-plan --refresh`) when:

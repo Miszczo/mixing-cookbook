@@ -8,7 +8,7 @@ export const TRACK_STAGES = [
 
 export type TrackStageId = (typeof TRACK_STAGES)[number]["id"];
 
-const TRACK_STAGE_IDS = TRACK_STAGES.map((stage) => stage.id) as [TrackStageId, ...TrackStageId[]];
+export const TRACK_STAGE_IDS = TRACK_STAGES.map((stage) => stage.id) as [TrackStageId, ...TrackStageId[]];
 
 export const trackInputSchema = z.object({
   name: z.string().trim().min(1).max(100),

@@ -1,0 +1,115 @@
+---
+import { z } from "zod";
+import AppLayout from "@/layouts/AppLayout.astro";
+import { PLUGIN_TYPES, pluginTypeLabel } from "@/lib/plugins";
+import {
+  filterRecipes,
+  RECIPE_COLUMNS,
+  RECIPES,
+  recipeFromRow,
+  recipeRowSchema,
+  recipeSearchSchema,
+  type ListedRecipe,
+} from "@/lib/recipes";
+import { createClient } from "@/lib/supabase";
+import { cn } from "@/lib/utils";
+
+const search = recipeSearchSchema.parse(Object.fromEntries(Astro.url.searchParams));
+
+const supabase = createClient(Astro.request.headers, Astro.cookies);
+const result = supabase
+  ? await supabase.from("recipes").select(RECIPE_COLUMNS).order("created_at", { ascending: false })
+  : null;
+const rows = z.array(recipeRowSchema).safeParse(result?.data);
+const recipes = result && !result.error && rows.success ? rows.data.map(recipeFromRow) : null;
+
+const listed: ListedRecipe[] | null = recipes
+  ? [
+      ...RECIPES.map((recipe) => ({ recipe, source: "starter" as const })),
+      ...recipes.map((recipe) => ({ recipe, source: "own" as const })),
+    ]
+  : null;
+const matches = listed ? filterRecipes(listed, search) : null;
+
+const button = "rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm transition-colors hover:bg-white/20";
+const field = "w-full rounded-lg border border-white/20 bg-white/10 px-3 py-2 text-sm";
+---
+
+<AppLayout title="Recipes">
+  <a href="/recipes/new" class:list={button}>
+    New recipe
+  </a>
+
+  <form method="get" action="/recipes" class="mt-6 flex flex-col gap-3 sm:flex-row sm:items-end">
+    <div class="flex flex-1 flex-col gap-1">
+      <label for="search-q" class="text-sm">
+        Szukaj intencji
+      </label>
+      <input id="search-q" type="search" name="q" value={search.q} maxlength={100} class:list={cn(field)} />
+    </div>
+    <div class="flex flex-col gap-1">
+      <label for="search-type" class="text-sm">
+        Type
+      </label>
+      <select id="search-type" name="type" class:list={cn(field, "sm:w-auto")}>
+        <option value="all" selected={search.type === "all"}>
+          All
+        </option>
+        {PLUGIN_TYPES.map((type) => (
+          <option value={type.id} selected={search.type === type.id}>
+            {type.label}
+          </option>
+        ))}
+      </select>
+    </div>
+    <div class="flex flex-col gap-1">
+      <label for="search-source" class="text-sm">
+        Source
+      </label>
+      <select id="search-source" name="source" class:list={cn(field, "sm:w-auto")}>
+        <option value="all" selected={search.source === "all"}>
+          All
+        </option>
+        <option value="starter" selected={search.source === "starter"}>
+          Starter
+        </option>
+        <option value="own" selected={search.source === "own"}>
+          Mine
+        </option>
+      </select>
+    </div>
+    <button type="submit" class:list={cn(button)}>
+      Search
+    </button>
+  </form>
+
+  {!matches ? (
+    <p role="alert" class="mt-6">
+      Recipes could not be loaded.
+    </p>
+  ) : matches.length === 0 ? (
+    <p class="mt-6 text-blue-100/80">No recipes match your search.</p>
+  ) : (
+    <ul class="mt-6 flex flex-col gap-3">
+      {matches.map(({ recipe, source }) => (
+        <li class="flex flex-col gap-2 rounded-xl border border-white/10 bg-white/5 p-3">
+          <p class="font-semibold">{recipe.intent}</p>
+          {source === "starter" && <p class="text-xs uppercase tracking-wide text-blue-100/80">Starter</p>}
+          <p class="text-sm text-blue-100/80">{pluginTypeLabel(recipe.requiredType)}</p>
+          <p class="text-sm text-blue-100/80">
+            {recipe.steps.length === 1 ? "1 step" : `${recipe.steps.length} steps`}
+          </p>
+          <img src={recipe.screenshot.src} alt={recipe.screenshot.alt} class="h-16 w-auto max-w-full rounded" />
+          {source === "own" && (
+            <form method="POST" action={`/api/recipes/${recipe.id}`}>
+              <input type="hidden" name="action" value="delete" />
+              <button type="submit" class:list={button}>
+                Delete
+              </button>
+            </form>
+          )}
+        </li>
+      ))}
+    </ul>
+  )}
+</AppLayout>
